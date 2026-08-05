@@ -263,6 +263,9 @@ function AdminPage() {
         </div>
       </div>
 
+      <ImportPanel />
+
+
       {form && (
         <form onSubmit={save} className="surface-card mt-8 rounded-xl p-6">
           <div className="flex items-center justify-between">
