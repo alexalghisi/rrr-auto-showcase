@@ -22,7 +22,7 @@ export const Route = createFileRoute("/masini/$slug")({
     const suffix = " | Bremen Auto Cluj";
     const title = `${clamp(name, 59 - suffix.length)}${suffix}`;
     const description = clamp(
-      `${name} — ${formatKm(car.mileage_km)}, ${car.fuel}, ${car.gearbox}${car.power_hp ? `, ${car.power_hp} CP` : ""}, ${formatPrice(Number(car.price), car.currency)}. Adusă din Germania, verificată, acte la zi. Vezi-o în Gilău, lângă Cluj-Napoca.`,
+      `${name} — ${formatKm(car.mileage_km)}, ${car.fuel}, ${car.gearbox}${car.power_hp ? `, ${car.power_hp} CP` : ""}, ${formatPrice(Number(car.price), car.currency)}. Adusă din Germania, verificată, acte la zi. Vezi-o pe DN1, Luna de Sus (Florești), lângă Cluj-Napoca.`,
       158,
     );
     const cover = car.images?.[0] ? absolutePhotoUrl(car.images[0]) : null;
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/masini/$slug")({
         { name: "description", content: description },
         {
           name: "keywords",
-          content: `${car.make} ${car.model} second hand, ${car.make} ${car.model} ${car.year} de vânzare, mașini second hand Cluj, auto rulate Gilău, ${car.fuel} ${car.gearbox}`,
+          content: `${car.make} ${car.model} second hand, ${car.make} ${car.model} ${car.year} de vânzare, mașini second hand Cluj, auto rulate Florești Cluj, ${car.fuel} ${car.gearbox}`,
         },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
@@ -47,7 +47,7 @@ export const Route = createFileRoute("/masini/$slug")({
         ...(cover
           ? [
               { property: "og:image", content: cover },
-              { property: "og:image:alt", content: `${name} de vânzare la Bremen Auto Gilău` },
+              { property: "og:image:alt", content: `${name} de vânzare la Bremen Auto, DN1 Florești, Cluj` },
               { name: "twitter:image", content: cover },
             ]
           : []),
@@ -161,7 +161,7 @@ function CarPage() {
               {car.images[active] ? (
                 <img
                   src={photoUrl(car.images[active]!)}
-                  alt={`${title} ${car.year} de vânzare la Bremen Auto Gilău Cluj`}
+                  alt={`${title} ${car.year} de vânzare la Bremen Auto, DN1 Luna de Sus, Florești, Cluj`}
                   width={1200}
                   height={900}
                   className="size-full object-cover"

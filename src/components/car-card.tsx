@@ -18,7 +18,7 @@ export function CarCard({ car }: { car: Car }) {
         {cover ? (
           <img
             src={photoUrl(cover)}
-            alt={`${title} de vânzare la Bremen Auto Gilău, Cluj`}
+            alt={`${title} de vânzare la Bremen Auto, DN1 Florești, Cluj`}
             loading="lazy"
             className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
           />

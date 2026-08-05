@@ -83,11 +83,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Bremen Auto Gilău — mașini second hand din Germania, Cluj" },
+      { title: "Bremen Auto — mașini second hand din Germania, Cluj" },
       {
         name: "description",
         content:
-          "Parc auto în Gilău, județul Cluj: autoturisme rulate aduse din Germania, verificate, cu acte complete. Sună la 0751 692 335.",
+          "Parc auto pe DN1, Luna de Sus (Florești), jud. Cluj: autoturisme rulate aduse din Germania, verificate, cu acte complete. Sună la 0751 692 335.",
       },
       { name: "author", content: "Bremen Auto" },
       {
@@ -101,9 +101,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "theme-color", content: "#0f1115" },
       { name: "geo.region", content: "RO-CJ" },
-      { name: "geo.placename", content: "Gilău, Cluj" },
-      { name: "geo.position", content: "46.7539;23.3703" },
-      { name: "ICBM", content: "46.7539, 23.3703" },
+      { name: "geo.placename", content: "Luna de Sus, Florești, Cluj" },
+      { name: "geo.position", content: "46.752312;23.432062" },
+      { name: "ICBM", content: "46.752312, 23.432062" },
       { property: "og:site_name", content: "Bremen Auto" },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "ro_RO" },

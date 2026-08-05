@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema } from "@/lib/seo";
 
-const TITLE = "Despre Bremen Auto — auto rulate Gilău, Cluj";
+const TITLE = "Despre Bremen Auto — auto rulate Florești, Cluj";
 const DESCRIPTION =
-  "Bremen Auto, parc auto în Gilău (Cluj): mașini second hand din Germania, istoric de kilometraj verificat, dosar daune, carte service și acte complete.";
+  "Bremen Auto, parc auto pe DN1 în Luna de Sus (Florești, Cluj): mașini second hand din Germania, kilometraj verificat, dosar daune, carte service, acte complete.";
 
 export const Route = createFileRoute("/despre")({
   head: () => ({
@@ -47,7 +47,7 @@ function AboutPage() {
 
       <div className="mt-8 space-y-5 text-base leading-relaxed text-muted-foreground">
         <p>
-          {SITE.name} este un parc auto din Gilău, județul Cluj, specializat în autoturisme rulate
+          {SITE.name} este un parc auto pe DN1, în Luna de Sus (comuna Florești), județul Cluj, specializat în autoturisme rulate
           aduse direct din Germania. Alegem mașinile una câte una, la fața locului: verificăm
           istoricul de kilometraj, dosarul de daune și cartea de service înainte să le urcăm pe
           platformă.
@@ -68,7 +68,7 @@ function AboutPage() {
         {[
           ["100%", "mașini verificate înainte de a intra în parc"],
           ["Germania", "sursa principală a autoturismelor din stoc"],
-          ["Gilău · Cluj", "parcul unde poți veni la probă de drum"],
+          ["DN1 Luna de Sus · Cluj", "parcul unde poți veni la probă de drum"],
         ].map(([big, small]) => (
           <div key={big}>
             <p className="font-display text-2xl font-extrabold text-primary">{big}</p>

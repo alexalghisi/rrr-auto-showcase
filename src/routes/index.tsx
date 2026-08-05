@@ -14,9 +14,9 @@ const carsQuery = queryOptions({
   queryFn: () => listPublicCars(),
 });
 
-const TITLE = "Mașini second hand Cluj — Bremen Auto Gilău";
+const TITLE = "Mașini second hand Cluj — Bremen Auto Florești";
 const DESCRIPTION =
-  "Mașini second hand aduse din Germania, în Gilău lângă Cluj-Napoca: km verificați, carte service, acte complete, probă de drum. Stoc actualizat zilnic.";
+  "Mașini second hand aduse din Germania, pe DN1 în Luna de Sus (Florești), lângă Cluj-Napoca: km verificați, carte service, acte complete, probă de drum.";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(carsQuery),
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/")({
       {
         name: "keywords",
         content:
-          "masini second hand Cluj, auto rulate Cluj-Napoca, masini din Germania, parc auto Gilau, dealer auto Cluj, Bremen Auto",
+          "masini second hand Cluj, auto rulate Cluj-Napoca, masini din Germania, parc auto Floresti, parc auto Luna de Sus, dealer auto Cluj, Bremen Auto",
       },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
@@ -96,21 +96,21 @@ function HomePage() {
       <section className="relative overflow-hidden">
         <img
           src={heroImage}
-          alt="Parc auto Bremen Auto din Gilău, județul Cluj, cu mașini rulate aduse din Germania"
+          alt="Parc auto Bremen Auto pe DN1, Luna de Sus, comuna Florești, județul Cluj, cu mașini rulate aduse din Germania"
           width={1920}
           height={1088}
           className="absolute inset-0 size-full object-cover"
         />
         <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
         <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-24 sm:px-6 sm:pb-28 sm:pt-32">
-          <p className="eyebrow">Gilău · Cluj-Napoca · din Germania</p>
+          <p className="eyebrow">Florești · Cluj-Napoca · din Germania</p>
           <h1 className="mt-4 max-w-3xl font-display text-4xl leading-[1.05] sm:text-6xl">
             Mașini second hand în Cluj, alese cu grijă din{" "}
             <span className="text-gradient-primary">Germania</span>
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {SITE.name} aduce autoturisme rulate cu istoric verificat, carte service și acte
-            complete. Le vezi pe loc în parcul nostru din Gilău, la 15 minute de Cluj-Napoca.
+            complete. Le vezi pe loc în parcul nostru de pe DN1, Luna de Sus, la 10 minute de Cluj-Napoca.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
@@ -190,7 +190,7 @@ function HomePage() {
                 },
                 {
                   t: "Vezi mașina și faci proba de drum",
-                  d: "Te așteptăm în Gilău. Poți veni cu mecanicul tău sau mergem împreună la un service pentru verificare.",
+                  d: "Te așteptăm pe DN1, în Luna de Sus. Poți veni cu mecanicul tău sau mergem împreună la un service pentru verificare.",
                 },
                 {
                   t: "Semnezi actele și pleci cu ea",

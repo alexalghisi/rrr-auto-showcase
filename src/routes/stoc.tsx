@@ -20,9 +20,9 @@ const carsQuery = queryOptions({
   queryFn: () => listPublicCars(),
 });
 
-const TITLE = "Stoc mașini second hand Cluj | Auto rulate Bremen Auto Gilău";
+const TITLE = "Stoc mașini second hand Cluj | Bremen Auto Florești";
 const DESCRIPTION =
-  "Stoc actualizat de mașini second hand la Bremen Auto Gilău, lângă Cluj-Napoca: an, kilometraj, motorizare și preț. Auto rulate din Germania, verificate.";
+  "Stoc actualizat de mașini second hand la Bremen Auto, DN1 Luna de Sus lângă Cluj-Napoca: an, kilometraj, motorizare și preț. Auto rulate din Germania.";
 
 export const Route = createFileRoute("/stoc")({
   loader: ({ context }) => context.queryClient.ensureQueryData(carsQuery),
@@ -40,7 +40,7 @@ export const Route = createFileRoute("/stoc")({
       {
         name: "keywords",
         content:
-          "masini second hand Cluj, autoturisme rulate Cluj-Napoca, masini din Germania de vanzare, parc auto Gilau, stoc masini Cluj",
+          "masini second hand Cluj, autoturisme rulate Cluj-Napoca, masini din Germania de vanzare, parc auto Floresti, stoc masini Cluj",
       },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
@@ -61,7 +61,7 @@ export const Route = createFileRoute("/stoc")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "ItemList",
-          name: "Stoc mașini second hand Bremen Auto Gilău",
+          name: "Stoc mașini second hand Bremen Auto Florești, Cluj",
           numberOfItems: (loaderData ?? []).length,
           itemListElement: (loaderData ?? []).map((car, index: number) => ({
             "@type": "ListItem",
@@ -112,11 +112,11 @@ function StockPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-      <p className="eyebrow">Parc auto Gilău</p>
+      <p className="eyebrow">Parc auto Florești · DN1</p>
       <h1 className="mt-2 text-4xl sm:text-5xl">Mașini second hand în stoc</h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
         {cars.length} autoturisme rulate disponibile la {SITE.name}. Toate pot fi văzute și testate
-        în parcul din Gilău, județul Cluj.
+        în parcul de pe DN1, Luna de Sus, comuna Florești, județul Cluj.
       </p>
 
       <div className="surface-card mt-8 grid gap-3 rounded-xl p-4 sm:grid-cols-2 lg:grid-cols-4">
