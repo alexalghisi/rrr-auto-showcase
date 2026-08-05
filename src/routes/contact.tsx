@@ -64,6 +64,20 @@ function ContactPage() {
               </div>
             </li>
             <li className="flex gap-4">
+              <MessageCircle className="mt-1 size-5 shrink-0 text-primary" />
+              <div>
+                <p className="text-sm text-muted-foreground">WhatsApp</p>
+                <a
+                  href={whatsappUrl("Bună ziua! Am văzut site-ul Bremen Auto și vreau detalii despre o mașină.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-display text-xl"
+                >
+                  {SITE.phone}
+                </a>
+              </div>
+            </li>
+            <li className="flex gap-4">
               <Clock className="mt-1 size-5 shrink-0 text-primary" />
               <div>
                 <p className="text-sm text-muted-foreground">Program</p>
@@ -78,12 +92,22 @@ function ContactPage() {
                 <Phone className="size-4" /> Sună acum
               </a>
             </Button>
+            <Button asChild size="lg" variant="secondary">
+              <a
+                href={whatsappUrl("Bună ziua! Am văzut site-ul Bremen Auto și vreau detalii despre o mașină.")}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle className="size-4" /> Scrie pe WhatsApp
+              </a>
+            </Button>
             <Button asChild size="lg" variant="outline">
               <a href={SITE.facebook} target="_blank" rel="noopener noreferrer">
                 <Facebook className="size-4" /> Facebook
               </a>
             </Button>
           </div>
+
         </div>
 
         <div className="surface-card overflow-hidden rounded-xl">
