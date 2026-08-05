@@ -143,6 +143,27 @@ export type Database = {
         }
         Relationships: []
       }
+      page_views: {
+        Row: {
+          car_slug: string | null
+          created_at: string
+          id: string
+          path: string
+        }
+        Insert: {
+          car_slug?: string | null
+          created_at?: string
+          id?: string
+          path: string
+        }
+        Update: {
+          car_slug?: string | null
+          created_at?: string
+          id?: string
+          path?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

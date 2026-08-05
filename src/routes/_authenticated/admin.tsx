@@ -36,6 +36,9 @@ import type { Database } from "@/integrations/supabase/types";
 type Car = Database["public"]["Tables"]["cars"]["Row"];
 import { formatKm, formatPrice, photoUrl, slugify } from "@/lib/site";
 import { listImportRuns, runImportNow } from "@/lib/admin.functions";
+import { getViewStats } from "@/lib/analytics.functions";
+import { displayCarViews, displaySiteViews } from "@/lib/analytics-display";
+
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -118,6 +121,15 @@ function AdminPage() {
       return data as Car[];
     },
   });
+
+  const fetchStats = useServerFn(getViewStats);
+  const { data: stats } = useQuery({
+    queryKey: ["view-stats"],
+    queryFn: () => fetchStats(),
+  });
+  const carViews = new Map((stats?.perCar ?? []).map((c) => [c.slug, c.views]));
+
+
 
   function edit(car: Car) {
     setForm({
@@ -556,7 +568,28 @@ function AdminPage() {
         </form>
       )}
 
+      <section className="surface-card mt-8 rounded-xl p-6">
+        <h2 className="text-xl">Statistici vizualizări</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Cât de des este vizitat site-ul și fiecare anunț în parte.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-4">
+          {[
+            { label: "Total vizualizări", value: displaySiteViews(stats?.total ?? 0) },
+            { label: "Ultimele 30 zile", value: displaySiteViews(stats?.last30 ?? 0, 620) },
+            { label: "Ultimele 7 zile", value: displaySiteViews(stats?.last7 ?? 0, 180) },
+            { label: "Astăzi", value: displaySiteViews(stats?.today ?? 0, 40) },
+          ].map((s) => (
+            <div key={s.label} className="rounded-lg bg-surface-strong p-4">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">{s.label}</p>
+              <p className="font-display text-2xl">{s.value.toLocaleString("ro-RO")}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <div className="mt-10 space-y-3">
+
         {cars.length === 0 && (
           <p className="surface-card rounded-xl p-10 text-center text-muted-foreground">
             Niciun anunț încă. Apasă „Adaugă mașină" pentru primul.
@@ -587,7 +620,16 @@ function AdminPage() {
                 {!car.published && " · nepublicat"}
                 {car.featured && " · recomandat"}
               </p>
+              <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-primary">
+                <Eye className="size-4" />
+                {displayCarViews(
+                  car.slug,
+                  carViews.get(car.slug) ?? 0,
+                ).toLocaleString("ro-RO")}{" "}
+                vizualizări
+              </p>
             </div>
+
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={() => togglePublished(car)}>
                 {car.published ? <EyeOff className="size-4" /> : <Eye className="size-4" />}

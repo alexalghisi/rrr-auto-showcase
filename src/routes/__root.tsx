@@ -15,6 +15,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
+import { trackView } from "@/lib/analytics.functions";
+
 
 function NotFoundComponent() {
   return (
@@ -142,6 +144,16 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const chrome = !pathname.startsWith("/admin") && !pathname.startsWith("/auth");
+
+  useEffect(() => {
+    if (!chrome) return;
+    const carSlug = pathname.startsWith("/masini/")
+      ? decodeURIComponent(pathname.slice("/masini/".length))
+      : null;
+    void trackView({ data: { path: pathname, carSlug } }).catch(() => {});
+  }, [pathname, chrome]);
+
+
 
   return (
     <QueryClientProvider client={queryClient}>
