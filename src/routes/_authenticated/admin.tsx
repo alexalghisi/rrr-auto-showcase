@@ -35,6 +35,7 @@ import type { Database } from "@/integrations/supabase/types";
 
 type Car = Database["public"]["Tables"]["cars"]["Row"];
 import { formatKm, formatPrice, photoUrl, slugify } from "@/lib/site";
+import { PhotoLightbox, type LightboxState } from "@/components/photo-lightbox";
 import { listImportRuns, runImportNow } from "@/lib/admin.functions";
 import { getViewStats } from "@/lib/analytics.functions";
 import { displayCarViews, displaySiteViews } from "@/lib/analytics-display";
@@ -109,6 +110,7 @@ function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [lightbox, setLightbox] = useState<LightboxState>(null);
 
   const { data: cars = [], refetch } = useQuery({
     queryKey: ["cars", "admin"],
@@ -479,8 +481,16 @@ function AdminPage() {
                   <img
                     src={photoUrl(img)}
                     alt={`Fotografie ${i + 1}`}
-                    className="size-full object-cover"
+                    onClick={(e) =>
+                      setLightbox({
+                        images: form.images,
+                        index: i,
+                        rect: e.currentTarget.getBoundingClientRect(),
+                      })
+                    }
+                    className="size-full cursor-zoom-in object-cover transition-transform duration-200 hover:scale-[1.06]"
                   />
+
                   <span className="absolute left-1 top-1 rounded bg-background/85 px-1 py-0.5 text-[10px] leading-none text-muted-foreground">
                     {i === 0 ? "Principală" : i + 1}
                   </span>
@@ -644,6 +654,8 @@ function AdminPage() {
           </div>
         ))}
       </div>
+
+      <PhotoLightbox state={lightbox} onClose={() => setLightbox(null)} />
     </div>
   );
 }

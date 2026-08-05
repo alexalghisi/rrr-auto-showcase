@@ -79,18 +79,35 @@ async function runActor(actor: string, input: Json): Promise<Json[]> {
   return parsed.filter((item): item is Json => Boolean(item && typeof item === "object"));
 }
 
+function looksLikeImage(url: string): boolean {
+  if (!/^https?:\/\//i.test(url)) return false;
+  if (/facebook\.com\/(?!.*\.(jpg|jpeg|png|webp))/i.test(url)) return false; // linkuri de postare, nu poze
+  if (/olx\.ro\//i.test(url)) return false;
+  return (
+    /\.(jpg|jpeg|png|webp|avif)(\?|;|$)/i.test(url) ||
+    /(olxcdn|fbcdn|fbsbx|scontent)/i.test(url) ||
+    /\/image(;|\?|$)/i.test(url)
+  );
+}
+
 function imageUrls(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
-  return value.flatMap((entry) => {
-    if (typeof entry === "string") return [entry];
-    if (!entry || typeof entry !== "object") return [];
-    const item = entry as Json;
-    const nestedImage = item["image"] && typeof item["image"] === "object" ? item["image"] as Json : {};
-    const photoImage = item["photo_image"] && typeof item["photo_image"] === "object" ? item["photo_image"] as Json : {};
-    const url = asText(item["thumbnail"] ?? item["photoUrl"] ?? nestedImage["uri"] ?? photoImage["uri"] ?? item["url"]);
-    return url ? [url] : [];
-  });
+  return value
+    .flatMap((entry) => {
+      if (typeof entry === "string") return [entry];
+      if (!entry || typeof entry !== "object") return [];
+      const item = entry as Json;
+      const nestedImage = item["image"] && typeof item["image"] === "object" ? (item["image"] as Json) : {};
+      const photoImage =
+        item["photo_image"] && typeof item["photo_image"] === "object" ? (item["photo_image"] as Json) : {};
+      const url = asText(
+        nestedImage["uri"] ?? photoImage["uri"] ?? item["thumbnail"] ?? item["photoUrl"] ?? item["imageUrl"] ?? item["url"],
+      );
+      return url ? [url] : [];
+    })
+    .filter(looksLikeImage);
 }
+
 
 function paramMap(item: Json): Record<string, string> {
   const list = Array.isArray(item["params"]) ? (item["params"] as Json[]) : [];

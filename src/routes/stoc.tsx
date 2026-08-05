@@ -22,7 +22,7 @@ const carsQuery = queryOptions({
 
 const TITLE = "Stoc mașini second hand Cluj | Auto rulate Bremen Auto Gilău";
 const DESCRIPTION =
-  "Toate mașinile second hand disponibile la Bremen Auto Gilău, lângă Cluj-Napoca: an, kilometraj, motorizare și preț. Autoturisme rulate din Germania, verificate.";
+  "Stoc actualizat de mașini second hand la Bremen Auto Gilău, lângă Cluj-Napoca: an, kilometraj, motorizare și preț. Auto rulate din Germania, verificate.";
 
 export const Route = createFileRoute("/stoc")({
   loader: ({ context }) => context.queryClient.ensureQueryData(carsQuery),
@@ -33,18 +33,26 @@ export const Route = createFileRoute("/stoc")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/stoc" },
+      { property: "og:site_name", content: SITE.name },
+      { property: "og:locale", content: "ro_RO" },
+      { property: "og:url", content: "https://bremenauto.ro/stoc" },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "keywords",
+        content:
+          "masini second hand Cluj, autoturisme rulate Cluj-Napoca, masini din Germania de vanzare, parc auto Gilau, stoc masini Cluj",
+      },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
-    links: [{ rel: "canonical", href: "/stoc" }],
+    links: [{ rel: "canonical", href: "https://bremenauto.ro/stoc" }],
     scripts: [
       {
         type: "application/ld+json",
         children: JSON.stringify(
           breadcrumbSchema([
-            { name: "Acasă", path: "/" },
-            { name: "Stoc mașini", path: "/stoc" },
+            { name: "Acasă", path: "https://bremenauto.ro/" },
+            { name: "Stoc mașini", path: "https://bremenauto.ro/stoc" },
           ]),
         ),
       },
@@ -58,7 +66,7 @@ export const Route = createFileRoute("/stoc")({
           itemListElement: (loaderData ?? []).map((car, index: number) => ({
             "@type": "ListItem",
             position: index + 1,
-            url: `/masini/${car.slug}`,
+            url: `https://bremenauto.ro/masini/${car.slug}`,
             name: `${car.make} ${car.model} ${car.year}`,
           })),
         }),

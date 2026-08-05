@@ -21,9 +21,23 @@ export function whatsappUrl(message?: string): string {
 
 export function photoUrl(path: string): string {
   if (!path) return "";
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    // Fotografiile externe (OLX / Facebook) se servesc prin proxy-ul propriu,
+    // altfel sunt blocate la hotlinking și apar rupte în browser.
+    const normalized = path
+      .replace(/^http:\/\//, "https://")
+      .replace(/;s=0x0$/, ";s=1000x700");
+    return `/api/public/img?u=${encodeURIComponent(normalized)}`;
+  }
   return `/api/public/photo/${path.replace(/^\/+/, "")}`;
 }
+
+/** Variantă absolută, pentru og:image și structured data. */
+export function absolutePhotoUrl(path: string): string {
+  const url = photoUrl(path);
+  return url.startsWith("http") ? url : `https://bremenauto.ro${url}`;
+}
+
 
 export function formatPrice(price: number, currency = "EUR"): string {
   return new Intl.NumberFormat("ro-RO", {

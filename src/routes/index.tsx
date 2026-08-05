@@ -16,7 +16,7 @@ const carsQuery = queryOptions({
 
 const TITLE = "Mașini second hand Cluj — Bremen Auto Gilău";
 const DESCRIPTION =
-  "Mașini second hand din Germania la Bremen Auto Gilău, lângă Cluj-Napoca: verificate tehnic, carte service și acte complete. Vezi stocul actualizat.";
+  "Mașini second hand aduse din Germania, în Gilău lângă Cluj-Napoca: km verificați, carte service, acte complete, probă de drum. Stoc actualizat zilnic.";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(carsQuery),
@@ -33,11 +33,13 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "ro_RO" },
-      { property: "og:url", content: "/" },
+      { property: "og:site_name", content: SITE.name },
+      { property: "og:url", content: "https://bremenauto.ro/" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: "https://bremenauto.ro/" }],
     scripts: [
       { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
       {
@@ -50,7 +52,7 @@ export const Route = createFileRoute("/")({
           publisher: { "@id": ORG_ID },
           potentialAction: {
             "@type": "SearchAction",
-            target: { "@type": "EntryPoint", urlTemplate: "/stoc?q={search_term_string}" },
+            target: { "@type": "EntryPoint", urlTemplate: "https://bremenauto.ro/stoc?q={search_term_string}" },
             "query-input": "required name=search_term_string",
           },
         }),

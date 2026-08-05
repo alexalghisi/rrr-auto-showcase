@@ -4,7 +4,7 @@ import { Phone, MapPin, Check, ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { getPublicCar } from "@/lib/cars.functions";
-import { SITE, formatKm, formatPrice, photoUrl } from "@/lib/site";
+import { SITE, absolutePhotoUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
 
 export const Route = createFileRoute("/masini/$slug")({
@@ -22,21 +22,38 @@ export const Route = createFileRoute("/masini/$slug")({
     const suffix = " | Bremen Auto Cluj";
     const title = `${clamp(name, 59 - suffix.length)}${suffix}`;
     const description = clamp(
-      `${name}, ${formatKm(car.mileage_km)}, ${car.fuel}, ${car.gearbox}${car.power_hp ? `, ${car.power_hp} CP` : ""} — ${formatPrice(Number(car.price), car.currency)}. Second hand de vânzare la Bremen Auto, Gilău, Cluj.`,
+      `${name} — ${formatKm(car.mileage_km)}, ${car.fuel}, ${car.gearbox}${car.power_hp ? `, ${car.power_hp} CP` : ""}, ${formatPrice(Number(car.price), car.currency)}. Adusă din Germania, verificată, acte la zi. Vezi-o în Gilău, lângă Cluj-Napoca.`,
       158,
     );
+    const cover = car.images?.[0] ? absolutePhotoUrl(car.images[0]) : null;
+    const url = `https://bremenauto.ro/masini/${params.slug}`;
     return {
       meta: [
         { title },
         { name: "description", content: description },
+        {
+          name: "keywords",
+          content: `${car.make} ${car.model} second hand, ${car.make} ${car.model} ${car.year} de vânzare, mașini second hand Cluj, auto rulate Gilău, ${car.fuel} ${car.gearbox}`,
+        },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "product" },
-        { property: "og:url", content: `/masini/${params.slug}` },
+        { property: "og:locale", content: "ro_RO" },
+        { property: "og:site_name", content: "Bremen Auto" },
+        { property: "og:url", content: url },
+        { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
+        ...(cover
+          ? [
+              { property: "og:image", content: cover },
+              { property: "og:image:alt", content: `${name} de vânzare la Bremen Auto Gilău` },
+              { name: "twitter:image", content: cover },
+            ]
+          : []),
       ],
-      links: [{ rel: "canonical", href: `/masini/${params.slug}` }],
+      links: [{ rel: "canonical", href: url }],
+
       scripts: [
         {
           type: "application/ld+json",
@@ -45,8 +62,8 @@ export const Route = createFileRoute("/masini/$slug")({
             "@type": "Car",
             name: `${car.make} ${car.model} ${car.year}`,
             description,
-            url: `/masini/${params.slug}`,
-            image: (car.images ?? []).slice(0, 6).map((p: string) => photoUrl(p)),
+            url,
+            image: (car.images ?? []).slice(0, 6).map((p: string) => absolutePhotoUrl(p)),
             brand: { "@type": "Brand", name: car.make },
             model: car.model,
             vehicleModelDate: String(car.year),
@@ -98,9 +115,9 @@ export const Route = createFileRoute("/masini/$slug")({
           type: "application/ld+json",
           children: JSON.stringify(
             breadcrumbSchema([
-              { name: "Acasă", path: "/" },
-              { name: "Stoc mașini", path: "/stoc" },
-              { name: `${car.make} ${car.model} ${car.year}`, path: `/masini/${params.slug}` },
+              { name: "Acasă", path: "https://bremenauto.ro/" },
+              { name: "Stoc mașini", path: "https://bremenauto.ro/stoc" },
+              { name: `${car.make} ${car.model} ${car.year}`, path: url },
             ]),
           ),
         },
