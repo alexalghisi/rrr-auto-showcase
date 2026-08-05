@@ -143,6 +143,16 @@ function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const chrome = !pathname.startsWith("/admin") && !pathname.startsWith("/auth");
 
+  useEffect(() => {
+    if (!chrome) return;
+    const carSlug = pathname.startsWith("/masini/")
+      ? decodeURIComponent(pathname.slice("/masini/".length))
+      : null;
+    void trackView({ data: { path: pathname, carSlug } }).catch(() => {});
+  }, [pathname, chrome]);
+
+
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
