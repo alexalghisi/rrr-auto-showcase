@@ -56,9 +56,14 @@ export function CarCard({ car }: { car: Car }) {
         </div>
 
         <div className="mt-5 flex items-end justify-between border-t border-border pt-4">
-          <span className="font-display text-2xl font-extrabold text-primary">
-            {formatPrice(Number(car.price), car.currency)}
-          </span>
+          <div>
+            <span className="block font-display text-2xl font-extrabold text-primary">
+              {formatPrice(Number(car.price), car.currency)}
+            </span>
+            <span className="mt-0.5 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
+              Cash · în rate
+            </span>
+          </div>
           <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground">
             Vezi detalii →
           </span>
