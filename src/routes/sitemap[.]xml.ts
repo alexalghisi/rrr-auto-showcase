@@ -4,8 +4,8 @@ import type {} from "@tanstack/react-start";
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
-      GET: async ({ request }) => {
-        const BASE_URL = new URL(request.url).origin;
+      GET: async () => {
+        const BASE_URL = "https://bremenauto.ro";
         const { createPublicClient } = await import("@/lib/cars.server");
         const { data } = await createPublicClient()
           .from("cars")
