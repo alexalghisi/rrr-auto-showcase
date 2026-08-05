@@ -213,7 +213,7 @@ async function scrapeSource(source: SourceKey): Promise<ScrapedCar[]> {
     fetchDetails: true,
     maxListings: 40,
   });
-  return items.map(parseOlxItem).filter((car): car is ScrapedCar => Boolean(car));
+  return items.map(parseOlxItem).filter((car): car is ScrapedCar => Boolean(car) && isOwnListing("olx", car!.url));
 }
 
 export function fingerprintFor(car: { make: string; model: string; year: number; mileage_km: number; price: number }): string {
