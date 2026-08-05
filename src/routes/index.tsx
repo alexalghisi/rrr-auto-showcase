@@ -77,6 +77,20 @@ export const Route = createFileRoute("/")({
         }),
       },
       { type: "application/ld+json", children: JSON.stringify(faqSchema(HOME_FAQS)) },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Mașini second hand disponibile în Cluj",
+          itemListElement: (loaderData ?? []).slice(0, 12).map((car, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            url: `https://bremenauto.ro/masini/${car.slug}`,
+            name: [car.make, car.model, car.year].filter(Boolean).join(" "),
+          })),
+        }),
+      },
     ],
   }),
   component: HomePage,
