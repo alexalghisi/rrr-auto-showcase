@@ -105,6 +105,7 @@ function AdminPage() {
   const [form, setForm] = useState<FormState | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
 
   const { data: cars = [], refetch } = useQuery({
     queryKey: ["cars", "admin"],
