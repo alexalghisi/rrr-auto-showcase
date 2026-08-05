@@ -297,14 +297,28 @@ async function logRun(result: ImportResult) {
   });
 }
 
-/** Anunță motoarele de căutare că sitemap-ul s-a schimbat, după fiecare import cu mașini noi. */
-async function pingSearchEngines(): Promise<void> {
-  const sitemap = encodeURIComponent("https://bremenauto.ro/sitemap.xml");
-  const endpoints = [
-    `https://www.bing.com/ping?sitemap=${sitemap}`,
-    `https://www.google.com/ping?sitemap=${sitemap}`,
-  ];
-  await Promise.allSettled(endpoints.map((url) => fetch(url, { method: "GET" })));
+const INDEXNOW_KEY = "4b35420b66f24cb7b75389827394684d";
+
+/** Anunță motoarele de căutare (IndexNow: Bing, Yandex, Seznam) după fiecare import cu mașini noi. */
+async function pingSearchEngines(urls: string[] = []): Promise<void> {
+  const host = "bremenauto.ro";
+  const urlList = [`https://${host}/`, `https://${host}/stoc`, `https://${host}/sitemap.xml`, ...urls]
+    .filter((v, i, a) => a.indexOf(v) === i)
+    .slice(0, 500);
+
+  await Promise.allSettled([
+    fetch("https://api.indexnow.org/indexnow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({
+        host,
+        key: INDEXNOW_KEY,
+        keyLocation: `https://${host}/${INDEXNOW_KEY}.txt`,
+        urlList,
+      }),
+    }),
+    fetch(`https://www.bing.com/ping?sitemap=${encodeURIComponent(`https://${host}/sitemap.xml`)}`),
+  ]);
 }
 
 export async function importAll(): Promise<ImportResult[]> {
