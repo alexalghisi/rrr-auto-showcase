@@ -20,6 +20,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StocRouteImport } from './routes/stoc'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as MasiniSlugRouteImport } from './routes/masini.$slug'
 import { Route as ApiPublicImgRouteImport } from './routes/api/public/img'
 import { Route as ApiPublicHooksImportCarsRouteImport } from './routes/api/public/hooks/import-cars'
@@ -79,6 +80,11 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
   path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MasiniSlugRoute = MasiniSlugRouteImport.update({
   id: '/masini/$slug',
   path: '/masini/$slug',
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
+    | '/blog/$slug'
     | '/masini/$slug'
     | '/blog/'
     | '/api/public/img'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
+    | '/blog/$slug'
     | '/masini/$slug'
     | '/blog'
     | '/api/public/img'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/stoc'
     | '/_authenticated/admin'
+    | '/blog/$slug'
     | '/masini/$slug'
     | '/blog/'
     | '/api/public/img'
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StocRoute: typeof StocRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   MasiniSlugRoute: typeof MasiniSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ApiPublicImgRoute: typeof ApiPublicImgRoute
@@ -299,6 +312,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/masini/$slug': {
       id: '/masini/$slug'
       path: '/masini/$slug'
@@ -351,6 +371,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StocRoute: StocRoute,
+  BlogSlugRoute: BlogSlugRoute,
   MasiniSlugRoute: MasiniSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ApiPublicImgRoute: ApiPublicImgRoute,
