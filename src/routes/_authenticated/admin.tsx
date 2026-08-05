@@ -620,7 +620,16 @@ function AdminPage() {
                 {!car.published && " · nepublicat"}
                 {car.featured && " · recomandat"}
               </p>
+              <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-primary">
+                <Eye className="size-4" />
+                {displayCarViews(
+                  car.slug,
+                  carViews.get(car.slug) ?? 0,
+                ).toLocaleString("ro-RO")}{" "}
+                vizualizări
+              </p>
             </div>
+
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={() => togglePublished(car)}>
                 {car.published ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
