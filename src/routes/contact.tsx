@@ -22,6 +22,18 @@ export const Route = createFileRoute("/contact")({
       { name: "twitter:description", content: DESCRIPTION },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
+    scripts: [
+      { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbSchema([
+            { name: "Acasă", path: "/" },
+            { name: "Contact", path: "/contact" },
+          ]),
+        ),
+      },
+    ],
   }),
   component: ContactPage,
 });
