@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { absolutePhotoUrl } from "@/lib/site";
 import { LANDING_SLUGS } from "@/lib/landing-pages";
+import { BLOG_POSTS } from "@/lib/blog";
 
 const BASE_URL = "https://bremenauto.ro";
 
@@ -43,6 +44,13 @@ export const Route = createFileRoute("/sitemap.xml")({
             path: `/${slug}`,
             changefreq: "weekly",
             priority: "0.85",
+          })),
+          { path: "/blog", changefreq: "weekly", priority: "0.7" },
+          ...BLOG_POSTS.map((post) => ({
+            path: `/blog/${post.slug}`,
+            changefreq: "monthly",
+            priority: "0.7",
+            lastmod: post.updated,
           })),
           ...cars.map((c) => {
             const title = [c.make, c.model, c.trim, c.year].filter(Boolean).join(" ");
