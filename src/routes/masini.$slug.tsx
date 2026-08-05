@@ -109,7 +109,7 @@ function CarPage() {
 
           {car.images.length > 1 && (
             <div className="mt-3 grid grid-cols-5 gap-2">
-              {car.images.map((img, i) => (
+              {car.images.map((img: string, i: number) => (
                 <button
                   key={img}
                   type="button"
@@ -142,7 +142,7 @@ function CarPage() {
             <section className="mt-10">
               <h2 className="text-2xl">Dotări</h2>
               <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                {car.features.map((f) => (
+                {car.features.map((f: string) => (
                   <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Check className="size-4 shrink-0 text-primary" /> {f}
                   </li>
