@@ -479,8 +479,16 @@ function AdminPage() {
                   <img
                     src={photoUrl(img)}
                     alt={`Fotografie ${i + 1}`}
-                    className="size-full object-cover"
+                    onClick={(e) =>
+                      setLightbox({
+                        images: form.images,
+                        index: i,
+                        rect: e.currentTarget.getBoundingClientRect(),
+                      })
+                    }
+                    className="size-full cursor-zoom-in object-cover transition-transform duration-200 hover:scale-[1.06]"
                   />
+
                   <span className="absolute left-1 top-1 rounded bg-background/85 px-1 py-0.5 text-[10px] leading-none text-muted-foreground">
                     {i === 0 ? "Principală" : i + 1}
                   </span>
