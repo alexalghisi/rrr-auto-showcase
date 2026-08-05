@@ -35,6 +35,7 @@ import type { Database } from "@/integrations/supabase/types";
 
 type Car = Database["public"]["Tables"]["cars"]["Row"];
 import { formatKm, formatPrice, photoUrl, slugify } from "@/lib/site";
+import { PhotoLightbox, type LightboxState } from "@/components/photo-lightbox";
 import { listImportRuns, runImportNow } from "@/lib/admin.functions";
 import { getViewStats } from "@/lib/analytics.functions";
 import { displayCarViews, displaySiteViews } from "@/lib/analytics-display";
@@ -109,6 +110,7 @@ function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [lightbox, setLightbox] = useState<LightboxState>(null);
 
   const { data: cars = [], refetch } = useQuery({
     queryKey: ["cars", "admin"],
@@ -652,6 +654,8 @@ function AdminPage() {
           </div>
         ))}
       </div>
+
+      <PhotoLightbox state={lightbox} onClose={() => setLightbox(null)} />
     </div>
   );
 }
