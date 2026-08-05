@@ -19,6 +19,18 @@ export const Route = createFileRoute("/despre")({
       { name: "twitter:description", content: DESCRIPTION },
     ],
     links: [{ rel: "canonical", href: "/despre" }],
+    scripts: [
+      { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbSchema([
+            { name: "Acasă", path: "/" },
+            { name: "Despre noi", path: "/despre" },
+          ]),
+        ),
+      },
+    ],
   }),
   component: AboutPage,
 });
