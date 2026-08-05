@@ -81,8 +81,8 @@ const advantages = [
   },
   {
     icon: HandCoins,
-    title: "Preț corect, fără surprize",
-    text: "Prețul afișat este prețul final negociabil. Acceptăm și mașina ta la schimb.",
+    title: "Cash sau în rate",
+    text: "Plătești cash, prin credit auto sau leasing. Te ajutăm cu actele și aprobarea rapidă, iar mașina ta o primim la schimb (buy-back).",
   },
 ];
 
@@ -112,6 +112,9 @@ function HomePage() {
             {SITE.name} aduce autoturisme rulate cu istoric verificat, carte service și acte
             complete. Le vezi pe loc în parcul nostru de pe DN1, Luna de Sus, la 10 minute de Cluj-Napoca.
           </p>
+          <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+            <HandCoins className="size-4" /> Cash sau în rate · credit auto & leasing
+          </div>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
               <Link to="/stoc">
@@ -194,7 +197,7 @@ function HomePage() {
                 },
                 {
                   t: "Semnezi actele și pleci cu ea",
-                  d: "Pregătim tot dosarul de înmatriculare. Acceptăm plata prin credit, leasing sau buy-back.",
+                  d: "Plătești cash sau în rate — credit auto, leasing sau buy-back. Pregătim tot dosarul de înmatriculare și te ajutăm cu aprobarea.",
                 },
               ].map((s, i) => (
                 <li key={s.t} className="flex gap-4">

@@ -228,6 +228,9 @@ function CarPage() {
             <p className="mt-5 font-display text-4xl font-extrabold text-primary">
               {formatPrice(Number(car.price), car.currency)}
             </p>
+            <p className="mt-2 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary">
+              <HandCoins className="size-4" /> Cash sau în rate — credit auto & leasing
+            </p>
             {car.status !== "disponibila" && (
               <p className="mt-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 {car.status === "rezervata" ? "Rezervată" : "Vândută"}
