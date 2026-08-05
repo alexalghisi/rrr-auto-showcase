@@ -193,10 +193,18 @@ function parseFacebookPost(item: Json): ScrapedCar | null {
   };
 }
 
+/** Ultima plasă de siguranță: acceptăm doar linkuri de pe pagina noastră de Facebook sau de pe OLX. */
+function isOwnListing(source: SourceKey, url: string): boolean {
+  if (source === "facebook") return /facebook\.com\/(bremenautocj|[^/]*bremenauto[^/]*)\b/i.test(url);
+  return /(^|\.)olx\.ro\//i.test(url);
+}
+
 async function scrapeSource(source: SourceKey): Promise<ScrapedCar[]> {
   if (source === "facebook") {
     const items = await runActor(FACEBOOK_ACTOR, { startUrls: [{ url: SOURCES.facebook }], resultsLimit: 20 });
-    return items.map(parseFacebookPost).filter((car): car is ScrapedCar => Boolean(car));
+    return items
+      .map(parseFacebookPost)
+      .filter((car): car is ScrapedCar => Boolean(car) && isOwnListing("facebook", car!.url));
   }
   const items = await runActor(OLX_ACTOR, {
     mode: "search",
@@ -205,7 +213,7 @@ async function scrapeSource(source: SourceKey): Promise<ScrapedCar[]> {
     fetchDetails: true,
     maxListings: 40,
   });
-  return items.map(parseOlxItem).filter((car): car is ScrapedCar => Boolean(car));
+  return items.map(parseOlxItem).filter((car): car is ScrapedCar => Boolean(car) && isOwnListing("olx", car!.url));
 }
 
 export function fingerprintFor(car: { make: string; model: string; year: number; mileage_km: number; price: number }): string {
