@@ -3,7 +3,20 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, LogOut, Upload, X, Eye, EyeOff, RefreshCw } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  LogOut,
+  Upload,
+  X,
+  Eye,
+  EyeOff,
+  RefreshCw,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,6 +105,7 @@ function AdminPage() {
   const [form, setForm] = useState<FormState | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
 
   const { data: cars = [], refetch } = useQuery({
     queryKey: ["cars", "admin"],
@@ -244,6 +258,19 @@ function AdminPage() {
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((f) => (f ? { ...f, [key]: value } : f));
+
+  function moveImage(from: number | null, to: number) {
+    if (from === null || from === to) return;
+    setForm((f) => {
+      if (!f) return f;
+      const images = [...f.images];
+      const [moved] = images.splice(from, 1);
+      if (moved === undefined) return f;
+      images.splice(to, 0, moved);
+      return { ...f, images };
+    });
+    setDragIndex(null);
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -426,8 +453,53 @@ function AdminPage() {
             <Label>Fotografii</Label>
             <div className="mt-2 flex flex-wrap gap-3">
               {form.images.map((img, i) => (
-                <div key={img} className="relative size-24 overflow-hidden rounded-md border border-border">
-                  <img src={photoUrl(img)} alt={`Fotografie ${i + 1}`} className="size-full object-cover" />
+                <div
+                  key={img}
+                  draggable
+                  onDragStart={() => setDragIndex(i)}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={() => moveImage(dragIndex, i)}
+                  onDragEnd={() => setDragIndex(null)}
+                  className={`group relative size-28 cursor-grab overflow-hidden rounded-md border active:cursor-grabbing ${
+                    i === 0 ? "border-primary ring-1 ring-primary" : "border-border"
+                  } ${dragIndex === i ? "opacity-50" : ""}`}
+                >
+                  <img
+                    src={photoUrl(img)}
+                    alt={`Fotografie ${i + 1}`}
+                    className="size-full object-cover"
+                  />
+                  <span className="absolute left-1 top-1 rounded bg-background/85 px-1 py-0.5 text-[10px] leading-none text-muted-foreground">
+                    {i === 0 ? "Principală" : i + 1}
+                  </span>
+                  <div className="absolute inset-x-0 bottom-0 flex justify-center gap-1 bg-background/85 p-1 opacity-0 transition group-hover:opacity-100">
+                    <button
+                      type="button"
+                      aria-label="Mută la stânga"
+                      disabled={i === 0}
+                      onClick={() => moveImage(i, i - 1)}
+                      className="rounded p-0.5 disabled:opacity-30"
+                    >
+                      <ChevronLeft className="size-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Setează ca imagine principală"
+                      onClick={() => moveImage(i, 0)}
+                      className="rounded p-0.5"
+                    >
+                      <Star className={`size-3.5 ${i === 0 ? "fill-primary text-primary" : ""}`} />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Mută la dreapta"
+                      disabled={i === form.images.length - 1}
+                      onClick={() => moveImage(i, i + 1)}
+                      className="rounded p-0.5 disabled:opacity-30"
+                    >
+                      <ChevronRight className="size-3.5" />
+                    </button>
+                  </div>
                   <button
                     type="button"
                     aria-label="Șterge fotografia"
@@ -443,7 +515,7 @@ function AdminPage() {
                   </button>
                 </div>
               ))}
-              <label className="flex size-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-dashed border-border text-xs text-muted-foreground hover:border-primary">
+              <label className="flex size-28 cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-dashed border-border text-xs text-muted-foreground hover:border-primary">
                 <Upload className="size-4" />
                 {uploading ? "Se încarcă..." : "Adaugă"}
                 <input
@@ -456,9 +528,11 @@ function AdminPage() {
               </label>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
-              Prima fotografie este imaginea principală a anunțului.
+              Trage fotografiile pentru a le reordona. Prima (marcată „Principală") apare în listă și
+              pe Google — o poți schimba cu butonul stea.
             </p>
           </div>
+
 
           <div className="mt-6 flex flex-wrap items-center gap-6">
             <label className="flex items-center gap-2 text-sm">

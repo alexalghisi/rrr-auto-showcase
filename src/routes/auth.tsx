@@ -29,13 +29,19 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  /** Permite autentificarea cu nume de utilizator (ex. „admin") sau cu email. */
+  function toEmail(value: string) {
+    const v = value.trim().toLowerCase();
+    return v.includes("@") ? v : `${v}@bremenauto.ro`;
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
       if (mode === "signup") {
         const { data, error } = await supabase.auth.signUp({
-          email,
+          email: toEmail(email),
           password,
           options: { emailRedirectTo: window.location.origin },
         });
@@ -46,7 +52,7 @@ function AuthPage() {
           return;
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({ email: toEmail(email), password });
         if (error) throw error;
       }
 
@@ -80,14 +86,15 @@ function AuthPage() {
 
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Utilizator sau email</Label>
             <Input
               id="email"
-              type="email"
+              type="text"
               required
+              placeholder="admin"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
+              autoComplete="username"
             />
           </div>
           <div className="space-y-1.5">
