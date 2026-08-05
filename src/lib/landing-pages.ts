@@ -48,6 +48,8 @@ interface ModelSeed {
   label: string;
   strengths: string;
   checks: string;
+  /** Filtru custom pentru categorii care nu sunt mărci (SUV, break, automate). */
+  match?: (car: Car) => boolean;
 }
 
 const MODEL_SEEDS: ModelSeed[] = [
@@ -221,6 +223,7 @@ const MODEL_SEEDS: ModelSeed[] = [
   {
     slug: "suv-second-hand-cluj",
     brand: "",
+    match: (car) => norm(car.body_type).includes("suv") || norm(car.body_type).includes("teren"),
     label: "SUV",
     strengths:
       "gardă la sol pentru drumurile de munte din Apuseni, siguranță sporită și portbagaj generos",
@@ -229,6 +232,7 @@ const MODEL_SEEDS: ModelSeed[] = [
   {
     slug: "break-second-hand-cluj",
     brand: "",
+    match: (car) => norm(car.body_type).includes("break") || norm(car.body_type).includes("combi"),
     label: "Break",
     strengths: "portbagaj mare pentru familie sau firmă, consum mic pe autostradă și confort pe drum lung",
     checks: "suspensia spate, hayonul electric și starea barelor de plafon",
@@ -236,6 +240,7 @@ const MODEL_SEEDS: ModelSeed[] = [
   {
     slug: "masini-automate-second-hand-cluj",
     brand: "",
+    match: (car) => norm(car.transmission).includes("automat"),
     label: "Mașini cu cutie automată",
     strengths: "confort maxim în traficul din Cluj-Napoca și uzură mai mică a ambreiajului",
     checks: "schimbul de ulei la cutie, mecatronica și comportamentul la schimbări la rece",
@@ -245,7 +250,7 @@ const MODEL_SEEDS: ModelSeed[] = [
 
 const modelPages: LandingPage[] = MODEL_SEEDS.map((seed) => {
   const name = seed.label;
-  const short = seed.model ? `${seed.brand} ${seed.model}` : seed.brand;
+  const short = seed.model ? `${seed.brand} ${seed.model}` : seed.brand || seed.label;
   return {
     slug: seed.slug,
     h1: `${name} second hand în ${CITY}`,
@@ -258,7 +263,7 @@ const modelPages: LandingPage[] = MODEL_SEEDS.map((seed) => {
     keywords: `${short.toLowerCase()} second hand cluj, ${short.toLowerCase()} rulat cluj-napoca, ${short.toLowerCase()} din germania cluj, dealer auto cluj, parc auto Florești`,
     eyebrow: `${short} · Florești · Cluj`,
     intro: `Cauți un ${short} second hand în Cluj-Napoca? La Bremen Auto, pe DN1 în Luna de Sus (comuna Florești), aducem ${name} direct din Germania: kilometraj verificat, dosar de daune consultat și carte de service la vedere. Poți veni la o probă de drum oricând — programul este non-stop.`,
-    match: byMake(seed.brand, seed.model),
+    match: seed.match ?? byMake(seed.brand, seed.model),
     sections: [
       {
         h2: `De ce merită un ${short} rulat din Germania`,
