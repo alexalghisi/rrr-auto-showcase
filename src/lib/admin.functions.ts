@@ -36,3 +36,30 @@ export const getMyAdminStatus = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return { isAdmin: Boolean(data) };
   });
+
+/** Pornește manual importul din OLX + Facebook (doar admin). */
+export const runImportNow = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) throw new Error("Forbidden");
+
+    const { importAll } = await import("@/lib/import.server");
+    return { results: await importAll() };
+  });
+
+/** Ultimele rulări ale importului automat (doar admin). */
+export const listImportRuns = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("import_runs")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(10);
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });

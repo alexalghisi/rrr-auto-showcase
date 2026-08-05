@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, LogOut, Upload, X, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, LogOut, Upload, X, Eye, EyeOff, RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,7 @@ import type { Database } from "@/integrations/supabase/types";
 
 type Car = Database["public"]["Tables"]["cars"]["Row"];
 import { formatKm, formatPrice, photoUrl, slugify } from "@/lib/site";
+import { listImportRuns, runImportNow } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -262,6 +264,9 @@ function AdminPage() {
           </Button>
         </div>
       </div>
+
+      <ImportPanel />
+
 
       {form && (
         <form onSubmit={save} className="surface-card mt-8 rounded-xl p-6">
@@ -533,5 +538,66 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <Label>{label}</Label>
       {children}
     </div>
+  );
+}
+
+function ImportPanel() {
+  const queryClient = useQueryClient();
+  const [running, setRunning] = useState(false);
+  const runImport = useServerFn(runImportNow);
+  const fetchRuns = useServerFn(listImportRuns);
+
+  const { data: runs = [], refetch } = useQuery({
+    queryKey: ["import-runs"],
+    queryFn: () => fetchRuns(),
+  });
+
+  async function start() {
+    setRunning(true);
+    try {
+      const { results } = await runImport();
+      const inserted = results.reduce((sum, r) => sum + r.inserted, 0);
+      const skipped = results.reduce((sum, r) => sum + r.skipped, 0);
+      const errors = results.flatMap((r) => r.errors);
+      toast.success(`Import gata: ${inserted} adăugate, ${skipped} sărite (duplicate)`);
+      if (errors.length) toast.error(errors[0]!);
+      await Promise.all([queryClient.invalidateQueries({ queryKey: ["cars"] }), refetch()]);
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      setRunning(false);
+    }
+  }
+
+  return (
+    <section className="surface-card mt-8 rounded-xl p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-xl">Import automat</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Preia zilnic anunțurile de pe OLX și Facebook, fără duplicate.
+          </p>
+        </div>
+        <Button variant="outline" onClick={start} disabled={running}>
+          <RefreshCw className={`size-4 ${running ? "animate-spin" : ""}`} />
+          {running ? "Se importă..." : "Importă acum"}
+        </Button>
+      </div>
+
+      {runs.length > 0 && (
+        <ul className="mt-4 divide-y divide-border text-sm">
+          {runs.map((run) => (
+            <li key={run.id} className="flex flex-wrap justify-between gap-2 py-2">
+              <span className="font-medium capitalize">{run.source}</span>
+              <span className="text-muted-foreground">
+                {new Date(run.created_at).toLocaleString("ro-RO")} · {run.found} găsite ·{" "}
+                {run.inserted} adăugate · {run.skipped} duplicate
+                {run.errors ? " · erori" : ""}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }

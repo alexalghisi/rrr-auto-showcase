@@ -14,10 +14,12 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DespreRouteImport } from './routes/despre'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StocRouteImport } from './routes/stoc'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as MasiniSlugRouteImport } from './routes/masini.$slug'
+import { Route as ApiPublicHooksImportCarsRouteImport } from './routes/api/public/hooks/import-cars'
 import { Route as ApiPublicPhotoSplatRouteImport } from './routes/api/public/photo.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -44,6 +46,11 @@ const DespreRoute = DespreRouteImport.update({
   path: '/despre',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -64,6 +71,12 @@ const MasiniSlugRoute = MasiniSlugRouteImport.update({
   path: '/masini/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksImportCarsRoute =
+  ApiPublicHooksImportCarsRouteImport.update({
+    id: '/api/public/hooks/import-cars',
+    path: '/api/public/hooks/import-cars',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPhotoSplatRoute = ApiPublicPhotoSplatRouteImport.update({
   id: '/api/public/photo/$',
   path: '/api/public/photo/$',
@@ -75,10 +88,12 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/despre': typeof DespreRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/masini/$slug': typeof MasiniSlugRoute
+  '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRoutesByTo {
@@ -86,10 +101,12 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/despre': typeof DespreRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/masini/$slug': typeof MasiniSlugRoute
+  '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRoutesById {
@@ -99,10 +116,12 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/despre': typeof DespreRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/masini/$slug': typeof MasiniSlugRoute
+  '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRouteTypes {
@@ -112,10 +131,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/despre'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
     | '/masini/$slug'
+    | '/api/public/hooks/import-cars'
     | '/api/public/photo/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -123,10 +144,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/despre'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
     | '/masini/$slug'
+    | '/api/public/hooks/import-cars'
     | '/api/public/photo/$'
   id:
     | '__root__'
@@ -135,10 +158,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/despre'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/stoc'
     | '/_authenticated/admin'
     | '/masini/$slug'
+    | '/api/public/hooks/import-cars'
     | '/api/public/photo/$'
   fileRoutesById: FileRoutesById
 }
@@ -148,9 +173,11 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   DespreRoute: typeof DespreRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StocRoute: typeof StocRoute
   MasiniSlugRoute: typeof MasiniSlugRoute
+  ApiPublicHooksImportCarsRoute: typeof ApiPublicHooksImportCarsRoute
   ApiPublicPhotoSplatRoute: typeof ApiPublicPhotoSplatRoute
 }
 
@@ -191,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DespreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -217,6 +251,13 @@ declare module '@tanstack/react-router' {
       path: '/masini/$slug'
       fullPath: '/masini/$slug'
       preLoaderRoute: typeof MasiniSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/import-cars': {
+      id: '/api/public/hooks/import-cars'
+      path: '/api/public/hooks/import-cars'
+      fullPath: '/api/public/hooks/import-cars'
+      preLoaderRoute: typeof ApiPublicHooksImportCarsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/photo/$': {
@@ -246,21 +287,13 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   DespreRoute: DespreRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StocRoute: StocRoute,
   MasiniSlugRoute: MasiniSlugRoute,
+  ApiPublicHooksImportCarsRoute: ApiPublicHooksImportCarsRoute,
   ApiPublicPhotoSplatRoute: ApiPublicPhotoSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
