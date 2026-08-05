@@ -7,6 +7,7 @@ import { CarCard } from "@/components/car-card";
 import { Button } from "@/components/ui/button";
 import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
+import { dealerSchema, faqSchema, ORG_ID, HOME_FAQS } from "@/lib/seo";
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
