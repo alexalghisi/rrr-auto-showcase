@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Phone, Mail, MapPin, Clock, Facebook } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Facebook, MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { SITE } from "@/lib/site";
+import { SITE, whatsappUrl } from "@/lib/site";
 
 const TITLE = "Contact Bremen Auto Gilău — parc auto lângă Cluj-Napoca";
 const DESCRIPTION =
-  "Sună la 0751 692 335 sau vino în parcul Bremen Auto din Gilău, județul Cluj. Program luni - sâmbătă, 09:00 - 19:00. Mașini second hand din Germania.";
+  "Sună la 0751 692 335 sau scrie pe WhatsApp. Parc auto Bremen Auto în Gilău, județul Cluj, program non-stop 24/7. Mașini second hand din Germania.";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
