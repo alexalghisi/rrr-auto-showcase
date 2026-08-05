@@ -56,7 +56,7 @@ export const Route = createFileRoute("/")({
             addressCountry: "RO",
           },
           sameAs: [SITE.facebook],
-          openingHours: "Mo-Sa 09:00-19:00",
+          openingHours: "Mo-Su 00:00-23:59",
         }),
       },
     ],
