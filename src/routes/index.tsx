@@ -39,7 +39,7 @@ const DESCRIPTION =
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(carsQuery),
-  head: () => ({
+  head: ({ loaderData }) => ({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
