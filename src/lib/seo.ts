@@ -84,7 +84,11 @@ export function faqSchema(faqs: ReadonlyArray<{ q: string; a: string }>) {
 export const HOME_FAQS = [
   {
     q: "Unde se află parcul auto Bremen Auto?",
-    a: "În comuna Gilău, județul Cluj, la aproximativ 15 minute de Cluj-Napoca pe drumul spre Huedin (E60).",
+    a: "Pe DN1, în Luna de Sus (comuna Florești), județul Cluj — la circa 10 minute de Cluj-Napoca, pe drumul spre Oradea/Huedin (E60).",
+  },
+  {
+    q: "Ce documente primesc la cumpărare?",
+    a: "Factură, contract de vânzare-cumpărare, carte de identitate a vehiculului și dosar complet pentru înmatriculare în România.",
   },
   {
     q: "Care este programul Bremen Auto?",
