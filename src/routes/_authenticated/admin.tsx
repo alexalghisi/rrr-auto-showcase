@@ -122,6 +122,15 @@ function AdminPage() {
     },
   });
 
+  const fetchStats = useServerFn(getViewStats);
+  const { data: stats } = useQuery({
+    queryKey: ["view-stats"],
+    queryFn: () => fetchStats(),
+  });
+  const carViews = new Map((stats?.perCar ?? []).map((c) => [c.slug, c.views]));
+
+
+
   function edit(car: Car) {
     setForm({
       id: car.id,
