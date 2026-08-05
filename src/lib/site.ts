@@ -11,8 +11,13 @@ export const SITE = {
   county: "Cluj",
   nearCity: "Cluj-Napoca",
   addressLine: "Comuna Gilău, județul Cluj (la 15 min de Cluj-Napoca)",
-  hours: "Luni - Sâmbătă: 09:00 - 19:00",
+  hours: "Non-stop, 24/7 — sună oricând",
 } as const;
+
+export function whatsappUrl(message?: string): string {
+  const base = "https://wa.me/40751692335";
+  return message ? `${base}?text=${encodeURIComponent(message)}` : base;
+}
 
 export function photoUrl(path: string): string {
   if (!path) return "";
