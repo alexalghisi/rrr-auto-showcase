@@ -76,6 +76,11 @@ function LandingRoute() {
   const { data: cars } = useSuspenseQuery(carsQuery);
   const matches = cars.filter(page.match);
   const related = LANDING_PAGES.filter((p) => p.slug !== page.slug).slice(0, 8);
+  const relatedPosts = BLOG_POSTS.filter((post) => post.relatedLandings.includes(page.slug)).slice(
+    0,
+    6,
+  );
+  const guides = relatedPosts.length ? relatedPosts : BLOG_POSTS.slice(0, 3);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
