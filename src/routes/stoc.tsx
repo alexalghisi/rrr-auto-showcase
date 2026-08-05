@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
@@ -14,6 +14,7 @@ import {
 import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/seo";
+import { LANDING_PAGES } from "@/lib/landing-pages";
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
@@ -180,6 +181,23 @@ function StockPage() {
           ))}
         </div>
       )}
+
+      <section className="mt-16">
+        <h2 className="text-2xl">Caută după model, buget sau finanțare</h2>
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {LANDING_PAGES.map((p) => (
+            <li key={p.slug}>
+              <Link
+                to="/$landing"
+                params={{ landing: p.slug }}
+                className="inline-block rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
+              >
+                {p.h1}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }
