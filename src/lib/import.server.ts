@@ -69,7 +69,7 @@ function apifyHeaders(): HeadersInit {
 
 async function runActor(actor: string, input: Json): Promise<Json[]> {
   const response = await fetch(
-    `${APIFY_GATEWAY}/acts/${actor}/run-sync-get-dataset-items?timeout=300&limit=20`,
+    `${APIFY_GATEWAY}/acts/${actor}/run-sync-get-dataset-items?timeout=300&limit=60`,
     { method: "POST", headers: apifyHeaders(), body: JSON.stringify(input) },
   );
   const raw = await response.text();
