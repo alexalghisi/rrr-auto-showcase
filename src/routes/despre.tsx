@@ -5,7 +5,7 @@ import { breadcrumbSchema, dealerSchema } from "@/lib/seo";
 
 const TITLE = "Despre Bremen Auto — auto rulate Gilău, Cluj";
 const DESCRIPTION =
-  "Parc auto în Gilău, județul Cluj, specializat în mașini second hand aduse din Germania: istoric verificat, carte service și acte complete.";
+  "Bremen Auto, parc auto în Gilău (Cluj): mașini second hand din Germania, istoric de kilometraj verificat, dosar daune, carte service și acte complete.";
 
 export const Route = createFileRoute("/despre")({
   head: () => ({
@@ -15,19 +15,22 @@ export const Route = createFileRoute("/despre")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/despre" },
+      { property: "og:site_name", content: SITE.name },
+      { property: "og:locale", content: "ro_RO" },
+      { property: "og:url", content: "https://bremenauto.ro/despre" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
-    links: [{ rel: "canonical", href: "/despre" }],
+    links: [{ rel: "canonical", href: "https://bremenauto.ro/despre" }],
     scripts: [
       { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
       {
         type: "application/ld+json",
         children: JSON.stringify(
           breadcrumbSchema([
-            { name: "Acasă", path: "/" },
-            { name: "Despre noi", path: "/despre" },
+            { name: "Acasă", path: "https://bremenauto.ro/" },
+            { name: "Despre noi", path: "https://bremenauto.ro/despre" },
           ]),
         ),
       },

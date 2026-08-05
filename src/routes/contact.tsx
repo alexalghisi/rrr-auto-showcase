@@ -17,19 +17,22 @@ export const Route = createFileRoute("/contact")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/contact" },
+      { property: "og:site_name", content: SITE.name },
+      { property: "og:locale", content: "ro_RO" },
+      { property: "og:url", content: "https://bremenauto.ro/contact" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
-    links: [{ rel: "canonical", href: "/contact" }],
+    links: [{ rel: "canonical", href: "https://bremenauto.ro/contact" }],
     scripts: [
       { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
       {
         type: "application/ld+json",
         children: JSON.stringify(
           breadcrumbSchema([
-            { name: "Acasă", path: "/" },
-            { name: "Contact", path: "/contact" },
+            { name: "Acasă", path: "https://bremenauto.ro/" },
+            { name: "Contact", path: "https://bremenauto.ro/contact" },
           ]),
         ),
       },
