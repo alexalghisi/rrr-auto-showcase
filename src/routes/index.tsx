@@ -8,6 +8,25 @@ import { Button } from "@/components/ui/button";
 import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
 import { dealerSchema, faqSchema, ORG_ID, HOME_FAQS } from "@/lib/seo";
+import { getLandingPage } from "@/lib/landing-pages";
+import { BLOG_POSTS } from "@/lib/blog";
+
+const HOME_LANDING_LINKS = [
+  "masini-second-hand-sub-5000-euro-cluj",
+  "masini-second-hand-5000-10000-euro-cluj",
+  "masini-second-hand-10000-15000-euro-cluj",
+  "masini-din-germania-cluj",
+  "masini-second-hand-in-rate-cluj",
+  "suv-second-hand-cluj",
+  "break-second-hand-cluj",
+  "masini-automate-second-hand-cluj",
+  "volkswagen-golf-second-hand-cluj",
+  "skoda-octavia-second-hand-cluj",
+  "bmw-second-hand-cluj",
+  "dacia-duster-second-hand-cluj",
+  "parc-auto-floresti-cluj",
+  "dealer-auto-cluj",
+];
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
