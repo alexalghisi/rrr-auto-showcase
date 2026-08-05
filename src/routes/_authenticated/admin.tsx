@@ -258,6 +258,19 @@ function AdminPage() {
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((f) => (f ? { ...f, [key]: value } : f));
 
+  function moveImage(from: number | null, to: number) {
+    if (from === null || from === to) return;
+    setForm((f) => {
+      if (!f) return f;
+      const images = [...f.images];
+      const [moved] = images.splice(from, 1);
+      if (moved === undefined) return f;
+      images.splice(to, 0, moved);
+      return { ...f, images };
+    });
+    setDragIndex(null);
+  }
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
