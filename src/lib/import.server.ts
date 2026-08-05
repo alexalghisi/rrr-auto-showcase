@@ -2,7 +2,9 @@
 import { slugify } from "./site";
 
 const APIFY_GATEWAY = "https://connector-gateway.lovable.dev/apify";
-const OLX_ACTOR = "piotrv1001~olx-listings-scraper";
+const OLX_ACTOR = "abotapi~olx-scraper";
+/** ID-ul contului OLX al dealerului (R R R Automobile / Bremen Auto). */
+const OLX_SELLER_ID = 247268;
 const FACEBOOK_ACTOR = "apify~facebook-posts-scraper";
 
 export const SOURCES = {
