@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { Phone, MapPin, Check, ArrowLeft } from "lucide-react";
+import { Phone, MapPin, Check, ArrowLeft, HandCoins } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { getPublicCar } from "@/lib/cars.functions";
