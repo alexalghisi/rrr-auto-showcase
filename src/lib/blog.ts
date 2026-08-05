@@ -1,4 +1,7 @@
 import { SITE } from "@/lib/site";
+import { BLOG_POSTS_A } from "@/lib/blog-posts-a";
+import { BLOG_POSTS_B } from "@/lib/blog-posts-b";
+import { BLOG_POSTS_C } from "@/lib/blog-posts-c";
 
 export type BlogCategory =
   | "Cum alegi"
@@ -35,7 +38,7 @@ const AUTHOR = SITE.name;
 
 export const BLOG_AUTHOR = AUTHOR;
 
-export const BLOG_POSTS: BlogPost[] = [
+const BLOG_POSTS_CORE: BlogPost[] = [
   {
     slug: "cum-alegi-o-masina-second-hand-in-cluj",
     title: "Cum alegi o mașină second hand în Cluj-Napoca: ghid complet 2026",
@@ -655,6 +658,13 @@ export const BLOG_POSTS: BlogPost[] = [
     ],
   },
 ];
+
+export const BLOG_POSTS: BlogPost[] = [
+  ...BLOG_POSTS_CORE,
+  ...BLOG_POSTS_A,
+  ...BLOG_POSTS_B,
+  ...BLOG_POSTS_C,
+].filter((post, index, all) => all.findIndex((p) => p.slug === post.slug) === index);
 
 export function getBlogPost(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find((p) => p.slug === slug);
