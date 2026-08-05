@@ -5,6 +5,7 @@ import { Phone, MapPin, Check, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getPublicCar } from "@/lib/cars.functions";
 import { SITE, formatKm, formatPrice, photoUrl } from "@/lib/site";
+import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
 
 export const Route = createFileRoute("/masini/$slug")({
   loader: async ({ params }) => {
