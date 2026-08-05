@@ -44,7 +44,7 @@ const BLOG_POSTS_CORE: BlogPost[] = [
     title: "Cum alegi o mașină second hand în Cluj-Napoca: ghid complet 2026",
     metaTitle: "Cum alegi o mașină second hand în Cluj | Ghid 2026",
     description:
-      "Ghid pas cu pas pentru cumpărarea unei mașini second hand în Cluj-Napoca: buget real, verificări tehnice, istoric km, test drive și acte. Sfaturi de la un dealer local.",
+      "Ghid pas cu pas pentru cumpărarea unei mașini second hand în Cluj-Napoca: buget real, verificări tehnice, istoric km, test drive și acte.",
     keywords:
       "cum alegi o masina second hand cluj, masini second hand cluj-napoca, verificare masina rulata cluj, dealer auto cluj, sfaturi cumparare auto rulat",
     category: "Cum alegi",
