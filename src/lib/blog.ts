@@ -126,7 +126,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
     relatedLandings: [
-      "masini-second-hand-cluj-sub-10000-euro",
+      "masini-second-hand-sub-10000-euro-cluj",
       "masini-din-germania-cluj",
       "dealer-auto-cluj",
       "parc-auto-floresti-cluj",
@@ -198,9 +198,9 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
     relatedLandings: [
-      "masini-second-hand-cluj-5000-10000-euro",
-      "masini-second-hand-cluj-sub-5000-euro",
-      "masini-second-hand-cluj-10000-15000-euro",
+      "masini-second-hand-5000-10000-euro-cluj",
+      "masini-second-hand-sub-5000-euro-cluj",
+      "masini-second-hand-10000-15000-euro-cluj",
       "dealer-auto-cluj",
       "masini-din-germania-cluj",
     ],
@@ -365,7 +365,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
     relatedLandings: [
-      "masini-second-hand-cluj-sub-10000-euro",
+      "masini-second-hand-sub-10000-euro-cluj",
       "skoda-octavia-second-hand-cluj",
       "volkswagen-golf-second-hand-cluj",
       "toyota-second-hand-cluj",
@@ -559,7 +559,7 @@ export const BLOG_POSTS: BlogPost[] = [
     relatedLandings: [
       "toyota-second-hand-cluj",
       "masini-automate-second-hand-cluj",
-      "masini-second-hand-cluj-5000-10000-euro",
+      "masini-second-hand-5000-10000-euro-cluj",
       "dealer-auto-cluj",
     ],
   },
@@ -650,7 +650,7 @@ export const BLOG_POSTS: BlogPost[] = [
     relatedLandings: [
       "dealer-auto-cluj",
       "parc-auto-floresti-cluj",
-      "masini-second-hand-cluj-sub-10000-euro",
+      "masini-second-hand-sub-10000-euro-cluj",
       "masini-din-germania-cluj",
     ],
   },
