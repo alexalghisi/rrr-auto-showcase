@@ -19,6 +19,7 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StocRouteImport } from './routes/stoc'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as MasiniSlugRouteImport } from './routes/masini.$slug'
 import { Route as ApiPublicImgRouteImport } from './routes/api/public/img'
 import { Route as ApiPublicHooksImportCarsRouteImport } from './routes/api/public/hooks/import-cars'
@@ -73,6 +74,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MasiniSlugRoute = MasiniSlugRouteImport.update({
   id: '/masini/$slug',
   path: '/masini/$slug',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/masini/$slug': typeof MasiniSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/masini/$slug': typeof MasiniSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/stoc': typeof StocRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/masini/$slug': typeof MasiniSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/stoc'
     | '/admin'
     | '/masini/$slug'
+    | '/blog/'
     | '/api/public/img'
     | '/api/public/hooks/import-cars'
     | '/api/public/photo/$'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/stoc'
     | '/admin'
     | '/masini/$slug'
+    | '/blog'
     | '/api/public/img'
     | '/api/public/hooks/import-cars'
     | '/api/public/photo/$'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/stoc'
     | '/_authenticated/admin'
     | '/masini/$slug'
+    | '/blog/'
     | '/api/public/img'
     | '/api/public/hooks/import-cars'
     | '/api/public/photo/$'
@@ -202,6 +214,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StocRoute: typeof StocRoute
   MasiniSlugRoute: typeof MasiniSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   ApiPublicImgRoute: typeof ApiPublicImgRoute
   ApiPublicHooksImportCarsRoute: typeof ApiPublicHooksImportCarsRoute
   ApiPublicPhotoSplatRoute: typeof ApiPublicPhotoSplatRoute
@@ -279,6 +292,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/masini/$slug': {
       id: '/masini/$slug'
       path: '/masini/$slug'
@@ -332,6 +352,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StocRoute: StocRoute,
   MasiniSlugRoute: MasiniSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   ApiPublicImgRoute: ApiPublicImgRoute,
   ApiPublicHooksImportCarsRoute: ApiPublicHooksImportCarsRoute,
   ApiPublicPhotoSplatRoute: ApiPublicPhotoSplatRoute,
