@@ -16,8 +16,15 @@ export const Route = createFileRoute("/masini/$slug")({
   head: ({ loaderData, params }) => {
     if (!loaderData) return {};
     const car = loaderData;
-    const title = `${car.make} ${car.model}${car.trim ? ` ${car.trim}` : ""} ${car.year} — ${formatPrice(Number(car.price), car.currency)} | Bremen Auto Cluj`;
-    const description = `${car.make} ${car.model} din ${car.year}, ${formatKm(car.mileage_km)}, ${car.fuel}, ${car.gearbox}${car.power_hp ? `, ${car.power_hp} CP` : ""}. Mașină second hand de vânzare la Bremen Auto, Gilău — Cluj. Tel: ${SITE.phone}.`;
+    const clamp = (value: string, max: number) =>
+      value.length <= max ? value : `${value.slice(0, max - 1).trimEnd()}…`;
+    const name = `${car.make} ${car.model}${car.trim ? ` ${car.trim}` : ""} ${car.year}`;
+    const suffix = " | Bremen Auto Cluj";
+    const title = `${clamp(name, 59 - suffix.length)}${suffix}`;
+    const description = clamp(
+      `${name}, ${formatKm(car.mileage_km)}, ${car.fuel}, ${car.gearbox}${car.power_hp ? `, ${car.power_hp} CP` : ""} — ${formatPrice(Number(car.price), car.currency)}. Second hand de vânzare la Bremen Auto, Gilău, Cluj.`,
+      158,
+    );
     return {
       meta: [
         { title },
