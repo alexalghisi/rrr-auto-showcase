@@ -240,7 +240,7 @@ const MODEL_SEEDS: ModelSeed[] = [
   {
     slug: "masini-automate-second-hand-cluj",
     brand: "",
-    match: (car) => norm(car.transmission).includes("automat"),
+    match: (car) => norm(car.gearbox).includes("automat"),
     label: "Mașini cu cutie automată",
     strengths: "confort maxim în traficul din Cluj-Napoca și uzură mai mică a ambreiajului",
     checks: "schimbul de ulei la cutie, mecatronica și comportamentul la schimbări la rece",
