@@ -92,37 +92,56 @@ function imageUrls(value: unknown): string[] {
   });
 }
 
+function paramMap(item: Json): Record<string, string> {
+  const list = Array.isArray(item["params"]) ? (item["params"] as Json[]) : [];
+  const map: Record<string, string> = {};
+  for (const entry of list) {
+    if (!entry || typeof entry !== "object") continue;
+    const key = asText(entry["key"]);
+    if (key) map[key] = asText(entry["value"]);
+  }
+  return map;
+}
+
 function parseOlxItem(item: Json): ScrapedCar | null {
-  const url = asText(item["url"] ?? item["link"]);
-  const title = asText(item["title"] ?? item["name"]);
-  const make = asText(item["make"] ?? item["brand"]);
-  const model = asText(item["model"]);
-  const year = asNumber(item["year"]);
+  if (asNumber(item["sellerId"]) !== OLX_SELLER_ID) return null;
+  const url = asText(item["url"]);
+  const title = asText(item["title"]);
+  const params = paramMap(item);
+  const year = asNumber(params["year"]);
   const price = asNumber(item["price"]);
-  if (!url || !make || !model || !year || !price) return null;
-  const offerId = asText(item["offerId"] ?? item["id"]) || url.match(/-ID([\w]+)\.html/i)?.[1] || slugify(title);
+  if (!url || !title || !year || !price) return null;
+
+  const cleanTitle = title.replace(/[~|].*$/, "").trim();
+  const words = cleanTitle.split(/\s+/).filter(Boolean);
+  const make = words[0] ?? "Auto";
+  const model = params["model"] || words.slice(1, 3).join(" ") || "Model";
+  const trim = cleanTitle.replace(new RegExp(`^${make}\\s*`, "i"), "").replace(new RegExp(`^${model}\\s*`, "i"), "").trim();
+  const offerId = asText(item["listingId"]) || url.match(/-ID([\w]+)\.html/i)?.[1] || slugify(title);
+
   return {
     url,
     externalId: `olx:${offerId}`,
     make,
     model,
-    trim: title.replace(new RegExp(`^${make}\\s+${model}\\s*`, "i"), "").trim() || null,
+    trim: trim || null,
     year: Math.round(year),
-    mileage_km: Math.round(asNumber(item["mileageKm"] ?? item["mileage"])),
-    fuel: asText(item["fuelType"] ?? item["fuel"]),
-    gearbox: asText(item["transmission"] ?? item["gearbox"]),
-    power_hp: asNumber(item["powerHp"] ?? item["power"]) || null,
-    engine_cc: asNumber(item["engineCapacityCm3"] ?? item["engineCapacity"]) || null,
-    body_type: asText(item["bodyType"]) || null,
-    color: asText(item["color"]) || null,
-    doors: asNumber(item["doorCount"] ?? item["doors"]) || null,
+    mileage_km: Math.round(asNumber(params["rulaj_pana"])),
+    fuel: params["petrol"] ?? null,
+    gearbox: params["gearbox"] ?? null,
+    power_hp: asNumber(params["engine_power"]) || null,
+    engine_cc: asNumber(params["enginesize"]) || null,
+    body_type: params["car_body"] || null,
+    color: params["color"] || null,
+    doors: asNumber(params["door_count"]) || null,
     price: Math.round(price),
-    currency: asText(item["currency"]) || "EUR",
+    currency: asText(item["priceCurrency"]) || "EUR",
     description: asText(item["description"]) || title,
-    features: Array.isArray(item["features"]) ? item["features"].map(asText).filter(Boolean) : [],
+    features: [],
     images: imageUrls(item["images"]),
   };
 }
+
 
 function parseFacebookPost(item: Json): ScrapedCar | null {
   const description = asText(item["text"] ?? item["caption"]);
