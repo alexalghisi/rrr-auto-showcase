@@ -93,6 +93,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
       },
       { name: "googlebot", content: "index, follow, max-image-preview:large, max-snippet:-1" },
+      {
+        name: "google-site-verification",
+        content: "qZYndZD3dGp89_ywsTSjcCZSkkNP_Cpb0Bt18J_OOME",
+      },
       { name: "theme-color", content: "#0f1115" },
       { name: "geo.region", content: "RO-CJ" },
       { name: "geo.placename", content: "Gilău, Cluj" },
