@@ -19,21 +19,23 @@ export const dealerSchema = {
   paymentAccepted: "Numerar, Transfer bancar, Credit auto, Leasing",
   areaServed: [
     { "@type": "City", name: "Cluj-Napoca" },
-    { "@type": "City", name: "Gilău" },
     { "@type": "City", name: "Florești" },
+    { "@type": "City", name: "Luna de Sus" },
+    { "@type": "City", name: "Gilău" },
     { "@type": "City", name: "Huedin" },
     { "@type": "AdministrativeArea", name: "Județul Cluj" },
     { "@type": "Country", name: "România" },
   ],
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Comuna Gilău",
-    addressLocality: "Gilău",
+    streetAddress: "DN1, Luna de Sus",
+    addressLocality: "Florești",
     addressRegion: "Cluj",
-    postalCode: "407310",
+    postalCode: "407280",
     addressCountry: "RO",
   },
-  geo: { "@type": "GeoCoordinates", latitude: 46.7539, longitude: 23.3703 },
+  hasMap: "https://www.google.com/maps?q=QC2J%2BWR+Luna+de+Sus,+Floresti,+Cluj",
+  geo: { "@type": "GeoCoordinates", latitude: 46.752312, longitude: 23.432062 },
   sameAs: [SITE.facebook],
   openingHoursSpecification: [
     {
