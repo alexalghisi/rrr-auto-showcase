@@ -52,7 +52,7 @@ function AuthPage() {
           return;
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({ email: toEmail(email), password });
         if (error) throw error;
       }
 
