@@ -9,9 +9,9 @@ export const dealerSchema = {
   "@type": "AutoDealer",
   "@id": ORG_ID,
   name: SITE.name,
-  alternateName: ["Bremen Auto Gilău", "Bremen Auto Cluj"],
+  alternateName: ["Bremen Auto Florești", "Bremen Auto Cluj", "Bremen Auto Luna de Sus"],
   description:
-    "Parc auto în Gilău, județul Cluj: mașini second hand aduse din Germania, verificate tehnic, cu acte complete.",
+    "Parc auto pe DN1, în Luna de Sus (comuna Florești), județul Cluj: mașini second hand aduse din Germania, verificate tehnic, cu acte complete.",
   telephone: "+40751692335",
   email: SITE.email,
   priceRange: "€€",
