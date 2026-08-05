@@ -246,5 +246,8 @@ async function logRun(result: ImportResult) {
 }
 
 export async function importAll(): Promise<ImportResult[]> {
-  return Promise.all((Object.keys(SOURCES) as SourceKey[]).map(importSource));
+  const results: ImportResult[] = [];
+  // Actorii sunt porniți serial pentru a evita timeout-urile gateway-ului la două rulări lungi simultan.
+  for (const source of Object.keys(SOURCES) as SourceKey[]) results.push(await importSource(source));
+  return results;
 }
