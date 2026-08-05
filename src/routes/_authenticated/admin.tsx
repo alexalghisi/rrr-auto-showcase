@@ -17,7 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import type { Car } from "@/lib/cars.server";
+import type { Database } from "@/integrations/supabase/types";
+
+type Car = Database["public"]["Tables"]["cars"]["Row"];
 import { formatKm, formatPrice, photoUrl, slugify } from "@/lib/site";
 
 export const Route = createFileRoute("/_authenticated/admin")({
