@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Facebook, Mail, MapPin, Phone, Clock } from "lucide-react";
 
 import { SITE } from "@/lib/site";
+import { LANDING_PAGES } from "@/lib/landing-pages";
 
 export function SiteFooter() {
   return (
@@ -74,6 +75,25 @@ export function SiteFooter() {
               <Clock className="mt-0.5 size-4 text-primary" />
               <span>{SITE.hours}</span>
             </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="border-t border-border">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+          <p className="eyebrow">Căutări populare în Cluj</p>
+          <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted-foreground">
+            {LANDING_PAGES.map((p) => (
+              <li key={p.slug}>
+                <Link
+                  to="/$landing"
+                  params={{ landing: p.slug }}
+                  className="transition-colors hover:text-primary"
+                >
+                  {p.h1}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
