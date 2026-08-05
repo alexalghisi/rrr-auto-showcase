@@ -18,9 +18,14 @@ export const Route = createFileRoute("/api/public/hooks/import-cars")({
           });
         }
 
-        const { importAll } = await import("@/lib/import.server");
-        const results = await importAll();
-        return Response.json({ ok: true, results });
+        try {
+          const { importAll } = await import("@/lib/import.server");
+          const results = await importAll();
+          return Response.json({ ok: true, results });
+        } catch (error) {
+          console.error("Import cars failed", error);
+          return Response.json({ ok: false, error: "Importul nu a putut fi finalizat" }, { status: 502 });
+        }
       },
     },
   },
