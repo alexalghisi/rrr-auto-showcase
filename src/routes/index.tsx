@@ -14,9 +14,9 @@ const carsQuery = queryOptions({
   queryFn: () => listPublicCars(),
 });
 
-const TITLE = "Mașini second hand Cluj — Bremen Auto Gilău | Auto rulate din Germania";
+const TITLE = "Mașini second hand Cluj — Bremen Auto Gilău";
 const DESCRIPTION =
-  "Bremen Auto Gilău, lângă Cluj-Napoca: mașini second hand aduse din Germania, verificate tehnic, cu carte service și acte complete. Vezi stocul actualizat și sună la 0751 692 335.";
+  "Mașini second hand din Germania la Bremen Auto Gilău, lângă Cluj-Napoca: verificate tehnic, carte service și acte complete. Vezi stocul actualizat.";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(carsQuery),
