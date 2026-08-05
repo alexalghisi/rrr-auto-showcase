@@ -24,12 +24,15 @@ export type Database = {
           doors: number | null
           drivetrain: string | null
           engine_cc: number | null
+          external_id: string | null
           featured: boolean
           features: string[]
+          fingerprint: string | null
           fuel: string
           gearbox: string
           id: string
           images: string[]
+          last_seen_at: string | null
           make: string
           mileage_km: number
           model: string
@@ -37,6 +40,8 @@ export type Database = {
           price: number
           published: boolean
           slug: string
+          source: string | null
+          source_url: string | null
           status: string
           trim: string | null
           updated_at: string
@@ -51,12 +56,15 @@ export type Database = {
           doors?: number | null
           drivetrain?: string | null
           engine_cc?: number | null
+          external_id?: string | null
           featured?: boolean
           features?: string[]
+          fingerprint?: string | null
           fuel?: string
           gearbox?: string
           id?: string
           images?: string[]
+          last_seen_at?: string | null
           make: string
           mileage_km?: number
           model: string
@@ -64,6 +72,8 @@ export type Database = {
           price: number
           published?: boolean
           slug: string
+          source?: string | null
+          source_url?: string | null
           status?: string
           trim?: string | null
           updated_at?: string
@@ -78,12 +88,15 @@ export type Database = {
           doors?: number | null
           drivetrain?: string | null
           engine_cc?: number | null
+          external_id?: string | null
           featured?: boolean
           features?: string[]
+          fingerprint?: string | null
           fuel?: string
           gearbox?: string
           id?: string
           images?: string[]
+          last_seen_at?: string | null
           make?: string
           mileage_km?: number
           model?: string
@@ -91,10 +104,42 @@ export type Database = {
           price?: number
           published?: boolean
           slug?: string
+          source?: string | null
+          source_url?: string | null
           status?: string
           trim?: string | null
           updated_at?: string
           year?: number
+        }
+        Relationships: []
+      }
+      import_runs: {
+        Row: {
+          created_at: string
+          errors: string | null
+          found: number
+          id: string
+          inserted: number
+          skipped: number
+          source: string
+        }
+        Insert: {
+          created_at?: string
+          errors?: string | null
+          found?: number
+          id?: string
+          inserted?: number
+          skipped?: number
+          source: string
+        }
+        Update: {
+          created_at?: string
+          errors?: string | null
+          found?: number
+          id?: string
+          inserted?: number
+          skipped?: number
+          source?: string
         }
         Relationships: []
       }
