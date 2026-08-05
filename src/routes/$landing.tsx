@@ -8,6 +8,7 @@ import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
 import { getLandingPage, LANDING_PAGES } from "@/lib/landing-pages";
+import { BLOG_POSTS } from "@/lib/blog";
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
@@ -194,7 +195,7 @@ function LandingRoute() {
       <section className="mt-16">
         <h2 className="text-2xl">Ghiduri utile înainte să cumperi</h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {relatedPosts.map((post) => (
+          {guides.map((post) => (
             <li key={post.slug}>
               <Link
                 to="/blog/$slug"
