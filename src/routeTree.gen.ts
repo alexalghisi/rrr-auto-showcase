@@ -10,7 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DespreRouteImport } from './routes/despre'
 import { Route as StocRouteImport } from './routes/stoc'
+import { Route as MasiniSlugRouteImport } from './routes/masini.$slug'
 import { Route as ApiPublicPhotoSplatRouteImport } from './routes/api/public/photo.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,9 +21,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DespreRoute = DespreRouteImport.update({
+  id: '/despre',
+  path: '/despre',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StocRoute = StocRouteImport.update({
   id: '/stoc',
   path: '/stoc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MasiniSlugRoute = MasiniSlugRouteImport.update({
+  id: '/masini/$slug',
+  path: '/masini/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicPhotoSplatRoute = ApiPublicPhotoSplatRouteImport.update({
@@ -31,31 +49,62 @@ const ApiPublicPhotoSplatRoute = ApiPublicPhotoSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/despre': typeof DespreRoute
   '/stoc': typeof StocRoute
+  '/masini/$slug': typeof MasiniSlugRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/despre': typeof DespreRoute
   '/stoc': typeof StocRoute
+  '/masini/$slug': typeof MasiniSlugRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/despre': typeof DespreRoute
   '/stoc': typeof StocRoute
+  '/masini/$slug': typeof MasiniSlugRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/stoc' | '/api/public/photo/$'
+  fullPaths:
+    | '/'
+    | '/contact'
+    | '/despre'
+    | '/stoc'
+    | '/masini/$slug'
+    | '/api/public/photo/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/stoc' | '/api/public/photo/$'
-  id: '__root__' | '/' | '/stoc' | '/api/public/photo/$'
+  to:
+    | '/'
+    | '/contact'
+    | '/despre'
+    | '/stoc'
+    | '/masini/$slug'
+    | '/api/public/photo/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/contact'
+    | '/despre'
+    | '/stoc'
+    | '/masini/$slug'
+    | '/api/public/photo/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactRoute: typeof ContactRoute
+  DespreRoute: typeof DespreRoute
   StocRoute: typeof StocRoute
+  MasiniSlugRoute: typeof MasiniSlugRoute
   ApiPublicPhotoSplatRoute: typeof ApiPublicPhotoSplatRoute
 }
 
@@ -68,11 +117,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/despre': {
+      id: '/despre'
+      path: '/despre'
+      fullPath: '/despre'
+      preLoaderRoute: typeof DespreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stoc': {
       id: '/stoc'
       path: '/stoc'
       fullPath: '/stoc'
       preLoaderRoute: typeof StocRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/masini/$slug': {
+      id: '/masini/$slug'
+      path: '/masini/$slug'
+      fullPath: '/masini/$slug'
+      preLoaderRoute: typeof MasiniSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/photo/$': {
@@ -87,7 +157,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactRoute: ContactRoute,
+  DespreRoute: DespreRoute,
   StocRoute: StocRoute,
+  MasiniSlugRoute: MasiniSlugRoute,
   ApiPublicPhotoSplatRoute: ApiPublicPhotoSplatRoute,
 }
 export const routeTree = rootRouteImport
