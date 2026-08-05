@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Phone, Mail, MapPin, Clock, Facebook } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Facebook, MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { SITE } from "@/lib/site";
+import { SITE, whatsappUrl } from "@/lib/site";
 
 const TITLE = "Contact Bremen Auto Gilău — parc auto lângă Cluj-Napoca";
 const DESCRIPTION =
-  "Sună la 0751 692 335 sau vino în parcul Bremen Auto din Gilău, județul Cluj. Program luni - sâmbătă, 09:00 - 19:00. Mașini second hand din Germania.";
+  "Sună la 0751 692 335 sau scrie pe WhatsApp. Parc auto Bremen Auto în Gilău, județul Cluj, program non-stop 24/7. Mașini second hand din Germania.";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -64,6 +64,20 @@ function ContactPage() {
               </div>
             </li>
             <li className="flex gap-4">
+              <MessageCircle className="mt-1 size-5 shrink-0 text-primary" />
+              <div>
+                <p className="text-sm text-muted-foreground">WhatsApp</p>
+                <a
+                  href={whatsappUrl("Bună ziua! Am văzut site-ul Bremen Auto și vreau detalii despre o mașină.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-display text-xl"
+                >
+                  {SITE.phone}
+                </a>
+              </div>
+            </li>
+            <li className="flex gap-4">
               <Clock className="mt-1 size-5 shrink-0 text-primary" />
               <div>
                 <p className="text-sm text-muted-foreground">Program</p>
@@ -78,12 +92,22 @@ function ContactPage() {
                 <Phone className="size-4" /> Sună acum
               </a>
             </Button>
+            <Button asChild size="lg" variant="secondary">
+              <a
+                href={whatsappUrl("Bună ziua! Am văzut site-ul Bremen Auto și vreau detalii despre o mașină.")}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle className="size-4" /> Scrie pe WhatsApp
+              </a>
+            </Button>
             <Button asChild size="lg" variant="outline">
               <a href={SITE.facebook} target="_blank" rel="noopener noreferrer">
                 <Facebook className="size-4" /> Facebook
               </a>
             </Button>
           </div>
+
         </div>
 
         <div className="surface-card overflow-hidden rounded-xl">
