@@ -1,4 +1,7 @@
 import { SITE } from "@/lib/site";
+import { BLOG_POSTS_A } from "@/lib/blog-posts-a";
+import { BLOG_POSTS_B } from "@/lib/blog-posts-b";
+import { BLOG_POSTS_C } from "@/lib/blog-posts-c";
 
 export type BlogCategory =
   | "Cum alegi"
@@ -35,13 +38,13 @@ const AUTHOR = SITE.name;
 
 export const BLOG_AUTHOR = AUTHOR;
 
-export const BLOG_POSTS: BlogPost[] = [
+const BLOG_POSTS_CORE: BlogPost[] = [
   {
     slug: "cum-alegi-o-masina-second-hand-in-cluj",
     title: "Cum alegi o mașină second hand în Cluj-Napoca: ghid complet 2026",
     metaTitle: "Cum alegi o mașină second hand în Cluj | Ghid 2026",
     description:
-      "Ghid pas cu pas pentru cumpărarea unei mașini second hand în Cluj-Napoca: buget real, verificări tehnice, istoric km, test drive și acte. Sfaturi de la un dealer local.",
+      "Ghid pas cu pas pentru cumpărarea unei mașini second hand în Cluj-Napoca: buget real, verificări tehnice, istoric km, test drive și acte.",
     keywords:
       "cum alegi o masina second hand cluj, masini second hand cluj-napoca, verificare masina rulata cluj, dealer auto cluj, sfaturi cumparare auto rulat",
     category: "Cum alegi",
@@ -126,7 +129,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
     relatedLandings: [
-      "masini-second-hand-cluj-sub-10000-euro",
+      "masini-second-hand-sub-10000-euro-cluj",
       "masini-din-germania-cluj",
       "dealer-auto-cluj",
       "parc-auto-floresti-cluj",
@@ -198,9 +201,9 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
     relatedLandings: [
-      "masini-second-hand-cluj-5000-10000-euro",
-      "masini-second-hand-cluj-sub-5000-euro",
-      "masini-second-hand-cluj-10000-15000-euro",
+      "masini-second-hand-5000-10000-euro-cluj",
+      "masini-second-hand-sub-5000-euro-cluj",
+      "masini-second-hand-10000-15000-euro-cluj",
       "dealer-auto-cluj",
       "masini-din-germania-cluj",
     ],
@@ -365,7 +368,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
     relatedLandings: [
-      "masini-second-hand-cluj-sub-10000-euro",
+      "masini-second-hand-sub-10000-euro-cluj",
       "skoda-octavia-second-hand-cluj",
       "volkswagen-golf-second-hand-cluj",
       "toyota-second-hand-cluj",
@@ -559,7 +562,7 @@ export const BLOG_POSTS: BlogPost[] = [
     relatedLandings: [
       "toyota-second-hand-cluj",
       "masini-automate-second-hand-cluj",
-      "masini-second-hand-cluj-5000-10000-euro",
+      "masini-second-hand-5000-10000-euro-cluj",
       "dealer-auto-cluj",
     ],
   },
@@ -650,11 +653,18 @@ export const BLOG_POSTS: BlogPost[] = [
     relatedLandings: [
       "dealer-auto-cluj",
       "parc-auto-floresti-cluj",
-      "masini-second-hand-cluj-sub-10000-euro",
+      "masini-second-hand-sub-10000-euro-cluj",
       "masini-din-germania-cluj",
     ],
   },
 ];
+
+export const BLOG_POSTS: BlogPost[] = [
+  ...BLOG_POSTS_CORE,
+  ...BLOG_POSTS_A,
+  ...BLOG_POSTS_B,
+  ...BLOG_POSTS_C,
+].filter((post, index, all) => all.findIndex((p) => p.slug === post.slug) === index);
 
 export function getBlogPost(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find((p) => p.slug === slug);

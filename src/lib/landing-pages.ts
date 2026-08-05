@@ -161,15 +161,6 @@ const MODEL_SEEDS: ModelSeed[] = [
     checks: "starea bateriei la variantele mild-hybrid și uzura discurilor de frână",
   },
   {
-    slug: "opel-astra-second-hand-cluj",
-    brand: "Opel",
-    model: "Astra",
-    label: "Opel Astra",
-    strengths:
-      "preț de achiziție mic pentru o mașină de clasă compactă, piese ieftine și motorizări 1.6 CDTi foarte economice",
-    checks: "supapa EGR, senzorii de presiune și starea suspensiei spate",
-  },
-  {
     slug: "toyota-second-hand-cluj",
     brand: "Toyota",
     label: "Toyota",

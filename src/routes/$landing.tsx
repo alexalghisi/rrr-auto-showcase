@@ -8,6 +8,7 @@ import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
 import { getLandingPage, LANDING_PAGES } from "@/lib/landing-pages";
+import { BLOG_POSTS } from "@/lib/blog";
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
@@ -76,6 +77,11 @@ function LandingRoute() {
   const { data: cars } = useSuspenseQuery(carsQuery);
   const matches = cars.filter(page.match);
   const related = LANDING_PAGES.filter((p) => p.slug !== page.slug).slice(0, 8);
+  const relatedPosts = BLOG_POSTS.filter((post) => post.relatedLandings.includes(page.slug)).slice(
+    0,
+    6,
+  );
+  const guides = relatedPosts.length ? relatedPosts : BLOG_POSTS.slice(0, 3);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
@@ -185,6 +191,25 @@ function LandingRoute() {
           ))}
         </ul>
       </section>
+
+      <section className="mt-16">
+        <h2 className="text-2xl">Ghiduri utile înainte să cumperi</h2>
+        <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {guides.map((post) => (
+            <li key={post.slug}>
+              <Link
+                to="/blog/$slug"
+                params={{ slug: post.slug }}
+                className="surface-card block rounded-xl p-5 transition-colors hover:border-primary"
+              >
+                <p className="eyebrow">{post.category}</p>
+                <span className="mt-2 block font-display text-base leading-snug">{post.title}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
     </div>
   );
 }

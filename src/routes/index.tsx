@@ -8,6 +8,25 @@ import { Button } from "@/components/ui/button";
 import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
 import { dealerSchema, faqSchema, ORG_ID, HOME_FAQS } from "@/lib/seo";
+import { getLandingPage } from "@/lib/landing-pages";
+import { BLOG_POSTS } from "@/lib/blog";
+
+const HOME_LANDING_LINKS = [
+  "masini-second-hand-sub-5000-euro-cluj",
+  "masini-second-hand-5000-10000-euro-cluj",
+  "masini-second-hand-10000-15000-euro-cluj",
+  "masini-din-germania-cluj",
+  "masini-second-hand-in-rate-cluj",
+  "suv-second-hand-cluj",
+  "break-second-hand-cluj",
+  "masini-automate-second-hand-cluj",
+  "volkswagen-golf-second-hand-cluj",
+  "skoda-octavia-second-hand-cluj",
+  "bmw-second-hand-cluj",
+  "dacia-duster-second-hand-cluj",
+  "parc-auto-floresti-cluj",
+  "dealer-auto-cluj",
+];
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
@@ -20,7 +39,7 @@ const DESCRIPTION =
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(carsQuery),
-  head: () => ({
+  head: ({ loaderData }) => ({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
@@ -58,6 +77,20 @@ export const Route = createFileRoute("/")({
         }),
       },
       { type: "application/ld+json", children: JSON.stringify(faqSchema(HOME_FAQS)) },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Mașini second hand disponibile în Cluj",
+          itemListElement: (loaderData ?? []).slice(0, 12).map((car, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            url: `https://bremenauto.ro/masini/${car.slug}`,
+            name: [car.make, car.model, car.year].filter(Boolean).join(" "),
+          })),
+        }),
+      },
     ],
   }),
   component: HomePage,
@@ -161,6 +194,58 @@ function HomePage() {
           </div>
         )}
       </section>
+
+      <section className="border-t border-border bg-surface">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+          <p className="eyebrow">Căutări populare în Cluj</p>
+          <h2 className="mt-2 text-3xl sm:text-4xl">Găsește rapid ce cauți</h2>
+          <div className="mt-8 flex flex-wrap gap-2">
+            {HOME_LANDING_LINKS.map((slug) => {
+              const page = getLandingPage(slug);
+              if (!page) return null;
+              return (
+                <Link
+                  key={slug}
+                  to="/$landing"
+                  params={{ landing: slug }}
+                  className="rounded-full border border-border bg-background px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                >
+                  {page.h1}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow">Ghiduri Bremen Auto</p>
+            <h2 className="mt-2 text-3xl sm:text-4xl">Sfaturi înainte să cumperi</h2>
+          </div>
+          <Button asChild variant="outline">
+            <Link to="/blog">Toate ghidurile</Link>
+          </Button>
+        </div>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {BLOG_POSTS.slice(0, 6).map((post) => (
+            <Link
+              key={post.slug}
+              to="/blog/$slug"
+              params={{ slug: post.slug }}
+              className="surface-card rounded-xl p-6 transition-colors hover:border-primary"
+            >
+              <p className="eyebrow">{post.category}</p>
+              <h3 className="mt-3 text-lg leading-snug">{post.title}</h3>
+              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                {post.excerpt}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
 
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
