@@ -185,6 +185,25 @@ function LandingRoute() {
           ))}
         </ul>
       </section>
+
+      <section className="mt-16">
+        <h2 className="text-2xl">Ghiduri utile înainte să cumperi</h2>
+        <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {relatedPosts.map((post) => (
+            <li key={post.slug}>
+              <Link
+                to="/blog/$slug"
+                params={{ slug: post.slug }}
+                className="surface-card block rounded-xl p-5 transition-colors hover:border-primary"
+              >
+                <p className="eyebrow">{post.category}</p>
+                <span className="mt-2 block font-display text-base leading-snug">{post.title}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
     </div>
   );
 }
