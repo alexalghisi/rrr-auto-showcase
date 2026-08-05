@@ -36,6 +36,9 @@ import type { Database } from "@/integrations/supabase/types";
 type Car = Database["public"]["Tables"]["cars"]["Row"];
 import { formatKm, formatPrice, photoUrl, slugify } from "@/lib/site";
 import { listImportRuns, runImportNow } from "@/lib/admin.functions";
+import { getViewStats } from "@/lib/analytics.functions";
+import { displayCarViews, displaySiteViews } from "@/lib/analytics-display";
+
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
