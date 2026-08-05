@@ -4,8 +4,8 @@ import type {} from "@tanstack/react-start";
 export const Route = createFileRoute("/robots.txt")({
   server: {
     handlers: {
-      GET: async ({ request }) => {
-        const origin = new URL(request.url).origin;
+      GET: async () => {
+        const origin = "https://bremenauto.ro";
         const body = [
           "User-agent: *",
           "Allow: /",

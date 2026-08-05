@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema } from "@/lib/seo";
 
-const TITLE = "Despre Bremen Auto — dealer auto rulate Gilău, Cluj";
+const TITLE = "Despre Bremen Auto — auto rulate Gilău, Cluj";
 const DESCRIPTION =
-  "Bremen Auto este un parc auto din Gilău, județul Cluj, specializat în mașini second hand aduse direct din Germania: istoric verificat, carte service și acte complete.";
+  "Parc auto în Gilău, județul Cluj, specializat în mașini second hand aduse din Germania: istoric verificat, carte service și acte complete.";
 
 export const Route = createFileRoute("/despre")({
   head: () => ({
