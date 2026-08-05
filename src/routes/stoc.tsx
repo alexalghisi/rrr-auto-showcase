@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
+import { breadcrumbSchema } from "@/lib/seo";
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
@@ -25,7 +26,7 @@ const DESCRIPTION =
 
 export const Route = createFileRoute("/stoc")({
   loader: ({ context }) => context.queryClient.ensureQueryData(carsQuery),
-  head: () => ({
+  head: ({ loaderData }) => ({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
@@ -37,6 +38,32 @@ export const Route = createFileRoute("/stoc")({
       { name: "twitter:description", content: DESCRIPTION },
     ],
     links: [{ rel: "canonical", href: "/stoc" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbSchema([
+            { name: "Acasă", path: "/" },
+            { name: "Stoc mașini", path: "/stoc" },
+          ]),
+        ),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Stoc mașini second hand Bremen Auto Gilău",
+          numberOfItems: (loaderData ?? []).length,
+          itemListElement: (loaderData ?? []).map((car, index: number) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            url: `/masini/${car.slug}`,
+            name: `${car.make} ${car.model} ${car.year}`,
+          })),
+        }),
+      },
+    ],
   }),
   component: StockPage,
 });

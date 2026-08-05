@@ -7,6 +7,7 @@ import { CarCard } from "@/components/car-card";
 import { Button } from "@/components/ui/button";
 import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
+import { dealerSchema, faqSchema, ORG_ID, HOME_FAQS } from "@/lib/seo";
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
@@ -38,27 +39,23 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "/" }],
     scripts: [
+      { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
       {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "AutoDealer",
+          "@type": "WebSite",
           name: SITE.name,
-          description: DESCRIPTION,
-          telephone: "+40751692335",
-          email: SITE.email,
-          priceRange: "€€",
-          areaServed: ["Cluj-Napoca", "Gilău", "Județul Cluj", "România"],
-          address: {
-            "@type": "PostalAddress",
-            addressLocality: "Gilău",
-            addressRegion: "Cluj",
-            addressCountry: "RO",
+          inLanguage: "ro-RO",
+          publisher: { "@id": ORG_ID },
+          potentialAction: {
+            "@type": "SearchAction",
+            target: { "@type": "EntryPoint", urlTemplate: "/stoc?q={search_term_string}" },
+            "query-input": "required name=search_term_string",
           },
-          sameAs: [SITE.facebook],
-          openingHours: "Mo-Su 00:00-23:59",
         }),
       },
+      { type: "application/ld+json", children: JSON.stringify(faqSchema(HOME_FAQS)) },
     ],
   }),
   component: HomePage,
@@ -237,6 +234,20 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      <section className="mx-auto max-w-4xl px-4 pb-20 sm:px-6">
+        <p className="eyebrow">Întrebări frecvente</p>
+        <h2 className="mt-2 text-3xl sm:text-4xl">Ce vor să știe clienții din Cluj</h2>
+        <dl className="mt-8 space-y-4">
+          {HOME_FAQS.map((f) => (
+            <div key={f.q} className="surface-card rounded-xl p-6">
+              <dt className="font-display text-lg">{f.q}</dt>
+              <dd className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.a}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
     </>
+
   );
 }

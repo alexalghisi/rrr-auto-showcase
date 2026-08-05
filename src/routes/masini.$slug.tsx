@@ -5,6 +5,7 @@ import { Phone, MapPin, Check, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getPublicCar } from "@/lib/cars.functions";
 import { SITE, formatKm, formatPrice, photoUrl } from "@/lib/site";
+import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
 
 export const Route = createFileRoute("/masini/$slug")({
   loader: async ({ params }) => {
@@ -36,23 +37,65 @@ export const Route = createFileRoute("/masini/$slug")({
             "@context": "https://schema.org",
             "@type": "Car",
             name: `${car.make} ${car.model} ${car.year}`,
+            description,
+            url: `/masini/${params.slug}`,
+            image: (car.images ?? []).slice(0, 6).map((p: string) => photoUrl(p)),
             brand: { "@type": "Brand", name: car.make },
             model: car.model,
             vehicleModelDate: String(car.year),
-            mileageFromOdometer: { "@type": "QuantitativeValue", value: car.mileage_km, unitCode: "KMT" },
+            productionDate: String(car.year),
+            itemCondition: "https://schema.org/UsedCondition",
+            mileageFromOdometer: {
+              "@type": "QuantitativeValue",
+              value: car.mileage_km,
+              unitCode: "KMT",
+            },
             fuelType: car.fuel,
             vehicleTransmission: car.gearbox,
+            ...(car.body_type ? { bodyType: car.body_type } : {}),
+            ...(car.color ? { color: car.color } : {}),
+            ...(car.doors ? { numberOfDoors: car.doors } : {}),
+            ...(car.drivetrain ? { driveWheelConfiguration: car.drivetrain } : {}),
+            ...(car.power_hp
+              ? {
+                  vehicleEngine: {
+                    "@type": "EngineSpecification",
+                    enginePower: { "@type": "QuantitativeValue", value: car.power_hp, unitCode: "BHP" },
+                    ...(car.engine_cc
+                      ? {
+                          engineDisplacement: {
+                            "@type": "QuantitativeValue",
+                            value: car.engine_cc,
+                            unitCode: "CMQ",
+                          },
+                        }
+                      : {}),
+                  },
+                }
+              : {}),
             offers: {
               "@type": "Offer",
               price: Number(car.price),
               priceCurrency: car.currency,
+              itemCondition: "https://schema.org/UsedCondition",
               availability:
                 car.status === "vanduta"
                   ? "https://schema.org/SoldOut"
                   : "https://schema.org/InStock",
-              seller: { "@type": "AutoDealer", name: SITE.name, telephone: "+40751692335" },
+              seller: { "@id": ORG_ID },
             },
           }),
+        },
+        { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(
+            breadcrumbSchema([
+              { name: "Acasă", path: "/" },
+              { name: "Stoc mașini", path: "/stoc" },
+              { name: `${car.make} ${car.model} ${car.year}`, path: `/masini/${params.slug}` },
+            ]),
+          ),
         },
       ],
     };
