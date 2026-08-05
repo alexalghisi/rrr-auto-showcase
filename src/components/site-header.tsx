@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 const links = [
   { to: "/", label: "Acasă" },
   { to: "/stoc", label: "Mașini în stoc" },
+  { to: "/blog", label: "Blog" },
   { to: "/despre", label: "Despre noi" },
   { to: "/contact", label: "Contact" },
 ] as const;

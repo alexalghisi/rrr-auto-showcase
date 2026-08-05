@@ -40,6 +40,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link to="/blog" className="transition-colors hover:text-foreground">
+                Blog & ghiduri auto
+              </Link>
+            </li>
+            <li>
               <Link to="/contact" className="transition-colors hover:text-foreground">
                 Contact
               </Link>

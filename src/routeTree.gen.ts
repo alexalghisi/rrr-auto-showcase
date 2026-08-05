@@ -19,6 +19,8 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StocRouteImport } from './routes/stoc'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as MasiniSlugRouteImport } from './routes/masini.$slug'
 import { Route as ApiPublicImgRouteImport } from './routes/api/public/img'
 import { Route as ApiPublicHooksImportCarsRouteImport } from './routes/api/public/hooks/import-cars'
@@ -73,6 +75,16 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MasiniSlugRoute = MasiniSlugRouteImport.update({
   id: '/masini/$slug',
   path: '/masini/$slug',
@@ -105,7 +117,9 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/masini/$slug': typeof MasiniSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
@@ -120,7 +134,9 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/masini/$slug': typeof MasiniSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
@@ -137,7 +153,9 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/masini/$slug': typeof MasiniSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
@@ -154,7 +172,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
+    | '/blog/$slug'
     | '/masini/$slug'
+    | '/blog/'
     | '/api/public/img'
     | '/api/public/hooks/import-cars'
     | '/api/public/photo/$'
@@ -169,7 +189,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
+    | '/blog/$slug'
     | '/masini/$slug'
+    | '/blog'
     | '/api/public/img'
     | '/api/public/hooks/import-cars'
     | '/api/public/photo/$'
@@ -185,7 +207,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/stoc'
     | '/_authenticated/admin'
+    | '/blog/$slug'
     | '/masini/$slug'
+    | '/blog/'
     | '/api/public/img'
     | '/api/public/hooks/import-cars'
     | '/api/public/photo/$'
@@ -201,7 +225,9 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StocRoute: typeof StocRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   MasiniSlugRoute: typeof MasiniSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   ApiPublicImgRoute: typeof ApiPublicImgRoute
   ApiPublicHooksImportCarsRoute: typeof ApiPublicHooksImportCarsRoute
   ApiPublicPhotoSplatRoute: typeof ApiPublicPhotoSplatRoute
@@ -279,6 +305,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/masini/$slug': {
       id: '/masini/$slug'
       path: '/masini/$slug'
@@ -331,7 +371,9 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StocRoute: StocRoute,
+  BlogSlugRoute: BlogSlugRoute,
   MasiniSlugRoute: MasiniSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   ApiPublicImgRoute: ApiPublicImgRoute,
   ApiPublicHooksImportCarsRoute: ApiPublicHooksImportCarsRoute,
   ApiPublicPhotoSplatRoute: ApiPublicPhotoSplatRoute,

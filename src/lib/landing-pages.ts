@@ -48,6 +48,8 @@ interface ModelSeed {
   label: string;
   strengths: string;
   checks: string;
+  /** Filtru custom pentru categorii care nu sunt mărci (SUV, break, automate). */
+  match?: (car: Car) => boolean;
 }
 
 const MODEL_SEEDS: ModelSeed[] = [
@@ -158,11 +160,97 @@ const MODEL_SEEDS: ModelSeed[] = [
       "fiabilitate coreeană, dotări generoase pentru bani și consum mic la motorizările 1.6 CRDi",
     checks: "starea bateriei la variantele mild-hybrid și uzura discurilor de frână",
   },
+  {
+    slug: "opel-astra-second-hand-cluj",
+    brand: "Opel",
+    model: "Astra",
+    label: "Opel Astra",
+    strengths:
+      "preț de achiziție mic pentru o mașină de clasă compactă, piese ieftine și motorizări 1.6 CDTi foarte economice",
+    checks: "supapa EGR, senzorii de presiune și starea suspensiei spate",
+  },
+  {
+    slug: "toyota-second-hand-cluj",
+    brand: "Toyota",
+    label: "Toyota",
+    strengths:
+      "cea mai mică rată de defecțiuni din piață, hibrizi cu consum de 5 l/100 km în oraș și costuri de service previzibile",
+    checks: "starea bateriei hibride, uzura frânelor și istoricul de revizii Toyota",
+  },
+  {
+    slug: "peugeot-second-hand-cluj",
+    brand: "Peugeot",
+    label: "Peugeot",
+    strengths: "confort de rulare bun, dotări generoase și motorizări BlueHDi economice pe drum lung",
+    checks: "lanțul de distribuție la 1.2 PureTech, AdBlue și filtrul de particule",
+  },
+  {
+    slug: "renault-second-hand-cluj",
+    brand: "Renault",
+    label: "Renault",
+    strengths: "piese ieftine, rețea de service densă în Cluj și motoare 1.5 dCi verificate în timp",
+    checks: "injectoarele, turbina și cutia EDC",
+  },
+  {
+    slug: "hyundai-second-hand-cluj",
+    brand: "Hyundai",
+    label: "Hyundai",
+    strengths: "dotări multe la preț mic, fiabilitate foarte bună și consum redus",
+    checks: "ambreiajul, discurile de frână și istoricul de daune",
+  },
+  {
+    slug: "kia-second-hand-cluj",
+    brand: "Kia",
+    label: "Kia",
+    strengths: "garanție lungă de la producător, design modern și costuri de întreținere mici",
+    checks: "distribuția, cutia DCT și starea suspensiei",
+  },
+  {
+    slug: "nissan-qashqai-second-hand-cluj",
+    brand: "Nissan",
+    model: "Qashqai",
+    label: "Nissan Qashqai",
+    strengths: "poziție înaltă de condus, spațiu bun pentru familie și consum rezonabil de SUV compact",
+    checks: "cutia CVT, rulmenții și starea trapei panoramice",
+  },
+  {
+    slug: "seat-second-hand-cluj",
+    brand: "Seat",
+    label: "Seat",
+    strengths: "aceeași mecanică VW la un preț mai mic și dotări sportive din fabrică",
+    checks: "distribuția la TSI, cutia DSG și istoricul digital de service",
+  },
+  {
+    slug: "suv-second-hand-cluj",
+    brand: "",
+    match: (car) => norm(car.body_type).includes("suv") || norm(car.body_type).includes("teren"),
+    label: "SUV",
+    strengths:
+      "gardă la sol pentru drumurile de munte din Apuseni, siguranță sporită și portbagaj generos",
+    checks: "sistemul 4x4, cutia de transfer și uzura amortizoarelor",
+  },
+  {
+    slug: "break-second-hand-cluj",
+    brand: "",
+    match: (car) => norm(car.body_type).includes("break") || norm(car.body_type).includes("combi"),
+    label: "Break",
+    strengths: "portbagaj mare pentru familie sau firmă, consum mic pe autostradă și confort pe drum lung",
+    checks: "suspensia spate, hayonul electric și starea barelor de plafon",
+  },
+  {
+    slug: "masini-automate-second-hand-cluj",
+    brand: "",
+    match: (car) => norm(car.gearbox).includes("automat"),
+    label: "Mașini cu cutie automată",
+    strengths: "confort maxim în traficul din Cluj-Napoca și uzură mai mică a ambreiajului",
+    checks: "schimbul de ulei la cutie, mecatronica și comportamentul la schimbări la rece",
+  },
 ];
+
 
 const modelPages: LandingPage[] = MODEL_SEEDS.map((seed) => {
   const name = seed.label;
-  const short = seed.model ? `${seed.brand} ${seed.model}` : seed.brand;
+  const short = seed.model ? `${seed.brand} ${seed.model}` : seed.brand || seed.label;
   return {
     slug: seed.slug,
     h1: `${name} second hand în ${CITY}`,
@@ -175,7 +263,7 @@ const modelPages: LandingPage[] = MODEL_SEEDS.map((seed) => {
     keywords: `${short.toLowerCase()} second hand cluj, ${short.toLowerCase()} rulat cluj-napoca, ${short.toLowerCase()} din germania cluj, dealer auto cluj, parc auto Florești`,
     eyebrow: `${short} · Florești · Cluj`,
     intro: `Cauți un ${short} second hand în Cluj-Napoca? La Bremen Auto, pe DN1 în Luna de Sus (comuna Florești), aducem ${name} direct din Germania: kilometraj verificat, dosar de daune consultat și carte de service la vedere. Poți veni la o probă de drum oricând — programul este non-stop.`,
-    match: byMake(seed.brand, seed.model),
+    match: seed.match ?? byMake(seed.brand, seed.model),
     sections: [
       {
         h2: `De ce merită un ${short} rulat din Germania`,
