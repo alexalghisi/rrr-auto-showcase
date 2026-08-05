@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/site";
+import { breadcrumbSchema, dealerSchema } from "@/lib/seo";
 
 const TITLE = "Despre Bremen Auto — dealer auto rulate Gilău, Cluj";
 const DESCRIPTION =
