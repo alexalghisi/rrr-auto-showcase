@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin, Clock, Facebook, MessageCircle } from "lucide-reac
 
 import { Button } from "@/components/ui/button";
 import { SITE, whatsappUrl } from "@/lib/site";
+import { breadcrumbSchema, dealerSchema } from "@/lib/seo";
 
 const TITLE = "Contact Bremen Auto Gilău — parc auto lângă Cluj-Napoca";
 const DESCRIPTION =
