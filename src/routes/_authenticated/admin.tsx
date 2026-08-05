@@ -672,6 +672,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function ImportPanel() {
   const queryClient = useQueryClient();
   const [running, setRunning] = useState(false);
+  const [open, setOpen] = useState(false);
   const runImport = useServerFn(runImportNow);
   const fetchRuns = useServerFn(listImportRuns);
 
