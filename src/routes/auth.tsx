@@ -29,13 +29,19 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  /** Permite autentificarea cu nume de utilizator (ex. „admin") sau cu email. */
+  function toEmail(value: string) {
+    const v = value.trim().toLowerCase();
+    return v.includes("@") ? v : `${v}@bremenauto.ro`;
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
       if (mode === "signup") {
         const { data, error } = await supabase.auth.signUp({
-          email,
+          email: toEmail(email),
           password,
           options: { emailRedirectTo: window.location.origin },
         });
