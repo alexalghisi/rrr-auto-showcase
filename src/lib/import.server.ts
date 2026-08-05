@@ -67,7 +67,7 @@ function apifyHeaders(): HeadersInit {
 
 async function runActor(actor: string, input: Json): Promise<Json[]> {
   const response = await fetch(
-    `${APIFY_GATEWAY}/acts/${actor}/run-sync-get-dataset-items?timeout=240&limit=100`,
+    `${APIFY_GATEWAY}/acts/${actor}/run-sync-get-dataset-items?timeout=300&limit=20`,
     { method: "POST", headers: apifyHeaders(), body: JSON.stringify(input) },
   );
   const raw = await response.text();
@@ -157,7 +157,7 @@ function parseFacebookPost(item: Json): ScrapedCar | null {
 
 async function scrapeSource(source: SourceKey): Promise<ScrapedCar[]> {
   if (source === "facebook") {
-    const items = await runActor(FACEBOOK_ACTOR, { startUrls: [{ url: SOURCES.facebook }], resultsLimit: 50 });
+    const items = await runActor(FACEBOOK_ACTOR, { startUrls: [{ url: SOURCES.facebook }], resultsLimit: 20 });
     return items.map(parseFacebookPost).filter((car): car is ScrapedCar => Boolean(car));
   }
   const items = await runActor(OLX_ACTOR, { startUrls: [{ url: SOURCES.olx }], maxItems: 100 });
@@ -248,6 +248,6 @@ async function logRun(result: ImportResult) {
 export async function importAll(): Promise<ImportResult[]> {
   const results: ImportResult[] = [];
   // Actorii sunt porniți serial pentru a evita timeout-urile gateway-ului la două rulări lungi simultan.
-  for (const source of Object.keys(SOURCES) as SourceKey[]) results.push(await importSource(source));
+  for (const source of ["facebook", "olx"] as SourceKey[]) results.push(await importSource(source));
   return results;
 }
