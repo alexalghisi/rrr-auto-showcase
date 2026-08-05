@@ -9,9 +9,9 @@ export const dealerSchema = {
   "@type": "AutoDealer",
   "@id": ORG_ID,
   name: SITE.name,
-  alternateName: ["Bremen Auto Gilău", "Bremen Auto Cluj"],
+  alternateName: ["Bremen Auto Florești", "Bremen Auto Cluj", "Bremen Auto Luna de Sus"],
   description:
-    "Parc auto în Gilău, județul Cluj: mașini second hand aduse din Germania, verificate tehnic, cu acte complete.",
+    "Parc auto pe DN1, în Luna de Sus (comuna Florești), județul Cluj: mașini second hand aduse din Germania, verificate tehnic, cu acte complete.",
   telephone: "+40751692335",
   email: SITE.email,
   priceRange: "€€",
@@ -19,21 +19,23 @@ export const dealerSchema = {
   paymentAccepted: "Numerar, Transfer bancar, Credit auto, Leasing",
   areaServed: [
     { "@type": "City", name: "Cluj-Napoca" },
-    { "@type": "City", name: "Gilău" },
     { "@type": "City", name: "Florești" },
+    { "@type": "City", name: "Luna de Sus" },
+    { "@type": "City", name: "Gilău" },
     { "@type": "City", name: "Huedin" },
     { "@type": "AdministrativeArea", name: "Județul Cluj" },
     { "@type": "Country", name: "România" },
   ],
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Comuna Gilău",
-    addressLocality: "Gilău",
+    streetAddress: "DN1, Luna de Sus",
+    addressLocality: "Florești",
     addressRegion: "Cluj",
-    postalCode: "407310",
+    postalCode: "407280",
     addressCountry: "RO",
   },
-  geo: { "@type": "GeoCoordinates", latitude: 46.7539, longitude: 23.3703 },
+  hasMap: "https://www.google.com/maps?q=QC2J%2BWR+Luna+de+Sus,+Floresti,+Cluj",
+  geo: { "@type": "GeoCoordinates", latitude: 46.752312, longitude: 23.432062 },
   sameAs: [SITE.facebook],
   openingHoursSpecification: [
     {
@@ -82,7 +84,11 @@ export function faqSchema(faqs: ReadonlyArray<{ q: string; a: string }>) {
 export const HOME_FAQS = [
   {
     q: "Unde se află parcul auto Bremen Auto?",
-    a: "În comuna Gilău, județul Cluj, la aproximativ 15 minute de Cluj-Napoca pe drumul spre Huedin (E60).",
+    a: "Pe DN1, în Luna de Sus (comuna Florești), județul Cluj — la circa 10 minute de Cluj-Napoca, pe drumul spre Oradea/Huedin (E60).",
+  },
+  {
+    q: "Ce documente primesc la cumpărare?",
+    a: "Factură, contract de vânzare-cumpărare, carte de identitate a vehiculului și dosar complet pentru înmatriculare în România.",
   },
   {
     q: "Care este programul Bremen Auto?",

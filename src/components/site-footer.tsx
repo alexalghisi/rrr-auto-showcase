@@ -13,7 +13,7 @@ export function SiteFooter() {
           </p>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
             Parc auto cu mașini second hand aduse din Germania, verificate tehnic și livrate cu acte
-            complete. Gilău, județul Cluj.
+            complete. DN1, Luna de Sus, comuna Florești, județul Cluj.
           </p>
           <a
             href={SITE.facebook}
@@ -79,7 +79,7 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-border py-5 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} {SITE.name} · Mașini second hand Cluj-Napoca & Gilău
+        © {new Date().getFullYear()} {SITE.name} · Mașini second hand Cluj-Napoca & Florești
       </div>
     </footer>
   );

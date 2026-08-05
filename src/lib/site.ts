@@ -7,10 +7,14 @@ export const SITE = {
   whatsapp: "https://wa.me/40751692335",
   email: "vele_razvanel@yahoo.com",
   facebook: "https://www.facebook.com/bremenautocj/",
-  city: "Gilău",
+  city: "Luna de Sus",
+  commune: "Florești",
   county: "Cluj",
   nearCity: "Cluj-Napoca",
-  addressLine: "Comuna Gilău, județul Cluj (la 15 min de Cluj-Napoca)",
+  postalCode: "407280",
+  street: "DN1",
+  mapsQuery: "QC2J%2BWR%20Luna%20de%20Sus%2C%20Floresti%2C%20Cluj",
+  addressLine: "DN1, Luna de Sus, comuna Florești, jud. Cluj (10 min de Cluj-Napoca)",
   hours: "Non-stop, 24/7 — sună oricând",
 } as const;
 
