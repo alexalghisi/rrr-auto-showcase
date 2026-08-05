@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
- * Import zilnic automat, apelat de pg_cron.
+ * Import automat în fiecare oră, apelat de pg_cron.
  * Autentificare: header `apikey` cu cheia publishable a proiectului.
  */
 export const Route = createFileRoute("/api/public/hooks/import-cars")({
