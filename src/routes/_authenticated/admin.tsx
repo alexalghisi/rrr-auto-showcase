@@ -3,7 +3,20 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, LogOut, Upload, X, Eye, EyeOff, RefreshCw } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  LogOut,
+  Upload,
+  X,
+  Eye,
+  EyeOff,
+  RefreshCw,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
