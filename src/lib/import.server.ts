@@ -181,7 +181,13 @@ async function scrapeSource(source: SourceKey): Promise<ScrapedCar[]> {
     const items = await runActor(FACEBOOK_ACTOR, { startUrls: [{ url: SOURCES.facebook }], resultsLimit: 20 });
     return items.map(parseFacebookPost).filter((car): car is ScrapedCar => Boolean(car));
   }
-  const items = await runActor(OLX_ACTOR, { startUrls: [{ url: SOURCES.olx }], maxItems: 100 });
+  const items = await runActor(OLX_ACTOR, {
+    mode: "search",
+    country: "ro",
+    extraFilters: { user_id: OLX_SELLER_ID },
+    fetchDetails: true,
+    maxListings: 40,
+  });
   return items.map(parseOlxItem).filter((car): car is ScrapedCar => Boolean(car));
 }
 
