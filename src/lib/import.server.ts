@@ -289,9 +289,20 @@ async function logRun(result: ImportResult) {
   });
 }
 
+/** Anunță motoarele de căutare că sitemap-ul s-a schimbat, după fiecare import cu mașini noi. */
+async function pingSearchEngines(): Promise<void> {
+  const sitemap = encodeURIComponent("https://bremenauto.ro/sitemap.xml");
+  const endpoints = [
+    `https://www.bing.com/ping?sitemap=${sitemap}`,
+    `https://www.google.com/ping?sitemap=${sitemap}`,
+  ];
+  await Promise.allSettled(endpoints.map((url) => fetch(url, { method: "GET" })));
+}
+
 export async function importAll(): Promise<ImportResult[]> {
   const results: ImportResult[] = [];
   // Actorii sunt porniți serial pentru a evita timeout-urile gateway-ului la două rulări lungi simultan.
   for (const source of ["facebook", "olx"] as SourceKey[]) results.push(await importSource(source));
+  if (results.some((r) => r.inserted > 0)) await pingSearchEngines();
   return results;
 }
