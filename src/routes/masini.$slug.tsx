@@ -4,7 +4,7 @@ import { Phone, MapPin, Check, ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { getPublicCar } from "@/lib/cars.functions";
-import { SITE, formatKm, formatPrice, photoUrl } from "@/lib/site";
+import { SITE, absolutePhotoUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
 
 export const Route = createFileRoute("/masini/$slug")({
@@ -62,8 +62,8 @@ export const Route = createFileRoute("/masini/$slug")({
             "@type": "Car",
             name: `${car.make} ${car.model} ${car.year}`,
             description,
-            url: `/masini/${params.slug}`,
-            image: (car.images ?? []).slice(0, 6).map((p: string) => photoUrl(p)),
+            url,
+            image: (car.images ?? []).slice(0, 6).map((p: string) => absolutePhotoUrl(p)),
             brand: { "@type": "Brand", name: car.make },
             model: car.model,
             vehicleModelDate: String(car.year),
@@ -115,9 +115,9 @@ export const Route = createFileRoute("/masini/$slug")({
           type: "application/ld+json",
           children: JSON.stringify(
             breadcrumbSchema([
-              { name: "Acasă", path: "/" },
-              { name: "Stoc mașini", path: "/stoc" },
-              { name: `${car.make} ${car.model} ${car.year}`, path: `/masini/${params.slug}` },
+              { name: "Acasă", path: "https://bremenauto.ro/" },
+              { name: "Stoc mașini", path: "https://bremenauto.ro/stoc" },
+              { name: `${car.make} ${car.model} ${car.year}`, path: url },
             ]),
           ),
         },
