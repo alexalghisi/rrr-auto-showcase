@@ -697,25 +697,42 @@ function ImportPanel() {
     }
   }
 
+  const last = runs[0];
+  const lastLabel = last
+    ? `${new Date(last.created_at).toLocaleString("ro-RO", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })} · ${last.inserted} noi`
+    : "fără rulări";
+  const hasErrors = runs.some((r) => r.errors);
+
   return (
-    <section className="surface-card mt-8 rounded-xl p-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-xl">Import automat</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Preia zilnic anunțurile de pe OLX și Facebook, fără duplicate.
-          </p>
+    <section className="surface-card mt-6 rounded-xl px-4 py-2.5">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+        <span
+          className={`size-2 shrink-0 rounded-full ${hasErrors ? "bg-destructive" : "bg-primary"}`}
+          aria-hidden
+        />
+        <span className="font-medium">Import automat orar</span>
+        <span className="text-muted-foreground">{lastLabel}</span>
+        <div className="ml-auto flex items-center gap-1">
+          <Button variant="ghost" size="sm" onClick={start} disabled={running}>
+            <RefreshCw className={`size-4 ${running ? "animate-spin" : ""}`} />
+            {running ? "Se importă..." : "Importă"}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-label="Istoric importuri"
+          >
+            {open ? "Ascunde" : "Istoric"}
+          </Button>
         </div>
-        <Button variant="outline" onClick={start} disabled={running}>
-          <RefreshCw className={`size-4 ${running ? "animate-spin" : ""}`} />
-          {running ? "Se importă..." : "Importă acum"}
-        </Button>
       </div>
 
-      {runs.length > 0 && (
-        <ul className="mt-4 divide-y divide-border text-sm">
+      {open && runs.length > 0 && (
+        <ul className="mt-2 max-h-48 overflow-y-auto divide-y divide-border text-xs">
           {runs.map((run) => (
-            <li key={run.id} className="flex flex-wrap justify-between gap-2 py-2">
+            <li key={run.id} className="flex flex-wrap justify-between gap-2 py-1.5">
               <span className="font-medium capitalize">{run.source}</span>
               <span className="text-muted-foreground">
                 {new Date(run.created_at).toLocaleString("ro-RO")} · {run.found} găsite ·{" "}
