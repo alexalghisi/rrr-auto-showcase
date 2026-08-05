@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
+import { breadcrumbSchema } from "@/lib/seo";
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
