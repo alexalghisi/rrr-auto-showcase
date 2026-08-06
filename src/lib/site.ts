@@ -16,7 +16,12 @@ export const SITE = {
   mapsQuery: "QC2J%2BWR%20Luna%20de%20Sus%2C%20Floresti%2C%20Cluj",
   addressLine: "DN1, Luna de Sus, comuna Florești, jud. Cluj (10 min de Cluj-Napoca)",
   hours: "Non-stop, 24/7 — sună oricând",
+  // Se înlocuiește cu linkul direct „scrie recenzie” după verificarea Google Business Profile:
+  // https://search.google.com/local/writereview?placeid=<PLACE_ID>
+  googleReviewUrl:
+    "https://www.google.com/maps/search/?api=1&query=Bremen%20Auto%20DN1%20Luna%20de%20Sus%20Floresti%20Cluj",
 } as const;
+
 
 export function whatsappUrl(message?: string): string {
   const base = "https://wa.me/40751692335";

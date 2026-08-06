@@ -45,10 +45,16 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link to="/recenzii" className="transition-colors hover:text-foreground">
+                Recenzii Google
+              </Link>
+            </li>
+            <li>
               <Link to="/contact" className="transition-colors hover:text-foreground">
                 Contact
               </Link>
             </li>
+
             <li>
               <Link to="/auth" className="transition-colors hover:text-foreground">
                 Administrare
