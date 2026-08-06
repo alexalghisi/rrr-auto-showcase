@@ -126,4 +126,12 @@ export const HOME_FAQS = [
     q: "Se poate cumpăra în rate sau prin leasing?",
     a: "Da, se poate plăti cash, prin transfer bancar sau prin credit auto ori leasing, cu acte pregătite de noi.",
   },
+  {
+    q: "Livrați mașina în toată România?",
+    a: "Da. Livrăm pe platformă în orice județ din România, cu mașina asigurată pe durata transportului și cu actele trimise prin curier. Costul transportului îl comunicăm exact înainte de rezervare.",
+  },
+  {
+    q: "Pot cumpăra o mașină la distanță, fără să vin în Cluj?",
+    a: "Da. Facem o verificare video în direct a mașinii, trimitem raport foto complet, rezervi cu avans, semnăm contractul și mașina pleacă pe platformă spre tine. Dacă la livrare mașina nu corespunde descrierii, avansul se returnează integral.",
+  },
 ] as const;
