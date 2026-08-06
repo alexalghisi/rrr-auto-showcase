@@ -235,6 +235,67 @@ function normalizeGearbox(value?: string | null): string {
 
 export type ImportResult = { source: SourceKey; found: number; inserted: number; skipped: number; errors: string[] };
 
+const BROWSER_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36",
+  Accept: "image/avif,image/webp,image/*,*/*;q=0.8",
+} as const;
+
+/**
+ * Descarcă pozele de pe OLX/Facebook și le salvează definitiv în storage-ul propriu.
+ * Link-urile Facebook expiră (parametrul `oe=`), deci fără copie locală pozele dispar.
+ */
+async function mirrorImages(urls: string[], slug: string): Promise<string[]> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const stored: string[] = [];
+  for (const [index, url] of urls.entries()) {
+    try {
+      const normalized = url.replace(/^http:\/\//, "https://").replace(/;s=0x0$/, ";s=1600x1200");
+      const response = await fetch(normalized, { headers: BROWSER_HEADERS });
+      if (!response.ok) continue;
+      const type = response.headers.get("content-type") ?? "image/jpeg";
+      if (!type.startsWith("image/")) continue;
+      const ext = type.includes("png") ? "png" : type.includes("webp") ? "webp" : "jpg";
+      const path = `${slug}/${index + 1}.${ext}`;
+      const { error } = await supabaseAdmin.storage
+        .from("car-photos")
+        .upload(path, await response.arrayBuffer(), { contentType: type, upsert: true });
+      if (!error) stored.push(path);
+    } catch {
+      // poza individuală eșuată nu blochează restul importului
+    }
+  }
+  return stored;
+}
+
+/** Mută în storage pozele mașinilor deja existente care încă folosesc link-uri externe. */
+export async function backfillImages(limit = 12): Promise<{ updated: number; errors: string[] }> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data } = await supabaseAdmin.from("cars").select("id, slug, images").limit(200);
+  const pending = (data ?? []).filter((car) =>
+    (car.images ?? []).some((url: string) => /^https?:\/\//.test(url)),
+  );
+  const errors: string[] = [];
+  let updated = 0;
+  for (const car of pending.slice(0, limit)) {
+    const external = (car.images ?? []).filter((url: string) => /^https?:\/\//.test(url));
+    const local = (car.images ?? []).filter((url: string) => !/^https?:\/\//.test(url));
+    const mirrored = await mirrorImages(external, car.slug);
+    if (!mirrored.length) {
+      errors.push(`${car.slug}: nicio poză descărcată`);
+      continue;
+    }
+    const { error } = await supabaseAdmin
+      .from("cars")
+      .update({ images: [...local, ...mirrored] })
+      .eq("id", car.id);
+    if (error) errors.push(`${car.slug}: ${error.message}`);
+    else updated++;
+  }
+  return { updated, errors };
+}
+
+
 export async function importSource(source: SourceKey): Promise<ImportResult> {
   const result: ImportResult = { source, found: 0, inserted: 0, skipped: 0, errors: [] };
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
