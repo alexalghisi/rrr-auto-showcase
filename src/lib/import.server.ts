@@ -322,14 +322,18 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
       continue;
     }
     const suffix = slugify(car.externalId).slice(-10);
+    const slug = `${slugify(`${car.make}-${car.model}-${car.year}-${car.mileage_km}`)}-${suffix}`;
+    const externalImages = (car.images ?? []).filter((url) => /^https?:\/\//.test(url)).slice(0, 15);
+    const storedImages = await mirrorImages(externalImages, slug);
     const { error } = await supabaseAdmin.from("cars").insert({
-      slug: `${slugify(`${car.make}-${car.model}-${car.year}-${car.mileage_km}`)}-${suffix}`,
+      slug,
       make: car.make.trim(), model: car.model.trim(), trim: car.trim ?? null,
       year: car.year, mileage_km: car.mileage_km, fuel: normalizeFuel(car.fuel), gearbox: normalizeGearbox(car.gearbox),
       power_hp: car.power_hp ?? null, engine_cc: car.engine_cc ?? null, body_type: car.body_type ?? null,
       color: car.color ?? null, doors: car.doors ?? null, price: car.price,
       currency: (car.currency ?? "EUR").toUpperCase(), description: car.description ?? null,
-      features: (car.features ?? []).slice(0, 40), images: (car.images ?? []).filter((url) => /^https?:\/\//.test(url)).slice(0, 15),
+      features: (car.features ?? []).slice(0, 40), images: storedImages.length ? storedImages : externalImages,
+
       published: true, status: "disponibila", source, source_url: car.url,
       external_id: car.externalId, fingerprint, last_seen_at: new Date().toISOString(),
     });
