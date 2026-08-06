@@ -28,6 +28,23 @@ const HOME_LANDING_LINKS = [
   "dealer-auto-cluj",
 ];
 
+const HOME_GEO_LINKS = [
+  "masini-second-hand-livrare-toata-romania",
+  "masini-second-hand-cluj-napoca",
+  "masini-second-hand-floresti-cluj",
+  "masini-second-hand-turda",
+  "masini-second-hand-dej",
+  "masini-second-hand-zalau-salaj",
+  "masini-second-hand-baia-mare-maramures",
+  "masini-second-hand-bistrita",
+  "masini-second-hand-oradea-bihor",
+  "masini-second-hand-alba-iulia",
+  "masini-second-hand-targu-mures",
+  "masini-second-hand-sibiu",
+  "masini-second-hand-brasov",
+  "masini-second-hand-bucuresti",
+];
+
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
   queryFn: () => listPublicCars(),
@@ -217,6 +234,34 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+        <p className="eyebrow">Livrăm în toată România</p>
+        <h2 className="mt-2 text-3xl sm:text-4xl">Cumperi din Cluj, primești mașina acasă</h2>
+        <p className="mt-4 max-w-2xl text-muted-foreground">
+          Peste jumătate dintre clienții noștri sunt din alte județe. Alegi mașina, o verifici cu
+          noi prin videocall, iar noi ți-o livrăm pe platformă, cu actele pregătite pentru
+          înmatriculare.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-2">
+          {HOME_GEO_LINKS.map((slug) => {
+            const page = getLandingPage(slug);
+            if (!page) return null;
+            return (
+              <Link
+                key={slug}
+                to="/$landing"
+                params={{ landing: slug }}
+                className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+              >
+                {page.h1}
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
