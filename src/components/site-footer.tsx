@@ -86,7 +86,7 @@ export function SiteFooter() {
 
       <div className="border-t border-border">
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-          <p className="eyebrow">Căutări populare în Cluj</p>
+          <p className="eyebrow">Căutări populare · Cluj și toată România</p>
           <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted-foreground">
             {LANDING_PAGES.map((p) => (
               <li key={p.slug}>

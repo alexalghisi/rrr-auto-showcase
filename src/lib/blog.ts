@@ -2,6 +2,7 @@ import { SITE } from "@/lib/site";
 import { BLOG_POSTS_A } from "@/lib/blog-posts-a";
 import { BLOG_POSTS_B } from "@/lib/blog-posts-b";
 import { BLOG_POSTS_C } from "@/lib/blog-posts-c";
+import { BLOG_POSTS_D } from "@/lib/blog-posts-d";
 
 export type BlogCategory =
   | "Cum alegi"
@@ -664,6 +665,7 @@ export const BLOG_POSTS: BlogPost[] = [
   ...BLOG_POSTS_A,
   ...BLOG_POSTS_B,
   ...BLOG_POSTS_C,
+  ...BLOG_POSTS_D,
 ].filter((post, index, all) => all.findIndex((p) => p.slug === post.slug) === index);
 
 export function getBlogPost(slug: string): BlogPost | undefined {

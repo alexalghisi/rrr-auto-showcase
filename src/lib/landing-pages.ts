@@ -1,4 +1,5 @@
 import type { Tables } from "@/integrations/supabase/types";
+import { GEO_LANDING_PAGES } from "@/lib/landing-pages-geo";
 
 export type Car = Tables<"cars">;
 
@@ -524,7 +525,12 @@ const thematicPages: LandingPage[] = [
   },
 ];
 
-export const LANDING_PAGES: LandingPage[] = [...modelPages, ...pricePages, ...thematicPages];
+export const LANDING_PAGES: LandingPage[] = [
+  ...modelPages,
+  ...pricePages,
+  ...thematicPages,
+  ...GEO_LANDING_PAGES,
+];
 
 export function getLandingPage(slug: string): LandingPage | undefined {
   return LANDING_PAGES.find((p) => p.slug === slug);
