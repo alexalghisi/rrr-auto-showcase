@@ -277,7 +277,16 @@ function CarPage() {
               ))}
             </dl>
           </div>
+
+          <div className="mt-6">
+            <FinanceCalculator
+              price={Number(car.price)}
+              carSlug={car.slug}
+              carTitle={title}
+            />
+          </div>
         </aside>
+
       </div>
     </div>
   );
