@@ -243,12 +243,20 @@ function CarPage() {
                   <Phone className="size-4" /> {SITE.phone}
                 </a>
               </Button>
+              {car.status === "disponibila" && (
+                <ReserveDialog
+                  carSlug={car.slug}
+                  carTitle={title}
+                  price={formatPrice(Number(car.price), car.currency)}
+                />
+              )}
               <Button asChild size="lg" variant="outline">
                 <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer">
                   Scrie pe WhatsApp
                 </a>
               </Button>
             </div>
+
 
             <p className="mt-5 flex items-start gap-2 text-sm text-muted-foreground">
               <MapPin className="mt-0.5 size-4 shrink-0 text-primary" /> {SITE.addressLine}
