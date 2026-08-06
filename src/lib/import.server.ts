@@ -235,6 +235,67 @@ function normalizeGearbox(value?: string | null): string {
 
 export type ImportResult = { source: SourceKey; found: number; inserted: number; skipped: number; errors: string[] };
 
+const BROWSER_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36",
+  Accept: "image/avif,image/webp,image/*,*/*;q=0.8",
+} as const;
+
+/**
+ * Descarcă pozele de pe OLX/Facebook și le salvează definitiv în storage-ul propriu.
+ * Link-urile Facebook expiră (parametrul `oe=`), deci fără copie locală pozele dispar.
+ */
+async function mirrorImages(urls: string[], slug: string): Promise<string[]> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const stored: string[] = [];
+  for (const [index, url] of urls.entries()) {
+    try {
+      const normalized = url.replace(/^http:\/\//, "https://").replace(/;s=0x0$/, ";s=1600x1200");
+      const response = await fetch(normalized, { headers: BROWSER_HEADERS });
+      if (!response.ok) continue;
+      const type = response.headers.get("content-type") ?? "image/jpeg";
+      if (!type.startsWith("image/")) continue;
+      const ext = type.includes("png") ? "png" : type.includes("webp") ? "webp" : "jpg";
+      const path = `${slug}/${index + 1}.${ext}`;
+      const { error } = await supabaseAdmin.storage
+        .from("car-photos")
+        .upload(path, await response.arrayBuffer(), { contentType: type, upsert: true });
+      if (!error) stored.push(path);
+    } catch {
+      // poza individuală eșuată nu blochează restul importului
+    }
+  }
+  return stored;
+}
+
+/** Mută în storage pozele mașinilor deja existente care încă folosesc link-uri externe. */
+export async function backfillImages(limit = 12): Promise<{ updated: number; errors: string[] }> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data } = await supabaseAdmin.from("cars").select("id, slug, images").limit(200);
+  const pending = (data ?? []).filter((car) =>
+    (car.images ?? []).some((url: string) => /^https?:\/\//.test(url)),
+  );
+  const errors: string[] = [];
+  let updated = 0;
+  for (const car of pending.slice(0, limit)) {
+    const external = (car.images ?? []).filter((url: string) => /^https?:\/\//.test(url));
+    const local = (car.images ?? []).filter((url: string) => !/^https?:\/\//.test(url));
+    const mirrored = await mirrorImages(external, car.slug);
+    if (!mirrored.length) {
+      errors.push(`${car.slug}: nicio poză descărcată`);
+      continue;
+    }
+    const { error } = await supabaseAdmin
+      .from("cars")
+      .update({ images: [...local, ...mirrored] })
+      .eq("id", car.id);
+    if (error) errors.push(`${car.slug}: ${error.message}`);
+    else updated++;
+  }
+  return { updated, errors };
+}
+
+
 export async function importSource(source: SourceKey): Promise<ImportResult> {
   const result: ImportResult = { source, found: 0, inserted: 0, skipped: 0, errors: [] };
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -261,14 +322,18 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
       continue;
     }
     const suffix = slugify(car.externalId).slice(-10);
+    const slug = `${slugify(`${car.make}-${car.model}-${car.year}-${car.mileage_km}`)}-${suffix}`;
+    const externalImages = (car.images ?? []).filter((url) => /^https?:\/\//.test(url)).slice(0, 15);
+    const storedImages = await mirrorImages(externalImages, slug);
     const { error } = await supabaseAdmin.from("cars").insert({
-      slug: `${slugify(`${car.make}-${car.model}-${car.year}-${car.mileage_km}`)}-${suffix}`,
+      slug,
       make: car.make.trim(), model: car.model.trim(), trim: car.trim ?? null,
       year: car.year, mileage_km: car.mileage_km, fuel: normalizeFuel(car.fuel), gearbox: normalizeGearbox(car.gearbox),
       power_hp: car.power_hp ?? null, engine_cc: car.engine_cc ?? null, body_type: car.body_type ?? null,
       color: car.color ?? null, doors: car.doors ?? null, price: car.price,
       currency: (car.currency ?? "EUR").toUpperCase(), description: car.description ?? null,
-      features: (car.features ?? []).slice(0, 40), images: (car.images ?? []).filter((url) => /^https?:\/\//.test(url)).slice(0, 15),
+      features: (car.features ?? []).slice(0, 40), images: storedImages.length ? storedImages : externalImages,
+
       published: true, status: "disponibila", source, source_url: car.url,
       external_id: car.externalId, fingerprint, last_seen_at: new Date().toISOString(),
     });
@@ -325,6 +390,8 @@ export async function importAll(): Promise<ImportResult[]> {
   const results: ImportResult[] = [];
   // Actorii sunt porniți serial pentru a evita timeout-urile gateway-ului la două rulări lungi simultan.
   for (const source of ["facebook", "olx"] as SourceKey[]) results.push(await importSource(source));
+  // Pozele vechi, încă găzduite extern, sunt mutate treptat în storage-ul propriu.
+  await backfillImages(12);
   if (results.some((r) => r.inserted > 0)) await pingSearchEngines();
   return results;
 }
