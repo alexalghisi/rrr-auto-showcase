@@ -143,6 +143,48 @@ export type Database = {
         }
         Relationships: []
       }
+      leads: {
+        Row: {
+          car_slug: string | null
+          car_title: string | null
+          created_at: string
+          details: Json
+          email: string | null
+          id: string
+          kind: string
+          message: string | null
+          name: string | null
+          phone: string | null
+          status: string
+        }
+        Insert: {
+          car_slug?: string | null
+          car_title?: string | null
+          created_at?: string
+          details?: Json
+          email?: string | null
+          id?: string
+          kind: string
+          message?: string | null
+          name?: string | null
+          phone?: string | null
+          status?: string
+        }
+        Update: {
+          car_slug?: string | null
+          car_title?: string | null
+          created_at?: string
+          details?: Json
+          email?: string | null
+          id?: string
+          kind?: string
+          message?: string | null
+          name?: string | null
+          phone?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       page_views: {
         Row: {
           car_slug: string | null

@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Phone, MapPin, Check, ArrowLeft, HandCoins } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { ReserveDialog } from "@/components/reserve-dialog";
+import { FinanceCalculator } from "@/components/finance-calculator";
+
 import { getPublicCar } from "@/lib/cars.functions";
 import { SITE, absolutePhotoUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
@@ -243,12 +246,20 @@ function CarPage() {
                   <Phone className="size-4" /> {SITE.phone}
                 </a>
               </Button>
+              {car.status === "disponibila" && (
+                <ReserveDialog
+                  carSlug={car.slug}
+                  carTitle={title}
+                  price={formatPrice(Number(car.price), car.currency)}
+                />
+              )}
               <Button asChild size="lg" variant="outline">
                 <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer">
                   Scrie pe WhatsApp
                 </a>
               </Button>
             </div>
+
 
             <p className="mt-5 flex items-start gap-2 text-sm text-muted-foreground">
               <MapPin className="mt-0.5 size-4 shrink-0 text-primary" /> {SITE.addressLine}
@@ -266,7 +277,16 @@ function CarPage() {
               ))}
             </dl>
           </div>
+
+          <div className="mt-6">
+            <FinanceCalculator
+              price={Number(car.price)}
+              carSlug={car.slug}
+              carTitle={title}
+            />
+          </div>
         </aside>
+
       </div>
     </div>
   );

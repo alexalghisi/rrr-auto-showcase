@@ -41,6 +41,8 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/despre", changefreq: "monthly", priority: "0.6" },
          { path: "/contact", changefreq: "monthly", priority: "0.7" },
          { path: "/recenzii", changefreq: "monthly", priority: "0.5" },
+         { path: "/gaseste-masina", changefreq: "weekly", priority: "0.8" },
+
 
           ...LANDING_SLUGS.map((slug) => ({
             path: `/${slug}`,
