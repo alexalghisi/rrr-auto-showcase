@@ -20,8 +20,12 @@ export function CarCard({ car }: { car: Car }) {
             src={photoUrl(cover)}
             alt={`${title} de vânzare la Bremen Auto, DN1 Florești, Cluj`}
             loading="lazy"
+            decoding="async"
+            width={800}
+            height={600}
             className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
+
         ) : (
           <div className="flex size-full items-center justify-center text-sm text-muted-foreground">
             Fotografii în curând
