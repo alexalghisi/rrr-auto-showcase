@@ -390,6 +390,8 @@ export async function importAll(): Promise<ImportResult[]> {
   const results: ImportResult[] = [];
   // Actorii sunt porniți serial pentru a evita timeout-urile gateway-ului la două rulări lungi simultan.
   for (const source of ["facebook", "olx"] as SourceKey[]) results.push(await importSource(source));
+  // Pozele vechi, încă găzduite extern, sunt mutate treptat în storage-ul propriu.
+  await backfillImages(12);
   if (results.some((r) => r.inserted > 0)) await pingSearchEngines();
   return results;
 }

@@ -20,6 +20,11 @@ export const Route = createFileRoute("/api/public/hooks/import-cars")({
 
         try {
           const { importAll } = await import("@/lib/import.server");
+          const mode = new URL(request.url).searchParams.get("mode");
+          if (mode === "backfill") {
+            const { backfillImages } = await import("@/lib/import.server");
+            return Response.json({ ok: true, backfill: await backfillImages(40) });
+          }
           const results = await importAll();
           return Response.json({ ok: true, results });
         } catch (error) {
