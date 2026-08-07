@@ -9,6 +9,7 @@ import { FinanceCalculator } from "@/components/finance-calculator";
 import { getPublicCar } from "@/lib/cars.functions";
 import { SITE, absolutePhotoUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
+import { LANDING_PAGES, type LandingPage } from "@/lib/landing-pages";
 
 export const Route = createFileRoute("/masini/$slug")({
   loader: async ({ params }) => {
