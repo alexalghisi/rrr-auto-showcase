@@ -9,6 +9,7 @@ import { FinanceCalculator } from "@/components/finance-calculator";
 import { getPublicCar } from "@/lib/cars.functions";
 import { SITE, absolutePhotoUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
+import { LANDING_PAGES, type LandingPage } from "@/lib/landing-pages";
 
 export const Route = createFileRoute("/masini/$slug")({
   loader: async ({ params }) => {
@@ -134,6 +135,7 @@ function CarPage() {
   const car = Route.useLoaderData();
   const [active, setActive] = useState(0);
   const title = `${car.make} ${car.model}${car.trim ? ` ${car.trim}` : ""}`;
+  const related = LANDING_PAGES.filter((p) => p.match(car)).slice(0, 8);
 
   const specs = [
     ["An fabricație", String(car.year)],
@@ -150,12 +152,20 @@ function CarPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-      <Link
-        to="/stoc"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="size-4" /> Înapoi la stoc
-      </Link>
+      <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+        <Link to="/" className="hover:text-foreground">
+          Acasă
+        </Link>
+        <span>/</span>
+        <Link to="/stoc" className="inline-flex items-center gap-1 hover:text-foreground">
+          <ArrowLeft className="size-3.5" /> Stoc mașini
+        </Link>
+        <span>/</span>
+        <span className="text-foreground">
+          {title} {car.year}
+        </span>
+      </nav>
+
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
         <div>
@@ -224,7 +234,9 @@ function CarPage() {
 
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <div className="surface-card rounded-xl p-6">
-            <h1 className="text-2xl leading-tight sm:text-3xl">{title}</h1>
+            <h1 className="text-2xl leading-tight sm:text-3xl">
+              {title} {car.year} second hand Cluj — Bremen Auto
+            </h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
               {car.year} · {formatKm(car.mileage_km)} · {car.fuel}
             </p>
@@ -288,6 +300,50 @@ function CarPage() {
         </aside>
 
       </div>
+
+      <section className="mt-14 border-t border-border pt-10">
+        <h2 className="text-2xl">Categorii înrudite cu {title}</h2>
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+          Vezi și alte mașini second hand din aceeași categorie, buget sau zonă de livrare.
+        </p>
+        <ul className="mt-5 flex flex-wrap gap-2">
+          {related.map((page: LandingPage) => (
+            <li key={page.slug}>
+              <Link
+                to="/$landing"
+                params={{ landing: page.slug }}
+                className="surface-card inline-block rounded-full px-4 py-2 text-sm transition-colors hover:border-primary"
+              >
+                {page.h1}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <h3 className="mt-8 text-lg">Navighează mai departe</h3>
+        <ul className="mt-3 flex flex-wrap gap-4 text-sm">
+          <li>
+            <Link to="/stoc" className="text-primary underline-offset-4 hover:underline">
+              Tot stocul de mașini second hand
+            </Link>
+          </li>
+          <li>
+            <Link to="/categorii" className="text-primary underline-offset-4 hover:underline">
+              Toate categoriile
+            </Link>
+          </li>
+          <li>
+            <Link to="/blog" className="text-primary underline-offset-4 hover:underline">
+              Ghid cumpărare mașini second hand
+            </Link>
+          </li>
+          <li>
+            <Link to="/" className="text-primary underline-offset-4 hover:underline">
+              Bremen Auto — prima pagină
+            </Link>
+          </li>
+        </ul>
+      </section>
     </div>
   );
 }
+

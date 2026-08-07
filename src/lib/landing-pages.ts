@@ -354,6 +354,85 @@ const pricePages: LandingPage[] = [
   ],
 }));
 
+interface YearSeed {
+  slug: string;
+  label: string;
+  intent: string;
+  match: (car: Car) => boolean;
+}
+
+const YEAR_SEEDS: YearSeed[] = [
+  {
+    slug: "masini-second-hand-dupa-2015-cluj",
+    label: "fabricate după 2015",
+    intent: "mașini rulate recente, cu norma de poluare Euro 6 și dotări moderne",
+    match: (car) => car.year >= 2015,
+  },
+  {
+    slug: "masini-second-hand-dupa-2018-cluj",
+    label: "fabricate după 2018",
+    intent: "autoturisme aproape noi, cu kilometraj mic și garanții de producător încă active",
+    match: (car) => car.year >= 2018,
+  },
+  {
+    slug: "masini-second-hand-dupa-2020-cluj",
+    label: "fabricate după 2020",
+    intent: "mașini rulate de ultimă generație, cu asistență la condus și consum redus",
+    match: (car) => car.year >= 2020,
+  },
+  {
+    slug: "masini-second-hand-sub-100000-km-cluj",
+    label: "sub 100.000 km",
+    intent: "mașini cu rulaj real mic, verificate în istoricul digital de service",
+    match: (car) => car.mileage_km > 0 && car.mileage_km <= 100000,
+  },
+];
+
+const yearPages: LandingPage[] = YEAR_SEEDS.map((seed) => ({
+  slug: seed.slug,
+  h1: `Mașini second hand ${seed.label} în ${CITY}`,
+  title: `Mașini second hand ${seed.label} Cluj`.slice(0, 60),
+  description:
+    `Mașini second hand ${seed.label}, aduse din Germania, în parcul Bremen Auto de pe DN1 Florești, lângă Cluj-Napoca. Km verificați, acte complete, cash sau în rate.`.slice(
+      0,
+      158,
+    ),
+  keywords: `masini second hand ${seed.label} cluj, auto rulate recente cluj-napoca, masini din germania cluj, parc auto Florești, dealer auto cluj`,
+  eyebrow: `An fabricație · ${seed.label}`,
+  intro: `Selecția de mașini second hand ${seed.label} din stocul Bremen Auto, parc auto pe DN1 în Luna de Sus (Florești), la 10 minute de Cluj-Napoca. Căutăm pentru clienții noștri ${seed.intent}.`,
+  match: seed.match,
+  sections: [
+    {
+      h2: `De ce să alegi mașini ${seed.label}`,
+      body: `Un autoturism ${seed.label} are, de regulă, uzură mecanică redusă, dotări de siguranță actuale și costuri de întreținere previzibile în primii ani. Pentru drumurile din județul Cluj, asta înseamnă mai puține opriri neplanificate în service.`,
+    },
+    {
+      h2: "Cum verificăm anul și kilometrajul real",
+      body: "Verificăm data primei înmatriculări din documentele germane, istoricul digital de service și rapoartele de kilometraj. Dacă apare o neconcordanță, mașina nu intră în parc.",
+    },
+    {
+      h2: `Cumperi ${seed.label} cash sau în rate`,
+      body: "Plătești cash, prin transfer bancar, prin credit auto sau în leasing. Pregătim dosarul de finanțare și dosarul complet de înmatriculare, iar mașina veche o preluăm la schimb.",
+    },
+  ],
+  faqs: [
+    {
+      q: `Ce mașini ${seed.label} aveți în stoc acum?`,
+      a: "Lista de pe această pagină se actualizează automat din stocul real, zilnic. Ce vezi aici este disponibil în parcul de pe DN1 Florești.",
+    },
+    {
+      q: "Un an de fabricație mai recent înseamnă automat mașină mai bună?",
+      a: "Nu întotdeauna. Contează la fel de mult kilometrajul real, istoricul de service și modul de utilizare — le verificăm pe toate trei.",
+    },
+    {
+      q: "Pot rezerva online o mașină recentă?",
+      a: "Da, poți rezerva direct din pagina mașinii, iar noi o scoatem din stoc până vii la vizionare.",
+    },
+  ],
+}));
+
+
+
 const thematicPages: LandingPage[] = [
   {
     slug: "masini-second-hand-in-rate-cluj",
@@ -528,8 +607,49 @@ const thematicPages: LandingPage[] = [
 export const LANDING_PAGES: LandingPage[] = [
   ...modelPages,
   ...pricePages,
+  ...yearPages,
   ...thematicPages,
   ...GEO_LANDING_PAGES,
+];
+
+/** Grupare folosită de hub-ul /categorii pentru linking intern. */
+export const LANDING_GROUPS: Array<{
+  id: string;
+  heading: string;
+  blurb: string;
+  pages: LandingPage[];
+}> = [
+  {
+    id: "marci",
+    heading: "Mașini second hand după marcă și model",
+    blurb:
+      "Cele mai căutate mărci din parcul nostru de pe DN1 Florești, fiecare cu verificările specifice modelului.",
+    pages: modelPages,
+  },
+  {
+    id: "buget",
+    heading: "Mașini second hand după buget",
+    blurb: "Alege intervalul de preț în euro și vezi doar mașinile disponibile acum în acel buget.",
+    pages: pricePages,
+  },
+  {
+    id: "an",
+    heading: "Mașini second hand după an și kilometraj",
+    blurb: "Filtrează după anul de fabricație sau după rulaj, cu kilometraj verificat în Germania.",
+    pages: yearPages,
+  },
+  {
+    id: "servicii",
+    heading: "Finanțare, import și parcul auto",
+    blurb: "Cum cumperi de la noi: în rate, din Germania, direct din parcul de pe DN1.",
+    pages: thematicPages,
+  },
+  {
+    id: "orase",
+    heading: "Livrare și vânzări pe orașe",
+    blurb: "Livrăm pe platformă în toată România — vezi pagina orașului tău.",
+    pages: GEO_LANDING_PAGES,
+  },
 ];
 
 export function getLandingPage(slug: string): LandingPage | undefined {
@@ -537,3 +657,4 @@ export function getLandingPage(slug: string): LandingPage | undefined {
 }
 
 export const LANDING_SLUGS = LANDING_PAGES.map((p) => p.slug);
+

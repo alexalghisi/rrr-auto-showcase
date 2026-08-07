@@ -35,6 +35,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link to="/categorii" className="transition-colors hover:text-foreground">
+                Categorii mașini
+              </Link>
+            </li>
+            <li>
               <Link to="/despre" className="transition-colors hover:text-foreground">
                 Despre noi
               </Link>
