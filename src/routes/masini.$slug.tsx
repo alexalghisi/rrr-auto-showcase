@@ -233,7 +233,9 @@ function CarPage() {
 
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <div className="surface-card rounded-xl p-6">
-            <h1 className="text-2xl leading-tight sm:text-3xl">{title}</h1>
+            <h1 className="text-2xl leading-tight sm:text-3xl">
+              {title} {car.year} second hand Cluj — Bremen Auto
+            </h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
               {car.year} · {formatKm(car.mileage_km)} · {car.fuel}
             </p>
