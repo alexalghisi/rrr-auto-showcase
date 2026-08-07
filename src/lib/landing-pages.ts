@@ -607,8 +607,49 @@ const thematicPages: LandingPage[] = [
 export const LANDING_PAGES: LandingPage[] = [
   ...modelPages,
   ...pricePages,
+  ...yearPages,
   ...thematicPages,
   ...GEO_LANDING_PAGES,
+];
+
+/** Grupare folosită de hub-ul /categorii pentru linking intern. */
+export const LANDING_GROUPS: Array<{
+  id: string;
+  heading: string;
+  blurb: string;
+  pages: LandingPage[];
+}> = [
+  {
+    id: "marci",
+    heading: "Mașini second hand după marcă și model",
+    blurb:
+      "Cele mai căutate mărci din parcul nostru de pe DN1 Florești, fiecare cu verificările specifice modelului.",
+    pages: modelPages,
+  },
+  {
+    id: "buget",
+    heading: "Mașini second hand după buget",
+    blurb: "Alege intervalul de preț în euro și vezi doar mașinile disponibile acum în acel buget.",
+    pages: pricePages,
+  },
+  {
+    id: "an",
+    heading: "Mașini second hand după an și kilometraj",
+    blurb: "Filtrează după anul de fabricație sau după rulaj, cu kilometraj verificat în Germania.",
+    pages: yearPages,
+  },
+  {
+    id: "servicii",
+    heading: "Finanțare, import și parcul auto",
+    blurb: "Cum cumperi de la noi: în rate, din Germania, direct din parcul de pe DN1.",
+    pages: thematicPages,
+  },
+  {
+    id: "orase",
+    heading: "Livrare și vânzări pe orașe",
+    blurb: "Livrăm pe platformă în toată România — vezi pagina orașului tău.",
+    pages: GEO_LANDING_PAGES,
+  },
 ];
 
 export function getLandingPage(slug: string): LandingPage | undefined {
@@ -616,3 +657,4 @@ export function getLandingPage(slug: string): LandingPage | undefined {
 }
 
 export const LANDING_SLUGS = LANDING_PAGES.map((p) => p.slug);
+
