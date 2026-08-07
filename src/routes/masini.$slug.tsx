@@ -134,6 +134,7 @@ function CarPage() {
   const car = Route.useLoaderData();
   const [active, setActive] = useState(0);
   const title = `${car.make} ${car.model}${car.trim ? ` ${car.trim}` : ""}`;
+  const related = LANDING_PAGES.filter((p) => p.match(car)).slice(0, 8);
 
   const specs = [
     ["An fabricație", String(car.year)],
@@ -150,12 +151,20 @@ function CarPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-      <Link
-        to="/stoc"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="size-4" /> Înapoi la stoc
-      </Link>
+      <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+        <Link to="/" className="hover:text-foreground">
+          Acasă
+        </Link>
+        <span>/</span>
+        <Link to="/stoc" className="inline-flex items-center gap-1 hover:text-foreground">
+          <ArrowLeft className="size-3.5" /> Stoc mașini
+        </Link>
+        <span>/</span>
+        <span className="text-foreground">
+          {title} {car.year}
+        </span>
+      </nav>
+
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
         <div>

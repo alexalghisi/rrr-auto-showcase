@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LandingRouteImport } from './routes/$landing'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CategoriiRouteImport } from './routes/categorii'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DespreRouteImport } from './routes/despre'
 import { Route as GasesteMasinaRouteImport } from './routes/gaseste-masina'
@@ -45,6 +46,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriiRoute = CategoriiRouteImport.update({
+  id: '/categorii',
+  path: '/categorii',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$landing': typeof LandingRoute
   '/auth': typeof AuthRoute
+  '/categorii': typeof CategoriiRoute
   '/contact': typeof ContactRoute
   '/despre': typeof DespreRoute
   '/gaseste-masina': typeof GasesteMasinaRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$landing': typeof LandingRoute
   '/auth': typeof AuthRoute
+  '/categorii': typeof CategoriiRoute
   '/contact': typeof ContactRoute
   '/despre': typeof DespreRoute
   '/gaseste-masina': typeof GasesteMasinaRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/$landing': typeof LandingRoute
   '/auth': typeof AuthRoute
+  '/categorii': typeof CategoriiRoute
   '/contact': typeof ContactRoute
   '/despre': typeof DespreRoute
   '/gaseste-masina': typeof GasesteMasinaRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$landing'
     | '/auth'
+    | '/categorii'
     | '/contact'
     | '/despre'
     | '/gaseste-masina'
@@ -203,6 +213,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$landing'
     | '/auth'
+    | '/categorii'
     | '/contact'
     | '/despre'
     | '/gaseste-masina'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/$landing'
     | '/auth'
+    | '/categorii'
     | '/contact'
     | '/despre'
     | '/gaseste-masina'
@@ -244,6 +256,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LandingRoute: typeof LandingRoute
   AuthRoute: typeof AuthRoute
+  CategoriiRoute: typeof CategoriiRoute
   ContactRoute: typeof ContactRoute
   DespreRoute: typeof DespreRoute
   GasesteMasinaRoute: typeof GasesteMasinaRoute
@@ -287,6 +300,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categorii': {
+      id: '/categorii'
+      path: '/categorii'
+      fullPath: '/categorii'
+      preLoaderRoute: typeof CategoriiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -406,6 +426,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LandingRoute: LandingRoute,
   AuthRoute: AuthRoute,
+  CategoriiRoute: CategoriiRoute,
   ContactRoute: ContactRoute,
   DespreRoute: DespreRoute,
   GasesteMasinaRoute: GasesteMasinaRoute,
@@ -423,13 +444,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
