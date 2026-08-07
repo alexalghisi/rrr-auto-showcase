@@ -300,6 +300,50 @@ function CarPage() {
         </aside>
 
       </div>
+
+      <section className="mt-14 border-t border-border pt-10">
+        <h2 className="text-2xl">Categorii înrudite cu {title}</h2>
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+          Vezi și alte mașini second hand din aceeași categorie, buget sau zonă de livrare.
+        </p>
+        <ul className="mt-5 flex flex-wrap gap-2">
+          {related.map((page: LandingPage) => (
+            <li key={page.slug}>
+              <Link
+                to="/$landing"
+                params={{ landing: page.slug }}
+                className="surface-card inline-block rounded-full px-4 py-2 text-sm transition-colors hover:border-primary"
+              >
+                {page.h1}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <h3 className="mt-8 text-lg">Navighează mai departe</h3>
+        <ul className="mt-3 flex flex-wrap gap-4 text-sm">
+          <li>
+            <Link to="/stoc" className="text-primary underline-offset-4 hover:underline">
+              Tot stocul de mașini second hand
+            </Link>
+          </li>
+          <li>
+            <Link to="/categorii" className="text-primary underline-offset-4 hover:underline">
+              Toate categoriile
+            </Link>
+          </li>
+          <li>
+            <Link to="/blog" className="text-primary underline-offset-4 hover:underline">
+              Ghid cumpărare mașini second hand
+            </Link>
+          </li>
+          <li>
+            <Link to="/" className="text-primary underline-offset-4 hover:underline">
+              Bremen Auto — prima pagină
+            </Link>
+          </li>
+        </ul>
+      </section>
     </div>
   );
 }
+
