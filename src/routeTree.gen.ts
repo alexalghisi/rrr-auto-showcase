@@ -27,6 +27,7 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as MasiniSlugRouteImport } from './routes/masini.$slug'
 import { Route as ApiPublicImgRouteImport } from './routes/api/public/img'
 import { Route as ApiPublicHooksImportCarsRouteImport } from './routes/api/public/hooks/import-cars'
+import { Route as ApiPublicHooksSeoRefreshRouteImport } from './routes/api/public/hooks/seo-refresh'
 import { Route as ApiPublicPhotoSplatRouteImport } from './routes/api/public/photo.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -119,6 +120,12 @@ const ApiPublicHooksImportCarsRoute =
     path: '/api/public/hooks/import-cars',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksSeoRefreshRoute =
+  ApiPublicHooksSeoRefreshRouteImport.update({
+    id: '/api/public/hooks/seo-refresh',
+    path: '/api/public/hooks/seo-refresh',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPhotoSplatRoute = ApiPublicPhotoSplatRouteImport.update({
   id: '/api/public/photo/$',
   path: '/api/public/photo/$',
@@ -143,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
+  '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRoutesByTo {
@@ -163,6 +171,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
+  '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRoutesById {
@@ -185,6 +194,7 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
+  '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRouteTypes {
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/api/public/img'
     | '/api/public/hooks/import-cars'
+    | '/api/public/hooks/seo-refresh'
     | '/api/public/photo/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/api/public/img'
     | '/api/public/hooks/import-cars'
+    | '/api/public/hooks/seo-refresh'
     | '/api/public/photo/$'
   id:
     | '__root__'
@@ -248,6 +260,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/api/public/img'
     | '/api/public/hooks/import-cars'
+    | '/api/public/hooks/seo-refresh'
     | '/api/public/photo/$'
   fileRoutesById: FileRoutesById
 }
@@ -269,6 +282,7 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   ApiPublicImgRoute: typeof ApiPublicImgRoute
   ApiPublicHooksImportCarsRoute: typeof ApiPublicHooksImportCarsRoute
+  ApiPublicHooksSeoRefreshRoute: typeof ApiPublicHooksSeoRefreshRoute
   ApiPublicPhotoSplatRoute: typeof ApiPublicPhotoSplatRoute
 }
 
@@ -400,6 +414,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksImportCarsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/seo-refresh': {
+      id: '/api/public/hooks/seo-refresh'
+      path: '/api/public/hooks/seo-refresh'
+      fullPath: '/api/public/hooks/seo-refresh'
+      preLoaderRoute: typeof ApiPublicHooksSeoRefreshRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/photo/$': {
       id: '/api/public/photo/$'
       path: '/api/public/photo/$'
@@ -439,6 +460,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   ApiPublicImgRoute: ApiPublicImgRoute,
   ApiPublicHooksImportCarsRoute: ApiPublicHooksImportCarsRoute,
+  ApiPublicHooksSeoRefreshRoute: ApiPublicHooksSeoRefreshRoute,
   ApiPublicPhotoSplatRoute: ApiPublicPhotoSplatRoute,
 }
 export const routeTree = rootRouteImport
