@@ -362,36 +362,16 @@ async function logRun(result: ImportResult) {
   });
 }
 
-const INDEXNOW_KEY = "4b35420b66f24cb7b75389827394684d";
-
-/** Anunță motoarele de căutare (IndexNow: Bing, Yandex, Seznam) după fiecare import cu mașini noi. */
-async function pingSearchEngines(urls: string[] = []): Promise<void> {
-  const host = "bremenauto.ro";
-  const urlList = [`https://${host}/`, `https://${host}/stoc`, `https://${host}/sitemap.xml`, ...urls]
-    .filter((v, i, a) => a.indexOf(v) === i)
-    .slice(0, 500);
-
-  await Promise.allSettled([
-    fetch("https://api.indexnow.org/indexnow", {
-      method: "POST",
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify({
-        host,
-        key: INDEXNOW_KEY,
-        keyLocation: `https://${host}/${INDEXNOW_KEY}.txt`,
-        urlList,
-      }),
-    }),
-    fetch(`https://www.bing.com/ping?sitemap=${encodeURIComponent(`https://${host}/sitemap.xml`)}`),
-  ]);
-}
-
 export async function importAll(): Promise<ImportResult[]> {
   const results: ImportResult[] = [];
   // Actorii sunt porniți serial pentru a evita timeout-urile gateway-ului la două rulări lungi simultan.
   for (const source of ["facebook", "olx"] as SourceKey[]) results.push(await importSource(source));
   // Pozele vechi, încă găzduite extern, sunt mutate treptat în storage-ul propriu.
   await backfillImages(12);
-  if (results.some((r) => r.inserted > 0)) await pingSearchEngines();
+  // Orice schimbare de stoc declanșează reindexarea completă (sitemap + IndexNow).
+  if (results.some((r) => r.inserted > 0 || r.skipped > 0)) {
+    const { dailySeoRefresh } = await import("./seo-ping.server");
+    await dailySeoRefresh();
+  }
   return results;
 }
