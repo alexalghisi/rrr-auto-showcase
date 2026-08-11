@@ -217,25 +217,38 @@ function AdminPage() {
         published: form.published,
       };
 
+      let touchedSlug = "";
       if (form.id) {
         const { error } = await supabase.from("cars").update(base).eq("id", form.id);
         if (error) throw new Error(error.message);
+        touchedSlug = cars?.find((c) => c.id === form.id)?.slug ?? "";
       } else {
         const slug = `${slugify(`${base.make} ${base.model} ${form.trim} ${base.year}`)}-${Math.random()
           .toString(36)
           .slice(2, 7)}`;
         const { error } = await supabase.from("cars").insert({ ...base, slug });
         if (error) throw new Error(error.message);
+        touchedSlug = slug;
       }
 
       toast.success("Anunț salvat");
       setForm(null);
       await refetch();
       queryClient.invalidateQueries({ queryKey: ["cars", "public"] });
+      void reindex(touchedSlug);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Salvare eșuată");
     } finally {
       setSaving(false);
+    }
+  }
+
+  /** Anunță Google/Bing (sitemap + IndexNow) imediat ce stocul s-a schimbat. */
+  async function reindex(slug?: string) {
+    try {
+      await notifySearchEngines({ data: { slugs: slug ? [slug] : [] } });
+    } catch {
+      // reindexarea eșuată nu blochează administrarea
     }
   }
 
@@ -249,6 +262,7 @@ function AdminPage() {
     toast.success("Anunț șters");
     await refetch();
     queryClient.invalidateQueries({ queryKey: ["cars", "public"] });
+    void reindex(car.slug);
   }
 
   async function togglePublished(car: Car) {
@@ -262,6 +276,7 @@ function AdminPage() {
     }
     await refetch();
     queryClient.invalidateQueries({ queryKey: ["cars", "public"] });
+    void reindex(car.slug);
   }
 
   async function signOut() {
