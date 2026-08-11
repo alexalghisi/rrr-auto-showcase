@@ -37,6 +37,7 @@ type Car = Database["public"]["Tables"]["cars"]["Row"];
 import { formatKm, formatPrice, photoUrl, slugify } from "@/lib/site";
 import { PhotoLightbox, type LightboxState } from "@/components/photo-lightbox";
 import { listImportRuns, runImportNow } from "@/lib/admin.functions";
+import { notifySearchEngines } from "@/lib/seo.functions";
 import { getViewStats } from "@/lib/analytics.functions";
 import { displayCarViews, displaySiteViews } from "@/lib/analytics-display";
 
