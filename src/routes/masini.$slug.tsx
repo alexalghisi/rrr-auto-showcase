@@ -35,10 +35,6 @@ export const Route = createFileRoute("/masini/$slug")({
       meta: [
         { title },
         { name: "description", content: description },
-        {
-          name: "keywords",
-          content: `${car.make} ${car.model} second hand, ${car.make} ${car.model} ${car.year} de vânzare, mașini second hand Cluj, auto rulate Florești Cluj, ${car.fuel} ${car.gearbox}`,
-        },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "product" },
