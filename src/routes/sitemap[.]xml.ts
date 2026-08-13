@@ -29,9 +29,11 @@ export const Route = createFileRoute("/sitemap.xml")({
         const { createPublicClient } = await import("@/lib/cars.server");
         const { data } = await createPublicClient()
           .from("cars")
-          .select("slug, updated_at, make, model, trim, year, images")
+          .select("slug, updated_at, make, model, trim, year, images, status")
           .eq("published", true)
+          .neq("status", "vanduta")
           .order("updated_at", { ascending: false });
+
 
         const cars = data ?? [];
 
