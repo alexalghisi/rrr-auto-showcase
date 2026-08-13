@@ -1,4 +1,5 @@
 import type { LandingPage } from "@/lib/landing-pages";
+import { GEO_LOCAL } from "@/lib/landing-geo-local";
 
 /**
  * Pagini geografice: acoperire națională pentru cumpărători din afara județului Cluj.
@@ -232,6 +233,7 @@ const GEO_SEEDS: GeoSeed[] = [
 
 export const GEO_LANDING_PAGES: LandingPage[] = GEO_SEEDS.map((seed) => {
   const isNational = seed.place === "toată România";
+  const local = GEO_LOCAL[seed.slug];
   const inPlace = isNational ? "în toată România" : `în ${seed.place}`;
   const h1 = isNational
     ? "Mașini second hand din Germania cu livrare în toată România"
@@ -282,6 +284,22 @@ export const GEO_LANDING_PAGES: LandingPage[] = GEO_SEEDS.map((seed) => {
         h2: "Actele primite la livrare",
         body: "Factură, contract de vânzare-cumpărare, cartea de identitate a vehiculului și dosarul complet pentru înmatriculare în România. Nu percepem comisioane ascunse, iar prețul afișat pe site este prețul final al mașinii.",
       },
+      ...(local
+        ? [
+            {
+              h2: `Cât costă transportul până în ${seed.place}`,
+              body: `Distanța rutieră până la parcul nostru de pe DN1, Luna de Sus, este de aproximativ ${local.distanceKm} km. Costul livrării pe platformă este ${local.transport}. Este un cost orientativ: îl confirmăm exact înainte de rezervare, în funcție de adresa finală și de programul transportatorului, și nu se modifică ulterior. Mașina este asigurată pe toată durata transportului.`,
+            },
+            {
+              h2: `Unde înmatriculezi mașina dacă locuiești în ${seed.place}`,
+              body: local.registration,
+            },
+            {
+              h2: `Ce modele se caută în zona ${seed.place}`,
+              body: local.models,
+            },
+          ]
+        : []),
     ],
     faqs: [
       {
@@ -310,6 +328,7 @@ export const GEO_LANDING_PAGES: LandingPage[] = GEO_SEEDS.map((seed) => {
         q: "Se poate cumpăra în rate de la distanță?",
         a: "Da. Dosarul de credit auto sau leasing se poate depune online, iar documentele se semnează electronic sau la livrare, în funcție de finanțator.",
       },
+      ...(local?.faqs ?? []),
     ],
   } satisfies LandingPage;
 });
