@@ -70,7 +70,10 @@ export const Route = createFileRoute("/")({
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
-    links: [{ rel: "canonical", href: "https://bremenauto.ro/" }],
+    links: [
+      { rel: "canonical", href: "https://bremenauto.ro/" },
+      { rel: "preload", as: "image", href: heroImage, fetchPriority: "high" },
+    ],
     scripts: [
       { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
       {
@@ -144,6 +147,8 @@ function HomePage() {
           alt="Parc auto Bremen Auto pe DN1, Luna de Sus, comuna Florești, județul Cluj, cu mașini rulate aduse din Germania"
           width={1920}
           height={1088}
+          fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 size-full object-cover"
         />
         <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />

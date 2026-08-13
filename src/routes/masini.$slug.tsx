@@ -173,6 +173,8 @@ function CarPage() {
                   alt={`${title} ${car.year} de vânzare la Bremen Auto, DN1 Luna de Sus, Florești, Cluj`}
                   width={1200}
                   height={900}
+                  fetchPriority="high"
+                  decoding="async"
                   className="size-full object-cover"
                 />
               ) : (
@@ -198,6 +200,9 @@ function CarPage() {
                     src={photoUrl(img)}
                     alt={`${title} — fotografia ${i + 1}`}
                     loading="lazy"
+                    decoding="async"
+                    width={320}
+                    height={240}
                     className="size-full object-cover"
                   />
                 </button>
