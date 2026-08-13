@@ -21,11 +21,6 @@ export const Route = createFileRoute("/gaseste-masina")({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
-      {
-        name: "keywords",
-        content:
-          "consilier auto AI, ce mașină să cumpăr, mașini second hand Cluj, alege mașina potrivită buget, mașini rate Cluj",
-      },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },

@@ -14,11 +14,6 @@ export const Route = createFileRoute("/categorii")({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
-      {
-        name: "keywords",
-        content:
-          "categorii masini second hand cluj, masini rulate dupa marca, masini second hand dupa buget, masini second hand dupa an, auto second hand romania",
-      },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },

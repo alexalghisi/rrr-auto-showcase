@@ -60,11 +60,6 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
-      {
-        name: "keywords",
-        content:
-          "masini second hand Cluj, auto rulate Cluj-Napoca, masini din Germania, parc auto Floresti, parc auto Luna de Sus, dealer auto Cluj, Bremen Auto",
-      },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
