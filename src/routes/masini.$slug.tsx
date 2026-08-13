@@ -14,9 +14,12 @@ import { LANDING_PAGES, type LandingPage } from "@/lib/landing-pages";
 export const Route = createFileRoute("/masini/$slug")({
   loader: async ({ params }) => {
     const car = await getPublicCar({ data: { slug: params.slug } });
-    if (!car) throw notFound();
+    // Anunț retras/vândut și depublicat: redirect permanent spre stoc,
+    // ca să nu pierdem semnalele SEO pe un 404 gol.
+    if (!car) throw redirect({ to: "/stoc", statusCode: 301 });
     return car;
   },
+
   head: ({ loaderData, params }) => {
     if (!loaderData) return {};
     const car = loaderData;
