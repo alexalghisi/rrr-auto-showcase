@@ -28,7 +28,6 @@ export const Route = createFileRoute("/$landing")({
       meta: [
         { title: page.title },
         { name: "description", content: page.description },
-        { name: "keywords", content: page.keywords },
         { property: "og:title", content: page.title },
         { property: "og:description", content: page.description },
         { property: "og:type", content: "website" },

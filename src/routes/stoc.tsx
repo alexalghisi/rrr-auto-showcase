@@ -38,11 +38,6 @@ export const Route = createFileRoute("/stoc")({
       { property: "og:locale", content: "ro_RO" },
       { property: "og:url", content: "https://bremenauto.ro/stoc" },
       { name: "twitter:card", content: "summary_large_image" },
-      {
-        name: "keywords",
-        content:
-          "masini second hand Cluj, autoturisme rulate Cluj-Napoca, masini din Germania de vanzare, parc auto Floresti, stoc masini Cluj",
-      },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],

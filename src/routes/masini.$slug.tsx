@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { Phone, MapPin, Check, ArrowLeft, HandCoins } from "lucide-react";
 
@@ -14,9 +14,12 @@ import { LANDING_PAGES, type LandingPage } from "@/lib/landing-pages";
 export const Route = createFileRoute("/masini/$slug")({
   loader: async ({ params }) => {
     const car = await getPublicCar({ data: { slug: params.slug } });
-    if (!car) throw notFound();
+    // Anunț retras/vândut și depublicat: redirect permanent spre stoc,
+    // ca să nu pierdem semnalele SEO pe un 404 gol.
+    if (!car) throw redirect({ to: "/stoc", statusCode: 301 });
     return car;
   },
+
   head: ({ loaderData, params }) => {
     if (!loaderData) return {};
     const car = loaderData;
@@ -35,10 +38,6 @@ export const Route = createFileRoute("/masini/$slug")({
       meta: [
         { title },
         { name: "description", content: description },
-        {
-          name: "keywords",
-          content: `${car.make} ${car.model} second hand, ${car.make} ${car.model} ${car.year} de vânzare, mașini second hand Cluj, auto rulate Florești Cluj, ${car.fuel} ${car.gearbox}`,
-        },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "product" },
@@ -177,6 +176,8 @@ function CarPage() {
                   alt={`${title} ${car.year} de vânzare la Bremen Auto, DN1 Luna de Sus, Florești, Cluj`}
                   width={1200}
                   height={900}
+                  fetchPriority="high"
+                  decoding="async"
                   className="size-full object-cover"
                 />
               ) : (
@@ -202,6 +203,9 @@ function CarPage() {
                     src={photoUrl(img)}
                     alt={`${title} — fotografia ${i + 1}`}
                     loading="lazy"
+                    decoding="async"
+                    width={320}
+                    height={240}
                     className="size-full object-cover"
                   />
                 </button>

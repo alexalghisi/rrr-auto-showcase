@@ -15,11 +15,6 @@ export const Route = createFileRoute("/blog/")({
     meta: [
       { title: TITLE.slice(0, 60) },
       { name: "description", content: DESCRIPTION },
-      {
-        name: "keywords",
-        content:
-          "blog auto cluj, ghid masini second hand cluj, sfaturi cumparare auto rulat, piata auto cluj-napoca",
-      },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },

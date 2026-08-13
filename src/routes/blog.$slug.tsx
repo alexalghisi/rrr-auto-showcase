@@ -19,7 +19,6 @@ export const Route = createFileRoute("/blog/$slug")({
       meta: [
         { title: post.metaTitle.slice(0, 60) },
         { name: "description", content: post.description.slice(0, 160) },
-        { name: "keywords", content: post.keywords },
         { name: "author", content: BLOG_AUTHOR },
         { property: "og:title", content: post.metaTitle },
         { property: "og:description", content: post.description },
