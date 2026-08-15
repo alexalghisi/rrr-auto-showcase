@@ -113,6 +113,96 @@ export type Database = {
         }
         Relationships: []
       }
+      competitor_reports: {
+        Row: {
+          created_at: string
+          findings: Json
+          gaps: Json
+          id: string
+          scanned_domains: string[]
+          summary: string
+        }
+        Insert: {
+          created_at?: string
+          findings?: Json
+          gaps?: Json
+          id?: string
+          scanned_domains?: string[]
+          summary?: string
+        }
+        Update: {
+          created_at?: string
+          findings?: Json
+          gaps?: Json
+          id?: string
+          scanned_domains?: string[]
+          summary?: string
+        }
+        Relationships: []
+      }
+      competitors: {
+        Row: {
+          active: boolean
+          created_at: string
+          domain: string
+          id: string
+          label: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          domain: string
+          id?: string
+          label?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          domain?: string
+          id?: string
+          label?: string
+        }
+        Relationships: []
+      }
+      content_drafts: {
+        Row: {
+          body: string
+          created_at: string
+          description: string
+          id: string
+          kind: string
+          slug: string
+          status: string
+          title: string
+          topic: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          description?: string
+          id?: string
+          kind?: string
+          slug: string
+          status?: string
+          title: string
+          topic: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          description?: string
+          id?: string
+          kind?: string
+          slug?: string
+          status?: string
+          title?: string
+          topic?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       import_runs: {
         Row: {
           created_at: string
@@ -203,6 +293,36 @@ export type Database = {
           created_at?: string
           id?: string
           path?: string
+        }
+        Relationships: []
+      }
+      seo_page_content: {
+        Row: {
+          created_at: string
+          id: string
+          intro: string
+          slug: string
+          source: string
+          stock_count: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          intro: string
+          slug: string
+          source?: string
+          stock_count?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          intro?: string
+          slug?: string
+          source?: string
+          stock_count?: number
+          updated_at?: string
         }
         Relationships: []
       }
