@@ -9,17 +9,28 @@ import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
 import { getLandingPage, LANDING_PAGES } from "@/lib/landing-pages";
 import { BLOG_POSTS } from "@/lib/blog";
+import { listPageIntros } from "@/lib/seo-content.functions";
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
   queryFn: () => listPublicCars(),
 });
 
+const introsQuery = queryOptions({
+  queryKey: ["seo", "intros"],
+  queryFn: () => listPageIntros(),
+});
+
 export const Route = createFileRoute("/$landing")({
   beforeLoad: ({ params }) => {
     if (!getLandingPage(params.landing)) throw notFound();
   },
-  loader: ({ context }) => context.queryClient.ensureQueryData(carsQuery),
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(carsQuery),
+      context.queryClient.ensureQueryData(introsQuery),
+    ]);
+  },
   head: ({ params }) => {
     const page = getLandingPage(params.landing);
     if (!page) return {};
@@ -74,6 +85,8 @@ function LandingRoute() {
   const { landing } = Route.useParams();
   const page = getLandingPage(landing)!;
   const { data: cars } = useSuspenseQuery(carsQuery);
+  const { data: intros } = useSuspenseQuery(introsQuery);
+  const intro = intros[page.slug] ?? page.intro;
   const matches = cars.filter(page.match);
   const related = LANDING_PAGES.filter((p) => p.slug !== page.slug).slice(0, 8);
   const relatedPosts = BLOG_POSTS.filter((post) => post.relatedLandings.includes(page.slug)).slice(
@@ -96,7 +109,7 @@ function LandingRoute() {
 
       <p className="eyebrow mt-6">{page.eyebrow}</p>
       <h1 className="mt-2 max-w-3xl text-4xl sm:text-5xl">{page.h1}</h1>
-      <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">{page.intro}</p>
+      <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">{intro}</p>
 
       <div className="mt-7 flex flex-wrap gap-3">
         <Button asChild size="lg">
