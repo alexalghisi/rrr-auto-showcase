@@ -16,6 +16,11 @@ export const Route = createFileRoute("/robots.txt")({
           "Allow: /api/public/photo/",
           "",
           `Sitemap: ${origin}/sitemap.xml`,
+          `Sitemap: ${origin}/sitemap-static.xml`,
+          `Sitemap: ${origin}/sitemap-stoc.xml`,
+          `Sitemap: ${origin}/sitemap-categorii.xml`,
+          `Sitemap: ${origin}/sitemap-orase.xml`,
+          `Sitemap: ${origin}/sitemap-blog.xml`,
           "",
         ].join("\n");
 

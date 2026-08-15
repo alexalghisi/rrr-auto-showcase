@@ -1,5 +1,6 @@
 import type { Tables } from "@/integrations/supabase/types";
 import { GEO_LANDING_PAGES } from "@/lib/landing-pages-geo";
+import { COMBO_PAGES } from "@/lib/landing-combo";
 
 export type Car = Tables<"cars">;
 
@@ -610,6 +611,7 @@ export const LANDING_PAGES: LandingPage[] = [
   ...yearPages,
   ...thematicPages,
   ...GEO_LANDING_PAGES,
+  ...COMBO_PAGES,
 ];
 
 /** Grupare folosită de hub-ul /categorii pentru linking intern. */
@@ -649,6 +651,13 @@ export const LANDING_GROUPS: Array<{
     heading: "Livrare și vânzări pe orașe",
     blurb: "Livrăm pe platformă în toată România — vezi pagina orașului tău.",
     pages: GEO_LANDING_PAGES,
+  },
+  {
+    id: "combinatii",
+    heading: "Marcă, segment și buget, pe orașul tău",
+    blurb:
+      "Pagini dedicate pentru combinațiile căutate cel mai des: model + oraș, tip de mașină + oraș, buget + oraș.",
+    pages: COMBO_PAGES,
   },
 ];
 

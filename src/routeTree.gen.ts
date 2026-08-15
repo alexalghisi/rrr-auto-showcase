@@ -19,6 +19,11 @@ import { Route as DespreRouteImport } from './routes/despre'
 import { Route as GasesteMasinaRouteImport } from './routes/gaseste-masina'
 import { Route as RecenziiRouteImport } from './routes/recenzii'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SitemapBlogDotxmlRouteImport } from './routes/sitemap-blog[.]xml'
+import { Route as SitemapCategoriiDotxmlRouteImport } from './routes/sitemap-categorii[.]xml'
+import { Route as SitemapOraseDotxmlRouteImport } from './routes/sitemap-orase[.]xml'
+import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
+import { Route as SitemapStocDotxmlRouteImport } from './routes/sitemap-stoc[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StocRouteImport } from './routes/stoc'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -26,7 +31,9 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as MasiniSlugRouteImport } from './routes/masini.$slug'
 import { Route as ApiPublicImgRouteImport } from './routes/api/public/img'
+import { Route as ApiPublicHooksCompetitorScanRouteImport } from './routes/api/public/hooks/competitor-scan'
 import { Route as ApiPublicHooksImportCarsRouteImport } from './routes/api/public/hooks/import-cars'
+import { Route as ApiPublicHooksSeoDailyRouteImport } from './routes/api/public/hooks/seo-daily'
 import { Route as ApiPublicHooksSeoRefreshRouteImport } from './routes/api/public/hooks/seo-refresh'
 import { Route as ApiPublicPhotoSplatRouteImport } from './routes/api/public/photo.$'
 
@@ -79,6 +86,31 @@ const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapBlogDotxmlRoute = SitemapBlogDotxmlRouteImport.update({
+  id: '/sitemap-blog.xml',
+  path: '/sitemap-blog.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapCategoriiDotxmlRoute = SitemapCategoriiDotxmlRouteImport.update({
+  id: '/sitemap-categorii.xml',
+  path: '/sitemap-categorii.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapOraseDotxmlRoute = SitemapOraseDotxmlRouteImport.update({
+  id: '/sitemap-orase.xml',
+  path: '/sitemap-orase.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapStaticDotxmlRoute = SitemapStaticDotxmlRouteImport.update({
+  id: '/sitemap-static.xml',
+  path: '/sitemap-static.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapStocDotxmlRoute = SitemapStocDotxmlRouteImport.update({
+  id: '/sitemap-stoc.xml',
+  path: '/sitemap-stoc.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -114,12 +146,23 @@ const ApiPublicImgRoute = ApiPublicImgRouteImport.update({
   path: '/api/public/img',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksCompetitorScanRoute =
+  ApiPublicHooksCompetitorScanRouteImport.update({
+    id: '/api/public/hooks/competitor-scan',
+    path: '/api/public/hooks/competitor-scan',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksImportCarsRoute =
   ApiPublicHooksImportCarsRouteImport.update({
     id: '/api/public/hooks/import-cars',
     path: '/api/public/hooks/import-cars',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksSeoDailyRoute = ApiPublicHooksSeoDailyRouteImport.update({
+  id: '/api/public/hooks/seo-daily',
+  path: '/api/public/hooks/seo-daily',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHooksSeoRefreshRoute =
   ApiPublicHooksSeoRefreshRouteImport.update({
     id: '/api/public/hooks/seo-refresh',
@@ -142,6 +185,11 @@ export interface FileRoutesByFullPath {
   '/gaseste-masina': typeof GasesteMasinaRoute
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-categorii.xml': typeof SitemapCategoriiDotxmlRoute
+  '/sitemap-orase.xml': typeof SitemapOraseDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -149,7 +197,9 @@ export interface FileRoutesByFullPath {
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
+  '/api/public/hooks/competitor-scan': typeof ApiPublicHooksCompetitorScanRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
+  '/api/public/hooks/seo-daily': typeof ApiPublicHooksSeoDailyRoute
   '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
@@ -163,6 +213,11 @@ export interface FileRoutesByTo {
   '/gaseste-masina': typeof GasesteMasinaRoute
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-categorii.xml': typeof SitemapCategoriiDotxmlRoute
+  '/sitemap-orase.xml': typeof SitemapOraseDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -170,7 +225,9 @@ export interface FileRoutesByTo {
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
+  '/api/public/hooks/competitor-scan': typeof ApiPublicHooksCompetitorScanRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
+  '/api/public/hooks/seo-daily': typeof ApiPublicHooksSeoDailyRoute
   '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
@@ -186,6 +243,11 @@ export interface FileRoutesById {
   '/gaseste-masina': typeof GasesteMasinaRoute
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-categorii.xml': typeof SitemapCategoriiDotxmlRoute
+  '/sitemap-orase.xml': typeof SitemapOraseDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -193,7 +255,9 @@ export interface FileRoutesById {
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
+  '/api/public/hooks/competitor-scan': typeof ApiPublicHooksCompetitorScanRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
+  '/api/public/hooks/seo-daily': typeof ApiPublicHooksSeoDailyRoute
   '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
@@ -209,6 +273,11 @@ export interface FileRouteTypes {
     | '/gaseste-masina'
     | '/recenzii'
     | '/robots.txt'
+    | '/sitemap-blog.xml'
+    | '/sitemap-categorii.xml'
+    | '/sitemap-orase.xml'
+    | '/sitemap-static.xml'
+    | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
@@ -216,7 +285,9 @@ export interface FileRouteTypes {
     | '/masini/$slug'
     | '/blog/'
     | '/api/public/img'
+    | '/api/public/hooks/competitor-scan'
     | '/api/public/hooks/import-cars'
+    | '/api/public/hooks/seo-daily'
     | '/api/public/hooks/seo-refresh'
     | '/api/public/photo/$'
   fileRoutesByTo: FileRoutesByTo
@@ -230,6 +301,11 @@ export interface FileRouteTypes {
     | '/gaseste-masina'
     | '/recenzii'
     | '/robots.txt'
+    | '/sitemap-blog.xml'
+    | '/sitemap-categorii.xml'
+    | '/sitemap-orase.xml'
+    | '/sitemap-static.xml'
+    | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
@@ -237,7 +313,9 @@ export interface FileRouteTypes {
     | '/masini/$slug'
     | '/blog'
     | '/api/public/img'
+    | '/api/public/hooks/competitor-scan'
     | '/api/public/hooks/import-cars'
+    | '/api/public/hooks/seo-daily'
     | '/api/public/hooks/seo-refresh'
     | '/api/public/photo/$'
   id:
@@ -252,6 +330,11 @@ export interface FileRouteTypes {
     | '/gaseste-masina'
     | '/recenzii'
     | '/robots.txt'
+    | '/sitemap-blog.xml'
+    | '/sitemap-categorii.xml'
+    | '/sitemap-orase.xml'
+    | '/sitemap-static.xml'
+    | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
     | '/_authenticated/admin'
@@ -259,7 +342,9 @@ export interface FileRouteTypes {
     | '/masini/$slug'
     | '/blog/'
     | '/api/public/img'
+    | '/api/public/hooks/competitor-scan'
     | '/api/public/hooks/import-cars'
+    | '/api/public/hooks/seo-daily'
     | '/api/public/hooks/seo-refresh'
     | '/api/public/photo/$'
   fileRoutesById: FileRoutesById
@@ -275,13 +360,20 @@ export interface RootRouteChildren {
   GasesteMasinaRoute: typeof GasesteMasinaRoute
   RecenziiRoute: typeof RecenziiRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
+  SitemapBlogDotxmlRoute: typeof SitemapBlogDotxmlRoute
+  SitemapCategoriiDotxmlRoute: typeof SitemapCategoriiDotxmlRoute
+  SitemapOraseDotxmlRoute: typeof SitemapOraseDotxmlRoute
+  SitemapStaticDotxmlRoute: typeof SitemapStaticDotxmlRoute
+  SitemapStocDotxmlRoute: typeof SitemapStocDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StocRoute: typeof StocRoute
   BlogSlugRoute: typeof BlogSlugRoute
   MasiniSlugRoute: typeof MasiniSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ApiPublicImgRoute: typeof ApiPublicImgRoute
+  ApiPublicHooksCompetitorScanRoute: typeof ApiPublicHooksCompetitorScanRoute
   ApiPublicHooksImportCarsRoute: typeof ApiPublicHooksImportCarsRoute
+  ApiPublicHooksSeoDailyRoute: typeof ApiPublicHooksSeoDailyRoute
   ApiPublicHooksSeoRefreshRoute: typeof ApiPublicHooksSeoRefreshRoute
   ApiPublicPhotoSplatRoute: typeof ApiPublicPhotoSplatRoute
 }
@@ -358,6 +450,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap-blog.xml': {
+      id: '/sitemap-blog.xml'
+      path: '/sitemap-blog.xml'
+      fullPath: '/sitemap-blog.xml'
+      preLoaderRoute: typeof SitemapBlogDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-categorii.xml': {
+      id: '/sitemap-categorii.xml'
+      path: '/sitemap-categorii.xml'
+      fullPath: '/sitemap-categorii.xml'
+      preLoaderRoute: typeof SitemapCategoriiDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-orase.xml': {
+      id: '/sitemap-orase.xml'
+      path: '/sitemap-orase.xml'
+      fullPath: '/sitemap-orase.xml'
+      preLoaderRoute: typeof SitemapOraseDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-static.xml': {
+      id: '/sitemap-static.xml'
+      path: '/sitemap-static.xml'
+      fullPath: '/sitemap-static.xml'
+      preLoaderRoute: typeof SitemapStaticDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-stoc.xml': {
+      id: '/sitemap-stoc.xml'
+      path: '/sitemap-stoc.xml'
+      fullPath: '/sitemap-stoc.xml'
+      preLoaderRoute: typeof SitemapStocDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -407,11 +534,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicImgRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/competitor-scan': {
+      id: '/api/public/hooks/competitor-scan'
+      path: '/api/public/hooks/competitor-scan'
+      fullPath: '/api/public/hooks/competitor-scan'
+      preLoaderRoute: typeof ApiPublicHooksCompetitorScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/import-cars': {
       id: '/api/public/hooks/import-cars'
       path: '/api/public/hooks/import-cars'
       fullPath: '/api/public/hooks/import-cars'
       preLoaderRoute: typeof ApiPublicHooksImportCarsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/seo-daily': {
+      id: '/api/public/hooks/seo-daily'
+      path: '/api/public/hooks/seo-daily'
+      fullPath: '/api/public/hooks/seo-daily'
+      preLoaderRoute: typeof ApiPublicHooksSeoDailyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/seo-refresh': {
@@ -453,13 +594,20 @@ const rootRouteChildren: RootRouteChildren = {
   GasesteMasinaRoute: GasesteMasinaRoute,
   RecenziiRoute: RecenziiRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
+  SitemapBlogDotxmlRoute: SitemapBlogDotxmlRoute,
+  SitemapCategoriiDotxmlRoute: SitemapCategoriiDotxmlRoute,
+  SitemapOraseDotxmlRoute: SitemapOraseDotxmlRoute,
+  SitemapStaticDotxmlRoute: SitemapStaticDotxmlRoute,
+  SitemapStocDotxmlRoute: SitemapStocDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StocRoute: StocRoute,
   BlogSlugRoute: BlogSlugRoute,
   MasiniSlugRoute: MasiniSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ApiPublicImgRoute: ApiPublicImgRoute,
+  ApiPublicHooksCompetitorScanRoute: ApiPublicHooksCompetitorScanRoute,
   ApiPublicHooksImportCarsRoute: ApiPublicHooksImportCarsRoute,
+  ApiPublicHooksSeoDailyRoute: ApiPublicHooksSeoDailyRoute,
   ApiPublicHooksSeoRefreshRoute: ApiPublicHooksSeoRefreshRoute,
   ApiPublicPhotoSplatRoute: ApiPublicPhotoSplatRoute,
 }
