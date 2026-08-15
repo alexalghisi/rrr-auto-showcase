@@ -652,6 +652,13 @@ export const LANDING_GROUPS: Array<{
     blurb: "Livrăm pe platformă în toată România — vezi pagina orașului tău.",
     pages: GEO_LANDING_PAGES,
   },
+  {
+    id: "combinatii",
+    heading: "Marcă, segment și buget, pe orașul tău",
+    blurb:
+      "Pagini dedicate pentru combinațiile căutate cel mai des: model + oraș, tip de mașină + oraș, buget + oraș.",
+    pages: COMBO_PAGES,
+  },
 ];
 
 export function getLandingPage(slug: string): LandingPage | undefined {
