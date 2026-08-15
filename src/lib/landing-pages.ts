@@ -1,5 +1,6 @@
 import type { Tables } from "@/integrations/supabase/types";
 import { GEO_LANDING_PAGES } from "@/lib/landing-pages-geo";
+import { COMBO_PAGES } from "@/lib/landing-combo";
 
 export type Car = Tables<"cars">;
 
