@@ -235,9 +235,12 @@ function brandPage(brand: BrandSeed, city: City): LandingPage {
     keywords: "",
     eyebrow: `${brand.label} · ${city.name}`,
     intro: `Cauți un ${brand.label} second hand în ${city.name}? La Bremen Auto, pe DN1 în Luna de Sus (comuna Florești), aducem ${brand.label} direct din Germania: ${brand.why}. Motorizările cu care ajung cel mai des la noi sunt ${brand.engines}, iar plaja realistă de preț pentru un exemplar bine întreținut este ${brand.budget}. Din ${city.name} ai ${city.route}, iar dacă nu vrei să te deplasezi, ${city.delivery}. Înainte să publicăm anunțul, la fiecare ${brand.label} verificăm ${brand.checks} — sunt exact punctele care fac diferența între o achiziție bună și o factură de service peste trei luni. Cumpărătorii din ${city.name} caută de obicei ${city.demand}, așa că îți spunem sincer dacă exemplarul din parc se potrivește cu felul în care conduci. ${BASE_TRUST}`,
-    match: (car) => norm(car.make).includes(norm(brand.make)) && norm(`${car.model} ${car.trim ?? ""}`).includes(norm(brand.model.replace("Seria ", "")))
-      ? true
-      : norm(car.make).includes(norm(brand.make)) && norm(`${car.model} ${car.trim ?? ""}`).includes(norm(brand.model)),
+    match: (car) => {
+      if (!norm(car.make).includes(norm(brand.make))) return false;
+      const haystack = norm(`${car.model} ${car.trim ?? ""}`);
+      const model = norm(brand.model);
+      return haystack.includes(model) || haystack.includes(model.replace("seria ", ""));
+    },
     sections: [
       {
         h2: `Ce verificăm la un ${brand.label} înainte de vânzare`,
