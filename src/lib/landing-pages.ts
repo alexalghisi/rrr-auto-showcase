@@ -610,6 +610,7 @@ export const LANDING_PAGES: LandingPage[] = [
   ...yearPages,
   ...thematicPages,
   ...GEO_LANDING_PAGES,
+  ...COMBO_PAGES,
 ];
 
 /** Grupare folosită de hub-ul /categorii pentru linking intern. */
