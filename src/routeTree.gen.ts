@@ -20,7 +20,10 @@ import { Route as GasesteMasinaRouteImport } from './routes/gaseste-masina'
 import { Route as RecenziiRouteImport } from './routes/recenzii'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapBlogDotxmlRouteImport } from './routes/sitemap-blog[.]xml'
+import { Route as SitemapCategoriiDotxmlRouteImport } from './routes/sitemap-categorii[.]xml'
+import { Route as SitemapOraseDotxmlRouteImport } from './routes/sitemap-orase[.]xml'
 import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
+import { Route as SitemapStocDotxmlRouteImport } from './routes/sitemap-stoc[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StocRouteImport } from './routes/stoc'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -86,9 +89,24 @@ const SitemapBlogDotxmlRoute = SitemapBlogDotxmlRouteImport.update({
   path: '/sitemap-blog.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapCategoriiDotxmlRoute = SitemapCategoriiDotxmlRouteImport.update({
+  id: '/sitemap-categorii.xml',
+  path: '/sitemap-categorii.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapOraseDotxmlRoute = SitemapOraseDotxmlRouteImport.update({
+  id: '/sitemap-orase.xml',
+  path: '/sitemap-orase.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapStaticDotxmlRoute = SitemapStaticDotxmlRouteImport.update({
   id: '/sitemap-static.xml',
   path: '/sitemap-static.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapStocDotxmlRoute = SitemapStocDotxmlRouteImport.update({
+  id: '/sitemap-stoc.xml',
+  path: '/sitemap-stoc.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -155,7 +173,10 @@ export interface FileRoutesByFullPath {
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-categorii.xml': typeof SitemapCategoriiDotxmlRoute
+  '/sitemap-orase.xml': typeof SitemapOraseDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -178,7 +199,10 @@ export interface FileRoutesByTo {
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-categorii.xml': typeof SitemapCategoriiDotxmlRoute
+  '/sitemap-orase.xml': typeof SitemapOraseDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -203,7 +227,10 @@ export interface FileRoutesById {
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-categorii.xml': typeof SitemapCategoriiDotxmlRoute
+  '/sitemap-orase.xml': typeof SitemapOraseDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -228,7 +255,10 @@ export interface FileRouteTypes {
     | '/recenzii'
     | '/robots.txt'
     | '/sitemap-blog.xml'
+    | '/sitemap-categorii.xml'
+    | '/sitemap-orase.xml'
     | '/sitemap-static.xml'
+    | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
@@ -251,7 +281,10 @@ export interface FileRouteTypes {
     | '/recenzii'
     | '/robots.txt'
     | '/sitemap-blog.xml'
+    | '/sitemap-categorii.xml'
+    | '/sitemap-orase.xml'
     | '/sitemap-static.xml'
+    | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
@@ -275,7 +308,10 @@ export interface FileRouteTypes {
     | '/recenzii'
     | '/robots.txt'
     | '/sitemap-blog.xml'
+    | '/sitemap-categorii.xml'
+    | '/sitemap-orase.xml'
     | '/sitemap-static.xml'
+    | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
     | '/_authenticated/admin'
@@ -300,7 +336,10 @@ export interface RootRouteChildren {
   RecenziiRoute: typeof RecenziiRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapBlogDotxmlRoute: typeof SitemapBlogDotxmlRoute
+  SitemapCategoriiDotxmlRoute: typeof SitemapCategoriiDotxmlRoute
+  SitemapOraseDotxmlRoute: typeof SitemapOraseDotxmlRoute
   SitemapStaticDotxmlRoute: typeof SitemapStaticDotxmlRoute
+  SitemapStocDotxmlRoute: typeof SitemapStocDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StocRoute: typeof StocRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -391,11 +430,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapBlogDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap-categorii.xml': {
+      id: '/sitemap-categorii.xml'
+      path: '/sitemap-categorii.xml'
+      fullPath: '/sitemap-categorii.xml'
+      preLoaderRoute: typeof SitemapCategoriiDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-orase.xml': {
+      id: '/sitemap-orase.xml'
+      path: '/sitemap-orase.xml'
+      fullPath: '/sitemap-orase.xml'
+      preLoaderRoute: typeof SitemapOraseDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap-static.xml': {
       id: '/sitemap-static.xml'
       path: '/sitemap-static.xml'
       fullPath: '/sitemap-static.xml'
       preLoaderRoute: typeof SitemapStaticDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-stoc.xml': {
+      id: '/sitemap-stoc.xml'
+      path: '/sitemap-stoc.xml'
+      fullPath: '/sitemap-stoc.xml'
+      preLoaderRoute: typeof SitemapStocDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -494,7 +554,10 @@ const rootRouteChildren: RootRouteChildren = {
   RecenziiRoute: RecenziiRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapBlogDotxmlRoute: SitemapBlogDotxmlRoute,
+  SitemapCategoriiDotxmlRoute: SitemapCategoriiDotxmlRoute,
+  SitemapOraseDotxmlRoute: SitemapOraseDotxmlRoute,
   SitemapStaticDotxmlRoute: SitemapStaticDotxmlRoute,
+  SitemapStocDotxmlRoute: SitemapStocDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StocRoute: StocRoute,
   BlogSlugRoute: BlogSlugRoute,
