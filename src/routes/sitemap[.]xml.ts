@@ -10,7 +10,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const stockLastmod = await latestStockUpdate();
         const now = new Date().toISOString();
 
-        const children: Array<{ path: string; lastmod?: string }> = [
+        const children: Array<{ path: string; lastmod?: string | undefined }> = [
           { path: "/sitemap-static.xml" },
           { path: "/sitemap-stoc.xml", lastmod: stockLastmod },
           { path: "/sitemap-categorii.xml", lastmod: stockLastmod ?? now },

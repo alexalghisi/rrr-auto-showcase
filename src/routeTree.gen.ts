@@ -19,6 +19,8 @@ import { Route as DespreRouteImport } from './routes/despre'
 import { Route as GasesteMasinaRouteImport } from './routes/gaseste-masina'
 import { Route as RecenziiRouteImport } from './routes/recenzii'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SitemapBlogDotxmlRouteImport } from './routes/sitemap-blog[.]xml'
+import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StocRouteImport } from './routes/stoc'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -77,6 +79,16 @@ const RecenziiRoute = RecenziiRouteImport.update({
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapBlogDotxmlRoute = SitemapBlogDotxmlRouteImport.update({
+  id: '/sitemap-blog.xml',
+  path: '/sitemap-blog.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapStaticDotxmlRoute = SitemapStaticDotxmlRouteImport.update({
+  id: '/sitemap-static.xml',
+  path: '/sitemap-static.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -142,6 +154,8 @@ export interface FileRoutesByFullPath {
   '/gaseste-masina': typeof GasesteMasinaRoute
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -163,6 +177,8 @@ export interface FileRoutesByTo {
   '/gaseste-masina': typeof GasesteMasinaRoute
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -186,6 +202,8 @@ export interface FileRoutesById {
   '/gaseste-masina': typeof GasesteMasinaRoute
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -209,6 +227,8 @@ export interface FileRouteTypes {
     | '/gaseste-masina'
     | '/recenzii'
     | '/robots.txt'
+    | '/sitemap-blog.xml'
+    | '/sitemap-static.xml'
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
@@ -230,6 +250,8 @@ export interface FileRouteTypes {
     | '/gaseste-masina'
     | '/recenzii'
     | '/robots.txt'
+    | '/sitemap-blog.xml'
+    | '/sitemap-static.xml'
     | '/sitemap.xml'
     | '/stoc'
     | '/admin'
@@ -252,6 +274,8 @@ export interface FileRouteTypes {
     | '/gaseste-masina'
     | '/recenzii'
     | '/robots.txt'
+    | '/sitemap-blog.xml'
+    | '/sitemap-static.xml'
     | '/sitemap.xml'
     | '/stoc'
     | '/_authenticated/admin'
@@ -275,6 +299,8 @@ export interface RootRouteChildren {
   GasesteMasinaRoute: typeof GasesteMasinaRoute
   RecenziiRoute: typeof RecenziiRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
+  SitemapBlogDotxmlRoute: typeof SitemapBlogDotxmlRoute
+  SitemapStaticDotxmlRoute: typeof SitemapStaticDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StocRoute: typeof StocRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -356,6 +382,20 @@ declare module '@tanstack/react-router' {
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-blog.xml': {
+      id: '/sitemap-blog.xml'
+      path: '/sitemap-blog.xml'
+      fullPath: '/sitemap-blog.xml'
+      preLoaderRoute: typeof SitemapBlogDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-static.xml': {
+      id: '/sitemap-static.xml'
+      path: '/sitemap-static.xml'
+      fullPath: '/sitemap-static.xml'
+      preLoaderRoute: typeof SitemapStaticDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -453,6 +493,8 @@ const rootRouteChildren: RootRouteChildren = {
   GasesteMasinaRoute: GasesteMasinaRoute,
   RecenziiRoute: RecenziiRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
+  SitemapBlogDotxmlRoute: SitemapBlogDotxmlRoute,
+  SitemapStaticDotxmlRoute: SitemapStaticDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StocRoute: StocRoute,
   BlogSlugRoute: BlogSlugRoute,
