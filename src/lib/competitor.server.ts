@@ -4,6 +4,7 @@
  * (title, meta description, structura de headinguri) pentru a găsi golurile noastre.
  */
 import { askAi } from "./ai.server";
+import type { Json } from "@/integrations/supabase/types";
 import { LANDING_PAGES } from "./landing-pages";
 import { BLOG_POSTS } from "./blog";
 
@@ -110,8 +111,8 @@ export async function runCompetitorScan(): Promise<{
     .slice(0, 12000);
 
   let summary = "";
-  let gaps: unknown[] = [];
-  let findings: unknown[] = [];
+  let gaps: Json[] = [];
+  let findings: Json[] = [];
 
   if (signals.length) {
     try {
@@ -123,14 +124,14 @@ Maxim 8 gaps și 8 findings, concrete și acționabile, în română.`,
         `SUBIECTELE NOASTRE:\n${ourTopics.slice(0, 6000)}\n\nSEMNALE CONCURENȚĂ:\n${theirs}`,
         { json: true, maxTokens: 2500 },
       );
-      const parsed = JSON.parse(raw) as { summary?: string; gaps?: unknown[]; findings?: unknown[] };
+      const parsed = JSON.parse(raw) as { summary?: string; gaps?: Json[]; findings?: Json[] };
       summary = parsed.summary ?? "";
       gaps = parsed.gaps ?? [];
       findings = parsed.findings ?? [];
     } catch (error) {
       console.error("competitor analysis failed", error);
       summary = "Analiza AI a eșuat; au fost salvate doar semnalele brute.";
-      findings = signals.map((s) => ({ domain: s.url, observation: s.title }));
+      findings = signals.map((s) => ({ domain: s.url, observation: s.title })) as Json[];
     }
   } else {
     summary = "Niciun concurent accesibil (robots.txt sau rețea).";

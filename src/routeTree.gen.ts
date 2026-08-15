@@ -31,7 +31,9 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as MasiniSlugRouteImport } from './routes/masini.$slug'
 import { Route as ApiPublicImgRouteImport } from './routes/api/public/img'
+import { Route as ApiPublicHooksCompetitorScanRouteImport } from './routes/api/public/hooks/competitor-scan'
 import { Route as ApiPublicHooksImportCarsRouteImport } from './routes/api/public/hooks/import-cars'
+import { Route as ApiPublicHooksSeoDailyRouteImport } from './routes/api/public/hooks/seo-daily'
 import { Route as ApiPublicHooksSeoRefreshRouteImport } from './routes/api/public/hooks/seo-refresh'
 import { Route as ApiPublicPhotoSplatRouteImport } from './routes/api/public/photo.$'
 
@@ -144,12 +146,23 @@ const ApiPublicImgRoute = ApiPublicImgRouteImport.update({
   path: '/api/public/img',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksCompetitorScanRoute =
+  ApiPublicHooksCompetitorScanRouteImport.update({
+    id: '/api/public/hooks/competitor-scan',
+    path: '/api/public/hooks/competitor-scan',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksImportCarsRoute =
   ApiPublicHooksImportCarsRouteImport.update({
     id: '/api/public/hooks/import-cars',
     path: '/api/public/hooks/import-cars',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksSeoDailyRoute = ApiPublicHooksSeoDailyRouteImport.update({
+  id: '/api/public/hooks/seo-daily',
+  path: '/api/public/hooks/seo-daily',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHooksSeoRefreshRoute =
   ApiPublicHooksSeoRefreshRouteImport.update({
     id: '/api/public/hooks/seo-refresh',
@@ -184,7 +197,9 @@ export interface FileRoutesByFullPath {
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
+  '/api/public/hooks/competitor-scan': typeof ApiPublicHooksCompetitorScanRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
+  '/api/public/hooks/seo-daily': typeof ApiPublicHooksSeoDailyRoute
   '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
@@ -210,7 +225,9 @@ export interface FileRoutesByTo {
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
+  '/api/public/hooks/competitor-scan': typeof ApiPublicHooksCompetitorScanRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
+  '/api/public/hooks/seo-daily': typeof ApiPublicHooksSeoDailyRoute
   '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
@@ -238,7 +255,9 @@ export interface FileRoutesById {
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/api/public/img': typeof ApiPublicImgRoute
+  '/api/public/hooks/competitor-scan': typeof ApiPublicHooksCompetitorScanRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
+  '/api/public/hooks/seo-daily': typeof ApiPublicHooksSeoDailyRoute
   '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
@@ -266,7 +285,9 @@ export interface FileRouteTypes {
     | '/masini/$slug'
     | '/blog/'
     | '/api/public/img'
+    | '/api/public/hooks/competitor-scan'
     | '/api/public/hooks/import-cars'
+    | '/api/public/hooks/seo-daily'
     | '/api/public/hooks/seo-refresh'
     | '/api/public/photo/$'
   fileRoutesByTo: FileRoutesByTo
@@ -292,7 +313,9 @@ export interface FileRouteTypes {
     | '/masini/$slug'
     | '/blog'
     | '/api/public/img'
+    | '/api/public/hooks/competitor-scan'
     | '/api/public/hooks/import-cars'
+    | '/api/public/hooks/seo-daily'
     | '/api/public/hooks/seo-refresh'
     | '/api/public/photo/$'
   id:
@@ -319,7 +342,9 @@ export interface FileRouteTypes {
     | '/masini/$slug'
     | '/blog/'
     | '/api/public/img'
+    | '/api/public/hooks/competitor-scan'
     | '/api/public/hooks/import-cars'
+    | '/api/public/hooks/seo-daily'
     | '/api/public/hooks/seo-refresh'
     | '/api/public/photo/$'
   fileRoutesById: FileRoutesById
@@ -346,7 +371,9 @@ export interface RootRouteChildren {
   MasiniSlugRoute: typeof MasiniSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ApiPublicImgRoute: typeof ApiPublicImgRoute
+  ApiPublicHooksCompetitorScanRoute: typeof ApiPublicHooksCompetitorScanRoute
   ApiPublicHooksImportCarsRoute: typeof ApiPublicHooksImportCarsRoute
+  ApiPublicHooksSeoDailyRoute: typeof ApiPublicHooksSeoDailyRoute
   ApiPublicHooksSeoRefreshRoute: typeof ApiPublicHooksSeoRefreshRoute
   ApiPublicPhotoSplatRoute: typeof ApiPublicPhotoSplatRoute
 }
@@ -507,11 +534,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicImgRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/competitor-scan': {
+      id: '/api/public/hooks/competitor-scan'
+      path: '/api/public/hooks/competitor-scan'
+      fullPath: '/api/public/hooks/competitor-scan'
+      preLoaderRoute: typeof ApiPublicHooksCompetitorScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/import-cars': {
       id: '/api/public/hooks/import-cars'
       path: '/api/public/hooks/import-cars'
       fullPath: '/api/public/hooks/import-cars'
       preLoaderRoute: typeof ApiPublicHooksImportCarsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/seo-daily': {
+      id: '/api/public/hooks/seo-daily'
+      path: '/api/public/hooks/seo-daily'
+      fullPath: '/api/public/hooks/seo-daily'
+      preLoaderRoute: typeof ApiPublicHooksSeoDailyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/seo-refresh': {
@@ -564,7 +605,9 @@ const rootRouteChildren: RootRouteChildren = {
   MasiniSlugRoute: MasiniSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ApiPublicImgRoute: ApiPublicImgRoute,
+  ApiPublicHooksCompetitorScanRoute: ApiPublicHooksCompetitorScanRoute,
   ApiPublicHooksImportCarsRoute: ApiPublicHooksImportCarsRoute,
+  ApiPublicHooksSeoDailyRoute: ApiPublicHooksSeoDailyRoute,
   ApiPublicHooksSeoRefreshRoute: ApiPublicHooksSeoRefreshRoute,
   ApiPublicPhotoSplatRoute: ApiPublicPhotoSplatRoute,
 }
