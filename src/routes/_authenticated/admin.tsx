@@ -40,6 +40,7 @@ import { listImportRuns, runImportNow } from "@/lib/admin.functions";
 import { notifySearchEngines } from "@/lib/seo.functions";
 import { getViewStats } from "@/lib/analytics.functions";
 import { displayCarViews, displaySiteViews } from "@/lib/analytics-display";
+import { SeoPanel } from "@/components/seo-panel";
 
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -613,6 +614,9 @@ function AdminPage() {
           ))}
         </div>
       </section>
+
+      <SeoPanel />
+
 
       <div className="mt-10 space-y-3">
 
