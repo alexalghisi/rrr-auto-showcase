@@ -2,7 +2,14 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { GscSnapshot, SiteResolution } from "./gsc.server";
 
-async function assertAdmin(context: { supabase: any; userId: string }) {
+type AdminContext = {
+  supabase: {
+    rpc: (fn: "has_role", args: { _user_id: string; _role: "admin" }) => Promise<{ data: unknown }>;
+  };
+  userId: string;
+};
+
+async function assertAdmin(context: AdminContext) {
   const { data: isAdmin } = await context.supabase.rpc("has_role", {
     _user_id: context.userId,
     _role: "admin",
