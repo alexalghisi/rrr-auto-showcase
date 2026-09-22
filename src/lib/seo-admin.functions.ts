@@ -4,7 +4,10 @@ import type { GscSnapshot, SiteResolution } from "./gsc.server";
 
 type AdminContext = {
   supabase: {
-    rpc: (fn: "has_role", args: { _user_id: string; _role: "admin" }) => Promise<{ data: unknown }>;
+    rpc: (
+      fn: "has_role",
+      args: { _user_id: string; _role: "admin" },
+    ) => PromiseLike<{ data: unknown }>;
   };
   userId: string;
 };
