@@ -6,6 +6,7 @@ import { RefreshCw, Check, X, ChevronDown, Search, Radar } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SeoPlanGenerator } from "@/components/seo-plan-generator";
 import {
   getSearchConsole,
   getCompetitorReport,
@@ -307,6 +308,8 @@ export function SeoPanel() {
           </ul>
         )}
       </div>
+
+      <SeoPlanGenerator />
     </section>
   );
 }

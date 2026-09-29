@@ -128,6 +128,22 @@ export const setDraftStatus = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+/** Plan SEO prioritizat generat de AI din raport / interogare / pagină. */
+export const generateSeoActionPlan = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { kind: "report" | "query" | "page"; input: string }) => {
+    const input = String(data.input ?? "").trim().slice(0, 12000);
+    if (input.length < 3) throw new Error("Introdu un text mai lung.");
+    const kind = ["report", "query", "page"].includes(data.kind) ? data.kind : "query";
+    return { kind, input };
+  })
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { generateSeoPlan } = await import("./seo-plan.server");
+    const label = { report: "raport de concurență", query: "interogare de căutare", page: "pagină SEO" }[data.kind];
+    return generateSeoPlan(label, data.input);
+  });
+
 /** Câte pagini programatice au intro AI proaspăt. */
 export const getSeoStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
