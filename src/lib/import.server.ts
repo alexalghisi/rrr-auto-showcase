@@ -347,6 +347,26 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
     knownPrints.add(fingerprint);
     result.inserted++;
   }
+  // Mașinile care nu mai apar în sursă sunt considerate vândute și dispar din stoc.
+  // Protecție: acționăm doar dacă lista primită e consistentă (minim 3 anunțuri).
+  if (cars.length >= 3) {
+    const seenIds = new Set(cars.map((car) => car.externalId));
+    const seenPrints = new Set(cars.map((car) => fingerprintFor(car)));
+    const { data: current } = await supabaseAdmin
+      .from("cars")
+      .select("id, external_id, fingerprint")
+      .eq("source", source)
+      .eq("published", true);
+    const gone = (current ?? []).filter(
+      (car) => !(car.external_id && seenIds.has(car.external_id)) && !(car.fingerprint && seenPrints.has(car.fingerprint)),
+    );
+    if (gone.length && gone.length <= Math.ceil(cars.length / 2)) {
+      await supabaseAdmin
+        .from("cars")
+        .update({ status: "vanduta", published: false })
+        .in("id", gone.map((car) => car.id));
+    }
+  }
   await logRun(result);
   return result;
 }
