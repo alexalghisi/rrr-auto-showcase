@@ -199,8 +199,46 @@ function isOwnListing(source: SourceKey, url: string): boolean {
   return /(^|\.)olx\.ro\//i.test(url);
 }
 
+/** Facebook prin API-ul oficial (Graph API) — gratuit, cu token de pagină. */
+async function scrapeFacebookGraph(token: string): Promise<ScrapedCar[]> {
+  const fields =
+    "id,message,permalink_url,full_picture,attachments{media{image{src}},subattachments{media{image{src}}}}";
+  const response = await fetch(
+    `https://graph.facebook.com/v21.0/me/posts?fields=${encodeURIComponent(fields)}&limit=50&access_token=${encodeURIComponent(token)}`,
+  );
+  const raw = await response.text();
+  if (!response.ok) throw new Error(`Facebook Graph ${response.status}: ${raw.slice(0, 300)}`);
+  const data = (JSON.parse(raw) as { data?: Json[] }).data ?? [];
+  const cars: ScrapedCar[] = [];
+  for (const post of data) {
+    const images: string[] = [];
+    const push = (m: unknown) => {
+      const src = asText(((m as Json)?.["media"] as Json | undefined)?.["image"] && (((m as Json)["media"] as Json)["image"] as Json)["src"]);
+      if (src) images.push(src);
+    };
+    const attachments = ((post["attachments"] as Json | undefined)?.["data"] as Json[] | undefined) ?? [];
+    for (const att of attachments) {
+      push(att);
+      const subs = ((att["subattachments"] as Json | undefined)?.["data"] as Json[] | undefined) ?? [];
+      for (const sub of subs) push(sub);
+    }
+    const full = asText(post["full_picture"]);
+    if (full) images.push(full);
+    const car = parseFacebookPost({
+      text: post["message"],
+      url: post["permalink_url"],
+      postId: post["id"],
+      images: [...new Set(images)],
+    });
+    if (car) cars.push(car);
+  }
+  return cars;
+}
+
 async function scrapeSource(source: SourceKey): Promise<ScrapedCar[]> {
   if (source === "facebook") {
+    const graphToken = process.env["FB_PAGE_ACCESS_TOKEN"];
+    if (graphToken) return scrapeFacebookGraph(graphToken);
     const items = await runActor(FACEBOOK_ACTOR, { startUrls: [{ url: SOURCES.facebook }], resultsLimit: 20 });
     return items
       .map(parseFacebookPost)
