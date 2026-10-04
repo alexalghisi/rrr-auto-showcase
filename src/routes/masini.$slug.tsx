@@ -5,6 +5,7 @@ import { Phone, MapPin, Check, ArrowLeft, HandCoins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/reserve-dialog";
 import { FinanceCalculator } from "@/components/finance-calculator";
+import { Viewer360 } from "@/components/viewer-360";
 
 import { getPublicCar } from "@/lib/cars.functions";
 import { SITE, absolutePhotoUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
@@ -169,6 +170,14 @@ function CarPage() {
       <div className="mt-6 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
         <div>
           <div className="surface-card overflow-hidden rounded-xl">
+            {car.images.length > 1 ? (
+              <Viewer360
+                images={car.images}
+                index={active}
+                onIndexChange={setActive}
+                alt={`${title} ${car.year} de vânzare la Bremen Auto, DN1 Luna de Sus, Florești, Cluj`}
+              />
+            ) : (
             <div className="aspect-[4/3] bg-surface-strong">
               {car.images[active] ? (
                 <img
@@ -186,6 +195,7 @@ function CarPage() {
                 </div>
               )}
             </div>
+            )}
           </div>
 
           {car.images.length > 1 && (

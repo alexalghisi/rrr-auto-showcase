@@ -1,17 +1,31 @@
 import { Link } from "@tanstack/react-router";
-import { Fuel, Gauge, Settings2, Calendar } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Fuel, Gauge, Settings2, Calendar, RotateCw } from "lucide-react";
 
 import type { Car } from "@/lib/cars.server";
 import { formatKm, formatPrice, photoUrl } from "@/lib/site";
 
 export function CarCard({ car }: { car: Car }) {
-  const cover = car.images[0];
+  const [hover, setHover] = useState(false);
+  const [frame, setFrame] = useState(0);
+  const n = car.images.length;
+  useEffect(() => {
+    if (!hover || n < 2) {
+      setFrame(0);
+      return;
+    }
+    const t = setInterval(() => setFrame((f) => (f + 1) % n), 600);
+    return () => clearInterval(t);
+  }, [hover, n]);
+  const cover = car.images[frame] ?? car.images[0];
   const title = `${car.make} ${car.model}${car.trim ? ` ${car.trim}` : ""}`;
 
   return (
     <Link
       to="/masini/$slug"
       params={{ slug: car.slug }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
       className="group surface-card flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/50"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-surface-strong">
@@ -30,6 +44,11 @@ export function CarCard({ car }: { car: Car }) {
           <div className="flex size-full items-center justify-center text-sm text-muted-foreground">
             Fotografii în curând
           </div>
+        )}
+        {n > 1 && (
+          <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
+            <RotateCw className="size-3" /> 360°
+          </span>
         )}
         {car.status !== "disponibila" && (
           <span className="absolute left-3 top-3 rounded-md bg-background/90 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
