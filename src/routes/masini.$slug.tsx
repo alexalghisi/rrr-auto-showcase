@@ -5,6 +5,7 @@ import { Phone, MapPin, Check, ArrowLeft, HandCoins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/reserve-dialog";
 import { FinanceCalculator } from "@/components/finance-calculator";
+import { Viewer360 } from "@/components/viewer-360";
 
 import { getPublicCar } from "@/lib/cars.functions";
 import { SITE, absolutePhotoUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
@@ -194,6 +195,7 @@ function CarPage() {
                 </div>
               )}
             </div>
+            )}
           </div>
 
           {car.images.length > 1 && (
