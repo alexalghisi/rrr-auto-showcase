@@ -4,14 +4,32 @@ import { Fuel, Gauge, Settings2, Calendar, RotateCw } from "lucide-react";
 
 import type { Car } from "@/lib/cars.server";
 import { formatKm, formatPrice, photoUrl } from "@/lib/site";
+import { spinFor } from "@/lib/spin360";
+import { Spin360 } from "@/components/spin-360";
 
 const ease = (t: number) => t * t * (3 - 2 * t); // smoothstep
 
 export function CarCard({ car }: { car: Car }) {
-  const n = car.images.length;
+  const hasSpin = !!spinFor(car.slug);
+  const n = hasSpin ? 0 : car.images.length;
   const [pos, setPos] = useState(0);
   const [active, setActive] = useState(false); // montează toate cadrele după prima interacțiune
   const boxRef = useRef<HTMLDivElement>(null);
+  const spinMoved = useRef(false);
+  const [inView, setInView] = useState(false);
+
+  // download the 360° frames only when the card is near the screen
+  useEffect(() => {
+    if (!hasSpin || inView || !boxRef.current) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) setInView(true);
+      },
+      { rootMargin: "200px" },
+    );
+    io.observe(boxRef.current);
+    return () => io.disconnect();
+  }, [hasSpin, inView]);
   const s = useRef({
     pos: 0,
     vel: 0,
@@ -148,14 +166,36 @@ export function CarCard({ car }: { car: Car }) {
         st.vel = 0;
       }}
       onClick={(e) => {
-        if (s.current.moved) {
+        if (s.current.moved || spinMoved.current) {
           e.preventDefault();
           s.current.moved = false;
+          spinMoved.current = false;
         }
       }}
       draggable={false}
       className="group surface-card flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/50"
     >
+      {hasSpin ? (
+        <div ref={boxRef} className="relative aspect-[4/3]">
+          <Spin360
+            slug={car.slug}
+            size="sm"
+            alt={altText}
+            movedRef={spinMoved}
+            load={inView}
+            hoverSpin
+            className="size-full"
+          />
+          <span className="pointer-events-none absolute bottom-3 right-3 z-10 inline-flex items-center gap-1 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
+            <RotateCw className="size-3" /> Trage 360°
+          </span>
+          {car.status !== "disponibila" && (
+            <span className="absolute left-3 top-3 z-10 rounded-md bg-background/90 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+              {car.status === "rezervata" ? "Rezervată" : "Vândută"}
+            </span>
+          )}
+        </div>
+      ) : (
       <div
         ref={boxRef}
         onPointerDown={onDown}
@@ -209,6 +249,7 @@ export function CarCard({ car }: { car: Car }) {
           </span>
         )}
       </div>
+      )}
 
       <div className="flex flex-1 flex-col p-5">
         <h3 className="font-display text-lg leading-tight">{title}</h3>
