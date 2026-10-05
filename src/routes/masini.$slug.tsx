@@ -182,7 +182,7 @@ function CarPage() {
             </div>
           )}
           <div className="surface-card overflow-hidden rounded-xl">
-            {car.images.length > 1 ? (
+            {car.images.length > 1 && !spinFor(car.slug) ? (
               <Viewer360
                 images={car.images}
                 index={active}
