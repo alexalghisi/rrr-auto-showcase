@@ -115,25 +115,17 @@ export function Spin360({
           c.height = Math.round(h * dpr);
           s.drawn = -1;
         }
-        const base = Math.floor(s.pos);
-        const frac = s.pos - base;
-        const key = Math.round(s.pos * 4); // redraw only when the view changes noticeably
+        // nearest whole frame: no double-image ghosting; frames are only a few degrees apart
+        const key = Math.round(s.pos);
         if (key !== s.drawn) {
-          s.drawn = key;
           const ctx = c.getContext("2d");
-          const a = nearest(base);
-          if (ctx && a) {
-            const draw = (im: HTMLImageElement, alpha: number) => {
-              const r = Math.max(c.width / im.naturalWidth, c.height / im.naturalHeight);
-              const dw = im.naturalWidth * r;
-              const dh = im.naturalHeight * r;
-              ctx.globalAlpha = alpha;
-              ctx.drawImage(im, (c.width - dw) / 2, (c.height - dh) / 2, dw, dh);
-            };
-            draw(a, 1);
-            const b = imgs.current[(((base + 1) % n) + n) % n];
-            if (b && frac > 0.02) draw(b, frac); // blend between frames = no visible steps
-            ctx.globalAlpha = 1;
+          const im = nearest(key);
+          if (ctx && im) {
+            s.drawn = key;
+            const r = Math.max(c.width / im.naturalWidth, c.height / im.naturalHeight);
+            const dw = im.naturalWidth * r;
+            const dh = im.naturalHeight * r;
+            ctx.drawImage(im, (c.width - dw) / 2, (c.height - dh) / 2, dw, dh);
           }
         }
       }
