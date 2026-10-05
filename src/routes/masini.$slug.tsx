@@ -223,12 +223,57 @@ function CarPage() {
             </div>
           )}
 
+          <section className="mt-10">
+            <h2 className="text-2xl">Specificații</h2>
+            <dl className="mt-4 overflow-hidden rounded-xl border border-border">
+              {[
+                ["Marcă", car.make],
+                ["Model", `${car.model}${car.trim ? ` ${car.trim}` : ""}`],
+                ["An fabricație", String(car.year)],
+                ["Kilometraj", formatKm(car.mileage_km)],
+                ["Combustibil", car.fuel],
+                ["Cutie de viteze", car.gearbox],
+                ["Putere", car.power_hp ? `${car.power_hp} CP` : null],
+                ["Capacitate cilindrică", car.engine_cc ? `${car.engine_cc} cmc` : null],
+                ["Caroserie", car.body_type],
+                ["Tracțiune", car.drivetrain],
+                ["Culoare", car.color],
+                ["Număr uși", car.doors ? String(car.doors) : null],
+                ["Plată", "Cash sau în rate"],
+              ]
+                .filter(([, v]) => v)
+                .map(([k, v], i) => (
+                  <div
+                    key={k as string}
+                    className={`grid grid-cols-2 gap-3 px-4 py-3 text-sm ${i % 2 ? "bg-surface-strong/40" : ""}`}
+                  >
+                    <dt className="text-muted-foreground">{k}</dt>
+                    <dd className="font-semibold">{v}</dd>
+                  </div>
+                ))}
+            </dl>
+          </section>
+
           {car.description && (
             <section className="mt-10">
               <h2 className="text-2xl">Descriere</h2>
-              <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
-                {car.description}
-              </p>
+              <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
+                {car.description
+                  .split(/\n+/)
+                  .map((l: string) => l.trim())
+                  .filter(Boolean)
+                  .map((line: string, i: number) => {
+                    const bullet = /^[-•*✅✔️▪️➡️🔹🔸👉]+\s*/u.test(line);
+                    const clean = line.replace(/^[-•*✅✔️▪️➡️🔹🔸👉\s]+/u, "");
+                    return bullet ? (
+                      <p key={i} className="flex items-start gap-2">
+                        <Check className="mt-0.5 size-4 shrink-0 text-primary" /> {clean}
+                      </p>
+                    ) : (
+                      <p key={i}>{line}</p>
+                    );
+                  })}
+              </div>
             </section>
           )}
 
