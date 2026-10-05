@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { RotateCw, Play, Pause } from "lucide-react";
 
 import { photoUrl } from "@/lib/site";
@@ -221,7 +221,7 @@ export function Viewer360({
       >
         {images.map((src, i) => {
           // unghiul panoului față de cameră (-180..180)
-          let a = (((i * step + rot) % 360) + 540) % 360 - 180;
+          const a = (((i * step + rot) % 360) + 540) % 360 - 180;
           const facing = Math.cos((a * Math.PI) / 180); // 1 = în față
           const bright = 0.35 + 0.65 * Math.max(0, facing);
           return (
@@ -234,7 +234,7 @@ export function Viewer360({
                 WebkitBoxReflect:
                   "below 4px linear-gradient(transparent 70%, rgba(0,0,0,0.28))",
                 filter: `brightness(${bright.toFixed(3)})`,
-              } as React.CSSProperties}
+              } as CSSProperties}
             >
               <img
                 src={photoUrl(src)}
