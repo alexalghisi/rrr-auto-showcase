@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
-type OAuthResult = { data: Record<string, any> | null; error: { message: string } | null };
+type OAuthData = { client?: { name?: string }; redirect_url?: string; redirect_to?: string };
+type OAuthResult = { data: OAuthData | null; error: { message: string } | null };
 type OAuthApi = {
   getAuthorizationDetails: (id: string) => Promise<OAuthResult>;
   approveAuthorization: (id: string) => Promise<OAuthResult>;

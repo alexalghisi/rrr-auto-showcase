@@ -11,7 +11,7 @@ import { claimFirstAdmin } from "@/lib/admin.functions";
 export const Route = createFileRoute("/auth")({
   ssr: false,
   validateSearch: (s: Record<string, unknown>): { next?: string } => {
-    const n = typeof s.next === "string" ? s.next : "";
+    const n = typeof s["next"] === "string" ? s["next"] : "";
     return n.startsWith("/") && !n.startsWith("//") ? { next: n } : {};
   },
   head: () => ({
