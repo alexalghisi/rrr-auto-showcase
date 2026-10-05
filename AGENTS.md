@@ -11,3 +11,4 @@
 
 ## Rules
 - Agent integrations (MCP) live in src/lib/mcp and use Lovable Cloud OAuth; tools query as the signed-in user so database access rules still apply.
+- 360° turntables: AI-generated orbit video per car, extracted to image sequences in public/spin/<slug>/ (large + s/ small) and registered in src/lib/spin360.ts; Spin360 always shows an 'AI simulation' label and real photos stay on the page — why: honest listings, no runtime video cost.
