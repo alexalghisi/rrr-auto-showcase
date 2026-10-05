@@ -28,6 +28,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,7 +48,7 @@ function AuthPage() {
         const { data, error } = await supabase.auth.signUp({
           email: toEmail(email),
           password,
-          options: { emailRedirectTo: window.location.origin },
+          options: { emailRedirectTo: window.location.origin + (next ?? "") },
         });
         if (error) throw error;
         if (!data.session) {
@@ -67,6 +68,7 @@ function AuthPage() {
         /* rolul există deja sau nu poate fi acordat */
       }
 
+      if (next) { window.location.href = next; return; }
       navigate({ to: "/admin" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Autentificare eșuată");
