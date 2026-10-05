@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Fuel, Gauge, Settings2, Calendar, RotateCw } from "lucide-react";
 
 import type { Car } from "@/lib/cars.server";
@@ -18,6 +18,22 @@ export function CarCard({ car }: { car: Car }) {
     return () => clearInterval(t);
   }, [hover, n]);
   const cover = car.images[frame] ?? car.images[0];
+  const drag = useRef({ down: false, x: 0, start: 0, moved: false });
+  const onDown = (e: React.PointerEvent) => {
+    if (n < 2) return;
+    drag.current = { down: true, x: e.clientX, start: frame, moved: false };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    setHover(false);
+  };
+  const onMove = (e: React.PointerEvent) => {
+    const d = drag.current;
+    if (!d.down) return;
+    const dx = e.clientX - d.x;
+    if (Math.abs(dx) > 6) d.moved = true;
+    const step = Math.round(-dx / 40);
+    setFrame((((d.start + step) % n) + n) % n);
+  };
+  const onUp = () => { drag.current.down = false; };
   const title = `${car.make} ${car.model}${car.trim ? ` ${car.trim}` : ""}`;
 
   return (
@@ -26,9 +42,18 @@ export function CarCard({ car }: { car: Car }) {
       params={{ slug: car.slug }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onClick={(e) => { if (drag.current.moved) { e.preventDefault(); drag.current.moved = false; } }}
+      draggable={false}
       className="group surface-card flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/50"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-surface-strong">
+      <div
+        onPointerDown={onDown}
+        onPointerMove={onMove}
+        onPointerUp={onUp}
+        onPointerCancel={onUp}
+        style={{ touchAction: "pan-y" }}
+        className={`relative aspect-[4/3] overflow-hidden bg-surface-strong ${n > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
+      >
         {cover ? (
           <img
             src={photoUrl(cover)}
@@ -37,7 +62,8 @@ export function CarCard({ car }: { car: Car }) {
             decoding="async"
             width={800}
             height={600}
-            className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+            draggable={false}
+            className="size-full select-none object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
         ) : (
@@ -47,7 +73,7 @@ export function CarCard({ car }: { car: Car }) {
         )}
         {n > 1 && (
           <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
-            <RotateCw className="size-3" /> 360°
+            <RotateCw className="size-3" /> Trage 360°
           </span>
         )}
         {car.status !== "disponibila" && (
