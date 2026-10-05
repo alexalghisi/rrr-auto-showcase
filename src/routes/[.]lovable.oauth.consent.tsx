@@ -17,7 +17,7 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
   ssr: false,
   head: () => ({ meta: [{ title: "Autorizare conexiune | Bremen Auto" }, { name: "robots", content: "noindex" }] }),
   validateSearch: (s: Record<string, unknown>) => ({
-    authorization_id: typeof s.authorization_id === "string" ? s.authorization_id : "",
+    authorization_id: typeof s["authorization_id"] === "string" ? s["authorization_id"] : "",
   }),
   beforeLoad: async ({ search, location }) => {
     if (!search.authorization_id) throw new Error("Lipsește authorization_id");
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
   },
   component: Consent,
   errorComponent: ({ error }) => (
-    <main className="mx-auto max-w-md px-4 py-16">Cererea nu a putut fi încărcată: {String(error?.message ?? error)}</main>
+    <main className="mx-auto max-w-md px-4 py-16">Cererea nu a putut fi încărcată: {String((error as Error)?.message ?? error)}</main>
   ),
 });
 
