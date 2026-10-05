@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/reserve-dialog";
 import { FinanceCalculator } from "@/components/finance-calculator";
 import { Viewer360 } from "@/components/viewer-360";
+import { Spin360 } from "@/components/spin-360";
+import { spinFor } from "@/lib/spin360";
 
 import { getPublicCar } from "@/lib/cars.functions";
 import { SITE, absolutePhotoUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
@@ -169,6 +171,16 @@ function CarPage() {
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
         <div>
+          {spinFor(car.slug) && (
+            <div className="surface-card mb-4 overflow-hidden rounded-xl">
+              <Spin360
+                slug={car.slug}
+                autoRotate
+                alt={`${title} ${car.year} — rotire 360° — Bremen Auto, Florești, Cluj`}
+                className="aspect-video w-full"
+              />
+            </div>
+          )}
           <div className="surface-card overflow-hidden rounded-xl">
             {car.images.length > 1 ? (
               <Viewer360

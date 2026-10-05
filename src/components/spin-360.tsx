@@ -221,8 +221,8 @@ export function Spin360({
               <Hand className="size-4" /> Trage stânga–dreapta ca să rotești mașina
             </span>
           )}
-          <span className="pointer-events-none absolute bottom-2 right-3 text-[10px] font-medium text-foreground/70 [text-shadow:0_0_6px_hsl(0_0%_100%/0.9)]">
-            Simulare generată cu AI din pozele reale · vezi pozele reale mai jos
+          <span className="pointer-events-none absolute bottom-2 right-2 rounded bg-background/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+            Simulare generată cu AI din pozele reale · pozele reale sunt mai jos
           </span>
         </>
       )}
