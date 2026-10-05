@@ -49,7 +49,7 @@ export function Spin360({
     startPos: 0,
     lastX: 0,
     lastT: 0,
-    drawn: -1,
+    drawn: NaN,
   });
 
   // download frames (first frame immediately, then the rest in rotation order)
@@ -70,7 +70,7 @@ export function Spin360({
         if (cancelled) return;
         list[i] = im;
         count++;
-        st.current.drawn = -1;
+        st.current.drawn = NaN;
         setLoaded(count);
       };
       im.src = spin.url(i);
@@ -113,7 +113,7 @@ export function Spin360({
         if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) {
           c.width = Math.round(w * dpr);
           c.height = Math.round(h * dpr);
-          s.drawn = -1;
+          s.drawn = NaN;
         }
         // nearest whole frame: no double-image ghosting; frames are only a few degrees apart
         const key = Math.round(s.pos);
