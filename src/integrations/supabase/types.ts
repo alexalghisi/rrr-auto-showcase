@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      car_ratings: {
+        Row: {
+          car_id: string
+          created_at: string
+          id: string
+          rating: number
+          updated_at: string
+          voter_hash: string
+        }
+        Insert: {
+          car_id: string
+          created_at?: string
+          id?: string
+          rating: number
+          updated_at?: string
+          voter_hash: string
+        }
+        Update: {
+          car_id?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          updated_at?: string
+          voter_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "car_ratings_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cars: {
         Row: {
           body_type: string | null
@@ -39,6 +74,8 @@ export type Database = {
           power_hp: number | null
           price: number
           published: boolean
+          rating_average: number
+          rating_count: number
           slug: string
           source: string | null
           source_url: string | null
@@ -71,6 +108,8 @@ export type Database = {
           power_hp?: number | null
           price: number
           published?: boolean
+          rating_average?: number
+          rating_count?: number
           slug: string
           source?: string | null
           source_url?: string | null
@@ -103,6 +142,8 @@ export type Database = {
           power_hp?: number | null
           price?: number
           published?: boolean
+          rating_average?: number
+          rating_count?: number
           slug?: string
           source?: string | null
           source_url?: string | null
@@ -358,6 +399,13 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      rate_car: {
+        Args: { p_car_slug: string; p_rating: number; p_voter_key: string }
+        Returns: {
+          rating_average: number
+          rating_count: number
+        }[]
       }
     }
     Enums: {

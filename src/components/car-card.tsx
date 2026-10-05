@@ -6,6 +6,7 @@ import type { Car } from "@/lib/cars.server";
 import { formatKm, formatPrice, photoUrl } from "@/lib/site";
 import { spinFor } from "@/lib/spin360";
 import { Spin360 } from "@/components/spin-360";
+import { RatingSummary } from "@/components/car-rating";
 
 const ease = (t: number) => t * t * (3 - 2 * t); // smoothstep
 
@@ -256,6 +257,11 @@ export function CarCard({ car }: { car: Car }) {
         <p className="mt-1 text-sm text-muted-foreground">
           {car.year} · {formatKm(car.mileage_km)}
         </p>
+        <RatingSummary
+          average={Number(car.rating_average)}
+          count={car.rating_count}
+          className="mt-3"
+        />
 
         <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5">

@@ -7,6 +7,7 @@ import { ReserveDialog } from "@/components/reserve-dialog";
 import { FinanceCalculator } from "@/components/finance-calculator";
 import { Viewer360 } from "@/components/viewer-360";
 import { Spin360 } from "@/components/spin-360";
+import { CarRating } from "@/components/car-rating";
 import { spinFor } from "@/lib/spin360";
 
 import { getPublicCar } from "@/lib/cars.functions";
@@ -347,6 +348,12 @@ function CarPage() {
             <p className="mt-5 flex items-start gap-2 text-sm text-muted-foreground">
               <MapPin className="mt-0.5 size-4 shrink-0 text-primary" /> {SITE.addressLine}
             </p>
+            <CarRating
+              carSlug={car.slug}
+              average={Number(car.rating_average)}
+              count={car.rating_count}
+              className="mt-5"
+            />
           </div>
 
           <div className="surface-card mt-6 rounded-xl p-6">
