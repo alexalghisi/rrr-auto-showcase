@@ -100,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "google-site-verification",
         content: "qZYndZD3dGp89_ywsTSjcCZSkkNP_Cpb0Bt18J_OOME",
       },
-      { name: "theme-color", content: "#0f1115" },
+      { name: "theme-color", content: "#fafaf7" },
       { name: "geo.region", content: "RO-CJ" },
       { name: "geo.placename", content: "Luna de Sus, Florești, Cluj" },
       { name: "geo.position", content: "46.752312;23.432062" },
