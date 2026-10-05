@@ -9,7 +9,7 @@ const LeadSchema = z.object({
   carSlug: z.string().trim().max(200).optional(),
   carTitle: z.string().trim().max(200).optional(),
   message: z.string().trim().max(1500).optional(),
-  details: z.record(z.union([z.string(), z.number(), z.boolean()])).optional(),
+  details: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
 });
 
 export type LeadInput = z.infer<typeof LeadSchema>;

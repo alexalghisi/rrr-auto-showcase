@@ -17,6 +17,7 @@ import { Route as CategoriiRouteImport } from './routes/categorii'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DespreRouteImport } from './routes/despre'
 import { Route as GasesteMasinaRouteImport } from './routes/gaseste-masina'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as RecenziiRouteImport } from './routes/recenzii'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapBlogDotxmlRouteImport } from './routes/sitemap-blog[.]xml'
@@ -26,10 +27,12 @@ import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static
 import { Route as SitemapStocDotxmlRouteImport } from './routes/sitemap-stoc[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StocRouteImport } from './routes/stoc'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as MasiniSlugRouteImport } from './routes/masini.$slug'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicImgRouteImport } from './routes/api/public/img'
 import { Route as ApiPublicHooksCompetitorScanRouteImport } from './routes/api/public/hooks/competitor-scan'
 import { Route as ApiPublicHooksImportCarsRouteImport } from './routes/api/public/hooks/import-cars'
@@ -74,6 +77,11 @@ const DespreRoute = DespreRouteImport.update({
 const GasesteMasinaRoute = GasesteMasinaRouteImport.update({
   id: '/gaseste-masina',
   path: '/gaseste-masina',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RecenziiRoute = RecenziiRouteImport.update({
@@ -121,6 +129,12 @@ const StocRoute = StocRouteImport.update({
   path: '/stoc',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -139,6 +153,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
 const MasiniSlugRoute = MasiniSlugRouteImport.update({
   id: '/masini/$slug',
   path: '/masini/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicImgRoute = ApiPublicImgRouteImport.update({
@@ -183,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/despre': typeof DespreRoute
   '/gaseste-masina': typeof GasesteMasinaRoute
+  '/mcp': typeof McpRoute
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
@@ -192,10 +212,12 @@ export interface FileRoutesByFullPath {
   '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/competitor-scan': typeof ApiPublicHooksCompetitorScanRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
@@ -211,6 +233,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/despre': typeof DespreRoute
   '/gaseste-masina': typeof GasesteMasinaRoute
+  '/mcp': typeof McpRoute
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
@@ -220,10 +243,12 @@ export interface FileRoutesByTo {
   '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/competitor-scan': typeof ApiPublicHooksCompetitorScanRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
@@ -241,6 +266,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/despre': typeof DespreRoute
   '/gaseste-masina': typeof GasesteMasinaRoute
+  '/mcp': typeof McpRoute
   '/recenzii': typeof RecenziiRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
@@ -250,10 +276,12 @@ export interface FileRoutesById {
   '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/masini/$slug': typeof MasiniSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/img': typeof ApiPublicImgRoute
   '/api/public/hooks/competitor-scan': typeof ApiPublicHooksCompetitorScanRoute
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
@@ -271,6 +299,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/despre'
     | '/gaseste-masina'
+    | '/mcp'
     | '/recenzii'
     | '/robots.txt'
     | '/sitemap-blog.xml'
@@ -280,10 +309,12 @@ export interface FileRouteTypes {
     | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
+    | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/blog/$slug'
     | '/masini/$slug'
     | '/blog/'
+    | '/.lovable/oauth/consent'
     | '/api/public/img'
     | '/api/public/hooks/competitor-scan'
     | '/api/public/hooks/import-cars'
@@ -299,6 +330,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/despre'
     | '/gaseste-masina'
+    | '/mcp'
     | '/recenzii'
     | '/robots.txt'
     | '/sitemap-blog.xml'
@@ -308,10 +340,12 @@ export interface FileRouteTypes {
     | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
+    | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/blog/$slug'
     | '/masini/$slug'
     | '/blog'
+    | '/.lovable/oauth/consent'
     | '/api/public/img'
     | '/api/public/hooks/competitor-scan'
     | '/api/public/hooks/import-cars'
@@ -328,6 +362,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/despre'
     | '/gaseste-masina'
+    | '/mcp'
     | '/recenzii'
     | '/robots.txt'
     | '/sitemap-blog.xml'
@@ -337,10 +372,12 @@ export interface FileRouteTypes {
     | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
+    | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
     | '/blog/$slug'
     | '/masini/$slug'
     | '/blog/'
+    | '/.lovable/oauth/consent'
     | '/api/public/img'
     | '/api/public/hooks/competitor-scan'
     | '/api/public/hooks/import-cars'
@@ -358,6 +395,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DespreRoute: typeof DespreRoute
   GasesteMasinaRoute: typeof GasesteMasinaRoute
+  McpRoute: typeof McpRoute
   RecenziiRoute: typeof RecenziiRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapBlogDotxmlRoute: typeof SitemapBlogDotxmlRoute
@@ -367,9 +405,11 @@ export interface RootRouteChildren {
   SitemapStocDotxmlRoute: typeof SitemapStocDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StocRoute: typeof StocRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BlogSlugRoute: typeof BlogSlugRoute
   MasiniSlugRoute: typeof MasiniSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   ApiPublicImgRoute: typeof ApiPublicImgRoute
   ApiPublicHooksCompetitorScanRoute: typeof ApiPublicHooksCompetitorScanRoute
   ApiPublicHooksImportCarsRoute: typeof ApiPublicHooksImportCarsRoute
@@ -436,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GasesteMasinaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/recenzii': {
       id: '/recenzii'
       path: '/recenzii'
@@ -499,6 +546,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StocRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -525,6 +579,13 @@ declare module '@tanstack/react-router' {
       path: '/masini/$slug'
       fullPath: '/masini/$slug'
       preLoaderRoute: typeof MasiniSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/img': {
@@ -592,6 +653,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DespreRoute: DespreRoute,
   GasesteMasinaRoute: GasesteMasinaRoute,
+  McpRoute: McpRoute,
   RecenziiRoute: RecenziiRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapBlogDotxmlRoute: SitemapBlogDotxmlRoute,
@@ -601,9 +663,12 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapStocDotxmlRoute: SitemapStocDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StocRoute: StocRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BlogSlugRoute: BlogSlugRoute,
   MasiniSlugRoute: MasiniSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   ApiPublicImgRoute: ApiPublicImgRoute,
   ApiPublicHooksCompetitorScanRoute: ApiPublicHooksCompetitorScanRoute,
   ApiPublicHooksImportCarsRoute: ApiPublicHooksImportCarsRoute,
