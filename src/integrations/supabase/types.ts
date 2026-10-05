@@ -400,6 +400,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      rate_car: {
+        Args: { p_car_slug: string; p_rating: number; p_voter_key: string }
+        Returns: {
+          rating_average: number
+          rating_count: number
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "user"

@@ -8,6 +8,13 @@
       "when": 1791208230289,
       "tag": "0000_create_car_ratings",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791208262211,
+      "tag": "0001_add_public_car_rating_function",
+      "breakpoints": true
     }
   ]
 }
