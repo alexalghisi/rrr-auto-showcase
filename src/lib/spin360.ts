@@ -5,10 +5,10 @@
 export const SPIN_360: Record<string, { frames: number; small: number }> = {
   "vw-touareg-4x4-automat-2008-296000-9136006809": { frames: 240, small: 120 },
   "dacia-sandero-stepway-2016-156000-2110006809": { frames: 238, small: 119 },
-  "audi-a6-2015-0-6008006809": { frames: 238, small: 119 },
-  "bmw-x1-x-2013-24300-7838006809": { frames: 238, small: 119 },
-  "bmw-x6-2010-278000-1520006809": { frames: 238, small: 119 },
-  "suzuki-vitara-2011-0-3444006809": { frames: 238, small: 119 },
+  "audi-a6-2015-0-6008006809": { frames: 119, small: 60 },
+  "bmw-x1-x-2013-24300-7838006809": { frames: 119, small: 60 },
+  "bmw-x6-2010-278000-1520006809": { frames: 119, small: 60 },
+  "suzuki-vitara-2011-0-3444006809": { frames: 101, small: 51 },
 };
 
 export function spinFor(slug: string, size: "lg" | "sm" = "lg") {
