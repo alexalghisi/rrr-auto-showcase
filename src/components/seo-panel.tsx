@@ -139,7 +139,7 @@ export function SeoPanel() {
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
         Motorul rulează zilnic singur: rescrie intro-urile paginilor în funcție de stoc, anunță
-        Google și Bing, scrie un draft de articol pe săptămână și scanează concurența.
+        Google și Bing, publică zilnic 2-4 articole noi pe blog și scanează concurența.
         {status?.lastRefresh
           ? ` Ultima optimizare: ${new Date(status.lastRefresh).toLocaleString("ro-RO")} · ${status.pages} pagini cu text generat.`
           : ""}

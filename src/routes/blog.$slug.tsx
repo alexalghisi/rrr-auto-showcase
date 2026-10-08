@@ -6,13 +6,16 @@ import { getLandingPage } from "@/lib/landing-pages";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
+import { getDbBlogPost } from "@/lib/blog-db.functions";
 
 export const Route = createFileRoute("/blog/$slug")({
-  beforeLoad: ({ params }) => {
-    if (!getBlogPost(params.slug)) throw notFound();
+  loader: async ({ params }) => {
+    const post = getBlogPost(params.slug) ?? (await getDbBlogPost({ data: { slug: params.slug } }));
+    if (!post) throw notFound();
+    return { post };
   },
-  head: ({ params }) => {
-    const post = getBlogPost(params.slug);
+  head: ({ loaderData }) => {
+    const post = loaderData?.post;
     if (!post) return {};
     const url = `https://bremenauto.ro/blog/${post.slug}`;
     return {
@@ -79,8 +82,7 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function BlogPostRoute() {
-  const { slug } = Route.useParams();
-  const post = getBlogPost(slug)!;
+  const { post } = Route.useLoaderData();
   const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
   const landings = post.relatedLandings
     .map((s) => getLandingPage(s))

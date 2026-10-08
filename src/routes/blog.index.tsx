@@ -4,6 +4,7 @@ import { CalendarDays, Clock, ArrowRight } from "lucide-react";
 import { BLOG_POSTS, BLOG_CATEGORIES } from "@/lib/blog";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema } from "@/lib/seo";
+import { listDbBlogPosts } from "@/lib/blog-db.functions";
 
 const URL = "https://bremenauto.ro/blog";
 const TITLE = "Blog auto Cluj — ghiduri mașini second hand | Bremen Auto";
@@ -11,7 +12,11 @@ const DESCRIPTION =
   "Ghiduri practice despre mașini second hand în Cluj-Napoca: cum alegi, prețuri reale, acte de înmatriculare, modele recomandate și studii de caz din parcul nostru.";
 
 export const Route = createFileRoute("/blog/")({
-  head: () => ({
+  loader: async () => {
+    const fresh = await listDbBlogPosts().catch(() => []);
+    return { posts: [...fresh, ...BLOG_POSTS] };
+  },
+  head: ({ loaderData }) => ({
     meta: [
       { title: TITLE.slice(0, 60) },
       { name: "description", content: DESCRIPTION },
@@ -45,7 +50,7 @@ export const Route = createFileRoute("/blog/")({
           name: "Blog Bremen Auto",
           url: URL,
           inLanguage: "ro-RO",
-          blogPost: BLOG_POSTS.map((p) => ({
+          blogPost: (loaderData?.posts ?? BLOG_POSTS).slice(0, 60).map((p) => ({
             "@type": "BlogPosting",
             headline: p.title,
             url: `https://bremenauto.ro/blog/${p.slug}`,
@@ -60,6 +65,7 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogIndex() {
+  const { posts } = Route.useLoaderData();
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
       <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
@@ -91,7 +97,7 @@ function BlogIndex() {
       </div>
 
       <div className="mt-12 grid gap-6 md:grid-cols-2">
-        {BLOG_POSTS.map((post) => (
+        {posts.map((post) => (
           <article key={post.slug} className="surface-card flex flex-col rounded-xl p-6">
             <span className="eyebrow">{post.category}</span>
             <h2 className="mt-3 text-xl leading-snug">
