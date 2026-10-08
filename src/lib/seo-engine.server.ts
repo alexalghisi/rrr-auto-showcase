@@ -148,19 +148,116 @@ Nu inventa statistici sau recenzii.`,
   return { created: true, title: parsed.title };
 }
 
+const CATEGORIES = ["Cum alegi", "Piața Cluj", "Documente", "Modele recomandate", "Case study"];
+
+function kebab(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 90);
+}
+
+/** Publică zilnic 2-4 articole noi, strict pe nișa vânzări auto second hand din Germania. */
+export async function publishDailyArticles(): Promise<string[]> {
+  const supabase = await adminClient();
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const { count } = await supabase
+    .from("blog_posts")
+    .select("id", { count: "exact", head: true })
+    .gte("created_at", today.toISOString());
+  const target = 2 + Math.floor(Math.random() * 3); // 2-4
+  const remaining = target - (count ?? 0);
+  if (remaining <= 0) return [];
+
+  const { data: existing } = await supabase
+    .from("blog_posts")
+    .select("slug, title")
+    .order("created_at", { ascending: false })
+    .limit(200);
+  const { data: cars } = await supabase
+    .from("cars")
+    .select("make, model, year, price, currency, fuel")
+    .eq("published", true)
+    .neq("status", "vanduta")
+    .limit(12);
+  const { LANDING_PAGES } = await import("./landing-pages");
+  const landingSlugs = LANDING_PAGES.map((p) => p.slug);
+  const takenSlugs = new Set([...BLOG_POSTS.map((p) => p.slug), ...(existing ?? []).map((e) => e.slug)]);
+  const takenTitles = [...BLOG_POSTS.map((p) => p.title), ...(existing ?? []).map((e) => e.title)];
+  const stock = (cars ?? []).map((c) => `${c.make} ${c.model} ${c.year}, ${c.fuel}, ${c.price} ${c.currency}`).join("; ");
+
+  const published: string[] = [];
+  for (let i = 0; i < remaining; i++) {
+    try {
+      const raw = await askAi(
+        `Ești editor senior de conținut auto pentru Bremen Auto: parc auto pe DN1, Luna de Sus, comuna Florești, jud. Cluj. Vinde EXCLUSIV mașini second hand aduse din Germania, cash sau în rate, livrare în toată România, program non-stop, telefon 0751 692 335.
+NIȘA E STRICTĂ: cumpărarea unei mașini second hand / din Germania (alegere, modele, prețuri, verificări, istoric, acte, înmatriculare, finanțare/rate, livrare, comparații de modele, piața din Cluj și orașele României). INTERZIS: piese, service, reparații, accesorii, tuning, mașini noi, alte subiecte.
+Scrii în română corectă, cu diacritice, natural, pentru oameni (fraze scurte, exemple concrete, cifre realiste în euro/lei), SEO first: un keyword long-tail principal folosit în titlu, primul paragraf și un H2, variații semantice, fără keyword stuffing. Nu inventa statistici, studii, recenzii sau clienți.
+Returnezi DOAR JSON valid:
+{"title": "max 70 caractere, conține keyword-ul", "metaTitle": "max 58 caractere", "description": "140-155 caractere, cu beneficiu clar", "keywords": "5-7 fraze separate prin virgulă", "category": unul din ${JSON.stringify(CATEGORIES)}, "excerpt": "1-2 fraze", "intro": ["2 paragrafe"], "sections": [{"h2": "...", "paragraphs": ["2-3 paragrafe de 50-90 cuvinte"], "bullets": ["opțional, 3-6 puncte scurte"]}] (5-7 secțiuni, ultima cu pașii concreți la Bremen Auto), "faqs": [{"q","a"}] (4-5), "relatedLandings": 3-5 sloguri DOAR din lista dată}`,
+        `Sloguri landing permise: ${landingSlugs.join(", ")}
+Stoc actual (poți menționa ca exemple): ${stock || "-"}
+Subiecte deja publicate (alege unul NOU, alt unghi): ${takenTitles.slice(0, 120).join(" | ").slice(0, 6000)}`,
+        { json: true, maxTokens: 5000 },
+      );
+      const p = JSON.parse(raw) as Partial<import("./blog").BlogPost>;
+      if (!p.title || !p.sections?.length || !p.intro?.length) continue;
+      let slug = kebab(p.title);
+      if (takenSlugs.has(slug)) slug = `${slug}-${Date.now().toString(36)}`;
+      takenSlugs.add(slug);
+      takenTitles.unshift(p.title);
+      const words = [...p.intro, ...p.sections.flatMap((s) => [...(s.paragraphs ?? []), ...(s.bullets ?? [])])]
+        .join(" ")
+        .split(/\s+/).length;
+      const { error } = await supabase.from("blog_posts").insert({
+        slug,
+        title: p.title.slice(0, 120),
+        meta_title: (p.metaTitle ?? p.title).slice(0, 60),
+        description: (p.description ?? p.excerpt ?? "").slice(0, 160),
+        keywords: (p.keywords ?? "").slice(0, 400),
+        category: CATEGORIES.includes(p.category ?? "") ? p.category! : "Cum alegi",
+        excerpt: (p.excerpt ?? p.description ?? "").slice(0, 300),
+        reading_minutes: Math.max(3, Math.round(words / 200)),
+        content: {
+          intro: p.intro,
+          sections: p.sections.map((s) => ({
+            h2: s.h2,
+            paragraphs: s.paragraphs ?? [],
+            ...(s.bullets?.length ? { bullets: s.bullets } : {}),
+          })),
+          faqs: p.faqs ?? [],
+          relatedLandings: (p.relatedLandings ?? []).filter((s) => landingSlugs.includes(s)).slice(0, 5),
+        },
+      });
+      if (!error) published.push(slug);
+    } catch (error) {
+      console.error("daily article failed", error);
+    }
+  }
+  return published;
+}
+
 /** Rularea completă, apelată de cron. */
 export async function runDailySeoEngine(): Promise<{
   refreshed: string[];
-  draft: { created: boolean; title?: string };
+  articles: string[];
   submitted: number;
 }> {
-  const intros = await refreshProgrammaticIntros();
-  const draft = await generateWeeklyDraft();
+  const articles = await publishDailyArticles();
+  const intros = await refreshProgrammaticIntros().catch(() => ({ refreshed: [] as string[] }));
 
   const { pingSearchEngines, buildIndexableUrls } = await import("./seo-ping.server");
-  const changed = intros.refreshed.map((slug) => `${ORIGIN}/${slug}`);
+  const changed = [
+    ...intros.refreshed.map((slug) => `${ORIGIN}/${slug}`),
+    ...articles.map((slug) => `${ORIGIN}/blog/${slug}`),
+  ];
+  if (articles.length) changed.push(`${ORIGIN}/blog`, `${ORIGIN}/sitemap-blog.xml`);
   const urls = changed.length ? changed : await buildIndexableUrls();
   const { submitted } = await pingSearchEngines(urls);
 
-  return { refreshed: intros.refreshed, draft, submitted };
+  return { refreshed: intros.refreshed, articles, submitted };
 }
