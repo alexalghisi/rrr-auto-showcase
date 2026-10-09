@@ -100,11 +100,12 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         state.target = state.position;
       }
       const index = frameAt(state.position, list.length);
-      const image = list[index];
-      if (image && state.drawn !== index && canvas.width && canvas.height) {
-        const ratio = Math.max(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
-        const width = image.naturalWidth * ratio, height = image.naturalHeight * ratio;
-        ctx.drawImage(image, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+      const frame = list[index];
+      if (frame && state.drawn !== index && canvas.width && canvas.height) {
+        const ratio = Math.max(canvas.width / frame.sw, canvas.height / frame.sh);
+        const width = frame.sw * ratio, height = frame.sh * ratio;
+        ctx.drawImage(frame.image, frame.sx, frame.sy, frame.sw, frame.sh,
+          (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
         state.drawn = index;
         canvas.dataset["frame"] = String(index);
       }
