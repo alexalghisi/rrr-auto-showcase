@@ -184,7 +184,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       className={`relative select-none overflow-hidden bg-surface-strong ${ready ? "cursor-grab active:cursor-grabbing" : "cursor-progress"} ${className}`}>
       <img src={spin.url(0)} alt={alt} width={size === "lg" ? 854 : 480} height={size === "lg" ? 480 : 270}
         decoding="async" draggable={false} className="absolute inset-0 size-full object-cover" />
-      <canvas ref={canvasRef} aria-hidden className="absolute inset-0 size-full" />
+      <canvas ref={canvasRef} aria-hidden className={`absolute inset-0 size-full ${ready ? "visible" : "invisible"}`} />
       {size === "lg" && <>
         <span className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary shadow-sm">
           <RotateCw className="size-3.5" /> 360°
