@@ -168,7 +168,8 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
   const onMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const state = st.current;
     if (!state.dragging || state.pointer !== event.pointerId) return;
-    const pixelsPerTurn = Math.max(1, state.width) * 1.6;
+    // One drag across the whole photo = one full 360° turn.
+    const pixelsPerTurn = Math.max(1, state.width);
     if (movedRef && Math.abs(event.clientX - state.startX) > 6) movedRef.current = true;
     state.target = state.startTarget + (state.startX - event.clientX) / pixelsPerTurn;
     const now = performance.now(), delta = (now - state.lastTime) / 1000;
