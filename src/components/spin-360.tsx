@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { RotateCw, Hand } from "lucide-react";
 import { spinFor } from "@/lib/spin360";
-import { loadSpinFrames } from "@/lib/spin-frames";
+import { loadSpinFrames, type SpinFrame } from "@/lib/spin-frames";
 import { coastTurn, followTurn, frameAt } from "@/lib/spin-motion";
 
 type Props = {
@@ -27,7 +27,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
   const spin = spinFor(slug, size);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
-  const frames = useRef<HTMLImageElement[]>([]);
+  const frames = useRef<SpinFrame[]>([]);
   const wake = useRef<() => void>(() => {});
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -40,15 +40,29 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
   useEffect(() => {
     if (!load) return;
     let cancelled = false;
-    // The small sequence is the same orbit and keeps mobile memory bounded.
-    const chosenSize = size === "lg" && window.matchMedia("(max-width: 767px)").matches ? "sm" : size;
-    loadSpinFrames(slug, chosenSize).then((sequence) => {
-      if (cancelled) return;
-      frames.current = sequence.frames;
-      setReady(sequence.complete);
-      setFailed(!sequence.complete);
+    let upgraded = false;
+    const publish = (list: SpinFrame[]) => {
+      frames.current = list;
+      st.current.drawn = -1;
+      setReady(true);
+      setFailed(false);
       wake.current();
+    };
+    // The small sequence is the same orbit: it is ready fast (one file, often cached
+    // from the card) and keeps mobile memory bounded. Desktop upgrades to large frames.
+    const upgrade = size === "lg" && !window.matchMedia("(max-width: 767px)").matches;
+    loadSpinFrames(slug, "sm").then((sequence) => {
+      if (cancelled || upgraded) return;
+      if (sequence.complete) publish(sequence.frames);
+      else if (!upgrade) setFailed(true);
     });
+    if (upgrade) {
+      loadSpinFrames(slug, "lg").then((sequence) => {
+        if (cancelled) return;
+        if (sequence.complete) { upgraded = true; publish(sequence.frames); }
+        else if (!frames.current.length) setFailed(true);
+      });
+    }
     return () => { cancelled = true; };
   }, [slug, size, load]);
 
@@ -86,11 +100,12 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         state.target = state.position;
       }
       const index = frameAt(state.position, list.length);
-      const image = list[index];
-      if (image && state.drawn !== index && canvas.width && canvas.height) {
-        const ratio = Math.max(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
-        const width = image.naturalWidth * ratio, height = image.naturalHeight * ratio;
-        ctx.drawImage(image, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+      const frame = list[index];
+      if (frame && state.drawn !== index && canvas.width && canvas.height) {
+        const ratio = Math.max(canvas.width / frame.sw, canvas.height / frame.sh);
+        const width = frame.sw * ratio, height = frame.sh * ratio;
+        ctx.drawImage(frame.image, frame.sx, frame.sy, frame.sw, frame.sh,
+          (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
         state.drawn = index;
         canvas.dataset["frame"] = String(index);
       }
@@ -182,7 +197,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       onMouseLeave={() => { st.current.hover = false; wake.current(); }}
       style={{ touchAction: "pan-y" }}
       className={`relative select-none overflow-hidden bg-surface-strong ${ready ? "cursor-grab active:cursor-grabbing" : "cursor-progress"} ${className}`}>
-      <img src={spin.url(0)} alt={alt} width={size === "lg" ? 854 : 480} height={size === "lg" ? 480 : 270}
+      <img src={spin.poster} alt={alt} width={size === "lg" ? 854 : 480} height={size === "lg" ? 480 : 270}
         decoding="async" draggable={false} className="absolute inset-0 size-full object-cover" />
       <canvas ref={canvasRef} aria-hidden className={`absolute inset-0 size-full ${ready ? "visible" : "invisible"}`} />
       {size === "lg" && <>
