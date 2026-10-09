@@ -6,14 +6,14 @@
 // Every sequence must loop seamlessly (last frame flows into the first).
 export const SPIN_360: Record<string, { frames: number; small: number }> = {
   "vw-touareg-4x4-automat-2008-296000-9136006809": { frames: 245, small: 123 },
-  "dacia-sandero-stepway-2016-156000-2110006809": { frames: 238, small: 119 },
-  "audi-a6-2015-0-6008006809": { frames: 247, small: 124 },
+  "dacia-sandero-stepway-2016-156000-2110006809": { frames: 248, small: 124 },
+  "audi-a6-2015-0-6008006809": { frames: 248, small: 124 },
   "bmw-x1-x-2013-24300-7838006809": { frames: 247, small: 124 },
   "bmw-x6-2010-278000-1520006809": { frames: 247, small: 124 },
   "suzuki-vitara-2011-0-3444006809": { frames: 211, small: 106 },
 };
 
-const V = "v=20261009b";
+const V = "v=20261009c";
 
 export type SpinSheet = { url: string; first: number; frames: number };
 
