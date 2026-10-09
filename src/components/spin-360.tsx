@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { RotateCw, Hand } from "lucide-react";
 import { spinFor } from "@/lib/spin360";
-import { loadSpinFrames } from "@/lib/spin-frames";
+import { loadSpinFrames, type SpinFrame } from "@/lib/spin-frames";
 import { coastTurn, followTurn, frameAt } from "@/lib/spin-motion";
 
 type Props = {
@@ -27,7 +27,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
   const spin = spinFor(slug, size);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
-  const frames = useRef<HTMLImageElement[]>([]);
+  const frames = useRef<SpinFrame[]>([]);
   const wake = useRef<() => void>(() => {});
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -197,7 +197,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       onMouseLeave={() => { st.current.hover = false; wake.current(); }}
       style={{ touchAction: "pan-y" }}
       className={`relative select-none overflow-hidden bg-surface-strong ${ready ? "cursor-grab active:cursor-grabbing" : "cursor-progress"} ${className}`}>
-      <img src={spin.url(0)} alt={alt} width={size === "lg" ? 854 : 480} height={size === "lg" ? 480 : 270}
+      <img src={spin.poster} alt={alt} width={size === "lg" ? 854 : 480} height={size === "lg" ? 480 : 270}
         decoding="async" draggable={false} className="absolute inset-0 size-full object-cover" />
       <canvas ref={canvasRef} aria-hidden className={`absolute inset-0 size-full ${ready ? "visible" : "invisible"}`} />
       {size === "lg" && <>
