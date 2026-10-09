@@ -92,7 +92,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         const width = image.naturalWidth * ratio, height = image.naturalHeight * ratio;
         ctx.drawImage(image, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
         state.drawn = index;
-        canvas.dataset.frame = String(index);
+        canvas.dataset["frame"] = String(index);
       }
       if (state.dragging || Math.abs(state.target - state.position) > 0.0001 || state.velocity ||
         (!state.reduced && (state.hover || state.auto))) raf = requestAnimationFrame(tick);
