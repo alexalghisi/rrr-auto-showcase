@@ -40,15 +40,29 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
   useEffect(() => {
     if (!load) return;
     let cancelled = false;
-    // The small sequence is the same orbit and keeps mobile memory bounded.
-    const chosenSize = size === "lg" && window.matchMedia("(max-width: 767px)").matches ? "sm" : size;
-    loadSpinFrames(slug, chosenSize).then((sequence) => {
-      if (cancelled) return;
-      frames.current = sequence.frames;
-      setReady(sequence.complete);
-      setFailed(!sequence.complete);
+    let upgraded = false;
+    const publish = (list: SpinFrame[]) => {
+      frames.current = list;
+      st.current.drawn = -1;
+      setReady(true);
+      setFailed(false);
       wake.current();
+    };
+    // The small sequence is the same orbit: it is ready fast (one file, often cached
+    // from the card) and keeps mobile memory bounded. Desktop upgrades to large frames.
+    const upgrade = size === "lg" && !window.matchMedia("(max-width: 767px)").matches;
+    loadSpinFrames(slug, "sm").then((sequence) => {
+      if (cancelled || upgraded) return;
+      if (sequence.complete) publish(sequence.frames);
+      else if (!upgrade) setFailed(true);
     });
+    if (upgrade) {
+      loadSpinFrames(slug, "lg").then((sequence) => {
+        if (cancelled) return;
+        if (sequence.complete) { upgraded = true; publish(sequence.frames); }
+        else if (!frames.current.length) setFailed(true);
+      });
+    }
     return () => { cancelled = true; };
   }, [slug, size, load]);
 
