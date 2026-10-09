@@ -1,228 +1,204 @@
 import { useEffect, useRef, useState } from "react";
 import { RotateCw, Hand } from "lucide-react";
-
 import { spinFor } from "@/lib/spin360";
+import { loadSpinFrames } from "@/lib/spin-frames";
+import { coastTurn, followTurn, frameAt } from "@/lib/spin-motion";
 
 type Props = {
   slug: string;
   size?: "lg" | "sm";
   alt: string;
-  /** Rotate slowly by itself until the user touches it. */
   autoRotate?: boolean;
-  /** Set to true while the last pointer gesture was a drag (lets a parent link ignore the click). */
   movedRef?: React.MutableRefObject<boolean>;
-  /** Only start downloading frames when true (cards wait for hover / viewport). */
   load?: boolean;
-  /** Spin while hovered (desktop cards). */
   hoverSpin?: boolean;
   className?: string;
 };
 
-/**
- * Full 360° turntable from an image sequence. Drag left/right (finger or mouse)
- * as long as you want, in both directions; release with speed for inertia.
- */
-export function Spin360({
-  slug,
-  size = "lg",
-  alt,
-  autoRotate = false,
-  movedRef,
-  load = true,
-  hoverSpin = false,
-  className = "",
-}: Props) {
-  const spin = spinFor(slug, size)!;
-  const n = spin.count;
+export function Spin360(props: Props) {
+  const spin = spinFor(props.slug, props.size ?? "lg");
+  if (!spin) return null;
+  // Key resets all gesture/loading state when navigating between cars.
+  return <SpinSequence key={`${props.slug}:${props.size ?? "lg"}`} {...props} />;
+}
+
+function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
+  load = true, hoverSpin = false, className = "" }: Props) {
+  const spin = spinFor(slug, size);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
-  const imgs = useRef<(HTMLImageElement | null)[]>([]);
-  const [loaded, setLoaded] = useState(0);
+  const frames = useRef<HTMLImageElement[]>([]);
+  const wake = useRef<() => void>(() => {});
+  const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [touched, setTouched] = useState(false);
-  const st = useRef({
-    pos: 0,
-    vel: 0,
-    dragging: false,
-    hover: false,
-    auto: autoRotate,
-    startX: 0,
-    startPos: 0,
-    lastX: 0,
-    lastT: 0,
-    drawn: NaN,
-  });
+  const st = useRef({ position: 0, target: 0, velocity: 0, dragging: false,
+    pointer: null as number | null, hover: false, auto: autoRotate, visible: false,
+    reduced: false, startX: 0, startTarget: 0, lastX: 0, lastTime: 0,
+    width: 0, height: 0, drawn: -1 });
 
-  // download frames (first frame immediately, then the rest in rotation order)
   useEffect(() => {
     if (!load) return;
     let cancelled = false;
-    const list: (HTMLImageElement | null)[] = new Array(n).fill(null);
-    imgs.current = list;
-    const order = [0];
-    for (let step = n / 2; step >= 1; step /= 2)
-      for (let i = 0; i < n; i += Math.max(1, Math.round(step))) if (!order.includes(i)) order.push(i);
-    for (let i = 0; i < n; i++) if (!order.includes(i)) order.push(i);
-    let count = 0;
-    order.forEach((i) => {
-      const im = new Image();
-      im.decoding = "async";
-      im.onload = () => {
-        if (cancelled) return;
-        list[i] = im;
-        count++;
-        st.current.drawn = NaN;
-        setLoaded(count);
-      };
-      im.src = spin.url(i);
+    // The small sequence is the same orbit and keeps mobile memory bounded.
+    const chosenSize = size === "lg" && window.matchMedia("(max-width: 767px)").matches ? "sm" : size;
+    loadSpinFrames(slug, chosenSize).then((sequence) => {
+      if (cancelled) return;
+      frames.current = sequence.frames;
+      setReady(sequence.complete);
+      setFailed(!sequence.complete);
+      wake.current();
     });
-    return () => {
-      cancelled = true;
-    };
-  }, [load, n, slug, size]); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => { cancelled = true; };
+  }, [slug, size, load]);
 
-  // render loop
   useEffect(() => {
+    const box = boxRef.current;
+    const canvas = canvasRef.current;
+    if (!box || !canvas) return;
+    const ctx = canvas.getContext("2d", { alpha: false });
+    if (!ctx) return;
     let raf = 0;
-    let prev = performance.now();
-    const nearest = (i: number) => {
-      const list = imgs.current;
-      for (let d = 0; d < n; d++) {
-        const a = list[(((i + d) % n) + n) % n];
-        if (a) return a;
-        const b = list[(((i - d) % n) + n) % n];
-        if (b) return b;
-      }
-      return null;
-    };
+    let previous = 0;
+    let disposed = false;
+    const state = st.current;
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    state.reduced = media.matches;
+    const active = () => state.visible && !document.hidden;
     const tick = (now: number) => {
-      const dt = Math.min(0.05, (now - prev) / 1000);
-      prev = now;
-      const s = st.current;
-      if (!s.dragging) {
-        if (s.hover) s.vel += (n * 0.12 - s.vel) * Math.min(1, dt * 3);
-        else if (s.auto) s.vel += (n * 0.06 - s.vel) * Math.min(1, dt * 2);
-        else s.vel *= Math.exp(-2.6 * dt);
-        if (Math.abs(s.vel) < 0.05 && !s.hover && !s.auto) s.vel = 0;
-        s.pos += s.vel * dt;
+      raf = 0;
+      if (!active() || disposed) { previous = 0; return; }
+      const delta = previous ? Math.min(0.05, (now - previous) / 1000) : 1 / 60;
+      previous = now;
+      const list = frames.current;
+      if (!list.length) return;
+      if (state.dragging || Math.abs(state.target - state.position) > 0.0001) {
+        state.position = followTurn(state.position, state.target, delta);
+      } else if (!state.reduced && (state.hover || state.auto)) {
+        const goal = state.hover ? 0.085 : 0.045;
+        state.velocity += (goal - state.velocity) * (1 - Math.exp(-3 * delta));
+        state.position += state.velocity * delta;
+        state.target = state.position;
+      } else {
+        const coast = coastTurn(state.position, state.velocity, delta);
+        state.position = coast.position;
+        state.velocity = Math.abs(coast.velocity) < 0.001 ? 0 : coast.velocity;
+        state.target = state.position;
       }
-      const c = canvasRef.current;
-      if (c) {
-        const w = c.clientWidth;
-        const h = c.clientHeight;
-        const dpr = Math.min(2, window.devicePixelRatio || 1);
-        if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) {
-          c.width = Math.round(w * dpr);
-          c.height = Math.round(h * dpr);
-          s.drawn = NaN;
-        }
-        // nearest whole frame: no double-image ghosting; frames are only a few degrees apart
-        const key = Math.round(s.pos);
-        if (key !== s.drawn) {
-          const ctx = c.getContext("2d");
-          const im = nearest(key);
-          if (ctx && im) {
-            s.drawn = key;
-            const r = Math.max(c.width / im.naturalWidth, c.height / im.naturalHeight);
-            const dw = im.naturalWidth * r;
-            const dh = im.naturalHeight * r;
-            ctx.drawImage(im, (c.width - dw) / 2, (c.height - dh) / 2, dw, dh);
-          }
-        }
+      const index = frameAt(state.position, list.length);
+      const image = list[index];
+      if (image && state.drawn !== index && canvas.width && canvas.height) {
+        const ratio = Math.max(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
+        const width = image.naturalWidth * ratio, height = image.naturalHeight * ratio;
+        ctx.drawImage(image, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+        state.drawn = index;
+        canvas.dataset.frame = String(index);
       }
-      raf = requestAnimationFrame(tick);
+      if (state.dragging || Math.abs(state.target - state.position) > 0.0001 || state.velocity ||
+        (!state.reduced && (state.hover || state.auto))) raf = requestAnimationFrame(tick);
+      else previous = 0;
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [n]);
+    const start = () => { if (!raf && active() && !disposed) raf = requestAnimationFrame(tick); };
+    wake.current = start;
+    const resize = new ResizeObserver(([entry]) => {
+      if (!entry) return;
+      state.width = entry.contentRect.width;
+      state.height = entry.contentRect.height;
+      // Do not upscale 480/854px frames into huge retina canvases.
+      const dpr = Math.min(window.devicePixelRatio || 1, size === "sm" ? 1 : 1.5);
+      const scale = Math.min(dpr, (size === "sm" ? 480 : 854) / Math.max(1, state.width));
+      canvas.width = Math.max(1, Math.round(state.width * scale));
+      canvas.height = Math.max(1, Math.round(state.height * scale));
+      state.drawn = -1;
+      start();
+    });
+    resize.observe(box);
+    const observer = new IntersectionObserver(([entry]) => {
+      state.visible = !!entry?.isIntersecting;
+      if (state.visible) start();
+      else { cancelAnimationFrame(raf); raf = 0; previous = 0; }
+    });
+    observer.observe(box);
+    const visibility = () => {
+      previous = 0;
+      if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+      else start();
+    };
+    const reduced = () => { state.reduced = media.matches; start(); };
+    document.addEventListener("visibilitychange", visibility);
+    media.addEventListener("change", reduced);
+    return () => {
+      disposed = true;
+      cancelAnimationFrame(raf);
+      resize.disconnect(); observer.disconnect();
+      document.removeEventListener("visibilitychange", visibility);
+      media.removeEventListener("change", reduced);
+      wake.current = () => {};
+    };
+  }, [size]);
 
-  // one full turn ≈ 1.6 widths of drag
-  const pxPerFrame = () => ((boxRef.current?.clientWidth ?? 400) * 1.6) / n;
-
-  const onDown = (e: React.PointerEvent) => {
-    const s = st.current;
-    s.dragging = true;
-    s.auto = false;
-    s.hover = false;
-    s.vel = 0;
-    s.startX = s.lastX = e.clientX;
-    s.startPos = s.pos;
-    s.lastT = performance.now();
+  const onDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!ready || !event.isPrimary || event.button !== 0) return;
+    const state = st.current;
+    state.dragging = true; state.pointer = event.pointerId;
+    state.auto = false; state.hover = false; state.velocity = 0;
+    state.startX = state.lastX = event.clientX;
+    state.target = state.position; state.startTarget = state.position;
+    state.lastTime = performance.now();
     if (movedRef) movedRef.current = false;
     setTouched(true);
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    event.currentTarget.setPointerCapture(event.pointerId);
+    wake.current();
   };
-  const onMove = (e: React.PointerEvent) => {
-    const s = st.current;
-    if (!s.dragging) return;
-    const ppf = pxPerFrame();
-    if (movedRef && Math.abs(e.clientX - s.startX) > 6) movedRef.current = true;
-    s.pos = s.startPos + (s.startX - e.clientX) / ppf;
-    const now = performance.now();
-    const dt = (now - s.lastT) / 1000;
-    if (dt > 0) s.vel = s.vel * 0.4 + ((s.lastX - e.clientX) / ppf / dt) * 0.6;
-    s.lastX = e.clientX;
-    s.lastT = now;
+  const onMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const state = st.current;
+    if (!state.dragging || state.pointer !== event.pointerId) return;
+    const pixelsPerTurn = Math.max(1, state.width) * 1.6;
+    if (movedRef && Math.abs(event.clientX - state.startX) > 6) movedRef.current = true;
+    state.target = state.startTarget + (state.startX - event.clientX) / pixelsPerTurn;
+    const now = performance.now(), delta = (now - state.lastTime) / 1000;
+    if (delta > 0.004) {
+      const measured = Math.max(-0.35, Math.min(0.35, (state.lastX - event.clientX) / pixelsPerTurn / delta));
+      state.velocity += (measured - state.velocity) * (1 - Math.exp(-18 * delta));
+    }
+    state.lastX = event.clientX; state.lastTime = now;
+    wake.current();
   };
-  const onUp = () => {
-    const s = st.current;
-    if (!s.dragging) return;
-    s.dragging = false;
-    if (performance.now() - s.lastT > 80) s.vel = 0;
-    const max = n * 1.5;
-    s.vel = Math.max(-max, Math.min(max, s.vel));
+  const onUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    const state = st.current;
+    if (state.pointer !== event.pointerId) return;
+    state.dragging = false; state.pointer = null;
+    if (event.type !== "pointerup" || performance.now() - state.lastTime > 100) state.velocity = 0;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    wake.current();
   };
 
-  const ready = loaded >= n;
-  const pct = Math.round((loaded / n) * 100);
-
+  if (!spin) return null;
   return (
-    <div
-      ref={boxRef}
-      onPointerDown={onDown}
-      onPointerMove={onMove}
-      onPointerUp={onUp}
-      onPointerCancel={onUp}
-      onMouseEnter={() => {
-        if (hoverSpin) st.current.hover = true;
-      }}
-      onMouseLeave={() => {
-        st.current.hover = false;
-      }}
+    <div ref={boxRef} data-spin={slug} data-ready={ready} data-failed={failed}
+      onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp}
+      onPointerCancel={onUp} onLostPointerCapture={onUp}
+      onMouseEnter={() => { if (hoverSpin && !st.current.dragging) { st.current.hover = true; wake.current(); } }}
+      onMouseLeave={() => { st.current.hover = false; wake.current(); }}
       style={{ touchAction: "pan-y" }}
-      className={`relative select-none overflow-hidden bg-surface-strong cursor-grab active:cursor-grabbing ${className}`}
-    >
-      {/* first frame as a normal image: instant paint + SEO alt text */}
-      <img
-        src={spin.url(0)}
-        alt={alt}
-        width={size === "lg" ? 960 : 480}
-        height={size === "lg" ? 540 : 270}
-        decoding="async"
-        draggable={false}
-        className="absolute inset-0 size-full object-cover"
-      />
+      className={`relative select-none overflow-hidden bg-surface-strong ${ready ? "cursor-grab active:cursor-grabbing" : "cursor-progress"} ${className}`}>
+      <img src={spin.url(0)} alt={alt} width={size === "lg" ? 854 : 480} height={size === "lg" ? 480 : 270}
+        decoding="async" draggable={false} className="absolute inset-0 size-full object-cover" />
       <canvas ref={canvasRef} aria-hidden className="absolute inset-0 size-full" />
-
-      {size === "lg" && (
-        <>
-          <span className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary shadow-sm">
-            <RotateCw className="size-3.5" /> 360°
-          </span>
-          {!touched && (
-            <span className="pointer-events-none absolute inset-x-0 bottom-10 mx-auto flex w-fit items-center gap-2 rounded-full bg-foreground/75 px-4 py-2 text-sm font-semibold text-background">
-              <Hand className="size-4" /> Trage stânga–dreapta ca să rotești mașina
-            </span>
-          )}
-          <span className="pointer-events-none absolute bottom-2 right-2 rounded bg-background/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-            Simulare generată cu AI din pozele reale · pozele reale sunt mai jos
-          </span>
-        </>
-      )}
-      {load && !ready && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-background/40">
-          <div className="h-full bg-primary transition-[width]" style={{ width: `${pct}%` }} />
-        </div>
-      )}
+      {size === "lg" && <>
+        <span className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary shadow-sm">
+          <RotateCw className="size-3.5" /> 360°
+        </span>
+        {!touched && ready && <span className="pointer-events-none absolute inset-x-0 bottom-10 mx-auto flex w-fit items-center gap-2 rounded-full bg-foreground/75 px-4 py-2 text-sm font-semibold text-background">
+          <Hand className="size-4" /> Trage stânga–dreapta ca să rotești mașina
+        </span>}
+      </>}
+      <span className={`pointer-events-none absolute rounded bg-background/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground ${size === "lg" ? "bottom-2 right-2" : "left-2 top-2"}`}>
+        {size === "lg" ? "Simulare AI · pozele reale sunt mai jos" : "Simulare AI"}
+      </span>
+      {load && !ready && <span role="status" className="pointer-events-none absolute bottom-2 left-2 rounded bg-background/90 px-2 py-1 text-xs text-muted-foreground">
+        {failed ? "Rotirea nu s-a încărcat" : "Se încarcă rotirea…"}
+      </span>}
     </div>
   );
 }
