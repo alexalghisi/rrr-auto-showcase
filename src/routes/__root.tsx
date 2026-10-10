@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
+import { AdBanner, NativeAd, SocialBar } from "@/components/ad-slots";
 import { trackView } from "@/lib/analytics.functions";
 
 
@@ -171,6 +172,13 @@ function RootComponent() {
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
         </main>
+        {chrome && (
+          <>
+            <AdBanner />
+            <NativeAd />
+            <SocialBar />
+          </>
+        )}
         {chrome && <SiteFooter />}
       </div>
       <Toaster position="top-center" />
