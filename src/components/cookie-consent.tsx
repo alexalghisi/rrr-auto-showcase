@@ -13,7 +13,7 @@ function applyConsent(granted: boolean) {
   w.gtag?.("consent", "update", { ad_storage: v, ad_user_data: v, ad_personalization: v, analytics_storage: v });
   const ads = window as unknown as { adsbygoogle?: Record<string, number> };
   const q = (ads.adsbygoogle ??= [] as unknown as Record<string, number>);
-  q.requestNonPersonalizedAds = granted ? 0 : 1;
+  q["requestNonPersonalizedAds"] = granted ? 0 : 1;
 }
 
 export function openCookieSettings() {
