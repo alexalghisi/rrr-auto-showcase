@@ -50,6 +50,7 @@ export function AdBanner() {
 export function NativeAd() {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    if (ADSTERRA_HIDDEN) return;
     const el = ref.current;
     if (!el) return;
     const s = document.createElement("script");
@@ -72,6 +73,7 @@ export function NativeAd() {
 
 export function SocialBar() {
   useEffect(() => {
+    if (ADSTERRA_HIDDEN) return;
     const s = document.createElement("script");
     s.src = SOCIAL_BAR_SRC;
     s.async = true;
