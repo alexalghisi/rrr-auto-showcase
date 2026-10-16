@@ -11,12 +11,9 @@ function applyConsent(granted: boolean) {
   const w = window as unknown as { gtag?: Gtag };
   const v = granted ? "granted" : "denied";
   w.gtag?.("consent", "update", { ad_storage: v, ad_user_data: v, ad_personalization: v, analytics_storage: v });
-  const ads = window as unknown as { adsbygoogle?: { requestNonPersonalizedAds?: number; pauseAdRequests?: number } };
-  ads.adsbygoogle = (ads.adsbygoogle ?? []) as never;
-  if (ads.adsbygoogle) {
-    ads.adsbygoogle.requestNonPersonalizedAds = granted ? 0 : 1;
-    ads.adsbygoogle.pauseAdRequests = 0;
-  }
+  const ads = window as unknown as { adsbygoogle?: Record<string, number> };
+  const q = (ads.adsbygoogle ??= [] as unknown as Record<string, number>);
+  q.requestNonPersonalizedAds = granted ? 0 : 1;
 }
 
 export function openCookieSettings() {
