@@ -14,7 +14,9 @@ import { Route as LandingRouteImport } from './routes/$landing'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CategoriiRouteImport } from './routes/categorii'
+import { Route as ConfidentialitateRouteImport } from './routes/confidentialitate'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as DespreRouteImport } from './routes/despre'
 import { Route as GasesteMasinaRouteImport } from './routes/gaseste-masina'
 import { Route as McpRouteImport } from './routes/mcp'
@@ -27,6 +29,7 @@ import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static
 import { Route as SitemapStocDotxmlRouteImport } from './routes/sitemap-stoc[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StocRouteImport } from './routes/stoc'
+import { Route as TermeniRouteImport } from './routes/termeni'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
@@ -64,9 +67,19 @@ const CategoriiRoute = CategoriiRouteImport.update({
   path: '/categorii',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfidentialitateRoute = ConfidentialitateRouteImport.update({
+  id: '/confidentialitate',
+  path: '/confidentialitate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DespreRoute = DespreRouteImport.update({
@@ -127,6 +140,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const StocRoute = StocRouteImport.update({
   id: '/stoc',
   path: '/stoc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermeniRoute = TermeniRouteImport.update({
+  id: '/termeni',
+  path: '/termeni',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
@@ -199,7 +217,9 @@ export interface FileRoutesByFullPath {
   '/$landing': typeof LandingRoute
   '/auth': typeof AuthRoute
   '/categorii': typeof CategoriiRoute
+  '/confidentialitate': typeof ConfidentialitateRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/despre': typeof DespreRoute
   '/gaseste-masina': typeof GasesteMasinaRoute
   '/mcp': typeof McpRoute
@@ -212,6 +232,7 @@ export interface FileRoutesByFullPath {
   '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
+  '/termeni': typeof TermeniRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -230,7 +251,9 @@ export interface FileRoutesByTo {
   '/$landing': typeof LandingRoute
   '/auth': typeof AuthRoute
   '/categorii': typeof CategoriiRoute
+  '/confidentialitate': typeof ConfidentialitateRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/despre': typeof DespreRoute
   '/gaseste-masina': typeof GasesteMasinaRoute
   '/mcp': typeof McpRoute
@@ -243,6 +266,7 @@ export interface FileRoutesByTo {
   '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
+  '/termeni': typeof TermeniRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -263,7 +287,9 @@ export interface FileRoutesById {
   '/$landing': typeof LandingRoute
   '/auth': typeof AuthRoute
   '/categorii': typeof CategoriiRoute
+  '/confidentialitate': typeof ConfidentialitateRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/despre': typeof DespreRoute
   '/gaseste-masina': typeof GasesteMasinaRoute
   '/mcp': typeof McpRoute
@@ -276,6 +302,7 @@ export interface FileRoutesById {
   '/sitemap-stoc.xml': typeof SitemapStocDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stoc': typeof StocRoute
+  '/termeni': typeof TermeniRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -296,7 +323,9 @@ export interface FileRouteTypes {
     | '/$landing'
     | '/auth'
     | '/categorii'
+    | '/confidentialitate'
     | '/contact'
+    | '/cookies'
     | '/despre'
     | '/gaseste-masina'
     | '/mcp'
@@ -309,6 +338,7 @@ export interface FileRouteTypes {
     | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
+    | '/termeni'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/blog/$slug'
@@ -327,7 +357,9 @@ export interface FileRouteTypes {
     | '/$landing'
     | '/auth'
     | '/categorii'
+    | '/confidentialitate'
     | '/contact'
+    | '/cookies'
     | '/despre'
     | '/gaseste-masina'
     | '/mcp'
@@ -340,6 +372,7 @@ export interface FileRouteTypes {
     | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
+    | '/termeni'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/blog/$slug'
@@ -359,7 +392,9 @@ export interface FileRouteTypes {
     | '/$landing'
     | '/auth'
     | '/categorii'
+    | '/confidentialitate'
     | '/contact'
+    | '/cookies'
     | '/despre'
     | '/gaseste-masina'
     | '/mcp'
@@ -372,6 +407,7 @@ export interface FileRouteTypes {
     | '/sitemap-stoc.xml'
     | '/sitemap.xml'
     | '/stoc'
+    | '/termeni'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
     | '/blog/$slug'
@@ -392,7 +428,9 @@ export interface RootRouteChildren {
   LandingRoute: typeof LandingRoute
   AuthRoute: typeof AuthRoute
   CategoriiRoute: typeof CategoriiRoute
+  ConfidentialitateRoute: typeof ConfidentialitateRoute
   ContactRoute: typeof ContactRoute
+  CookiesRoute: typeof CookiesRoute
   DespreRoute: typeof DespreRoute
   GasesteMasinaRoute: typeof GasesteMasinaRoute
   McpRoute: typeof McpRoute
@@ -405,6 +443,7 @@ export interface RootRouteChildren {
   SitemapStocDotxmlRoute: typeof SitemapStocDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StocRoute: typeof StocRoute
+  TermeniRoute: typeof TermeniRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BlogSlugRoute: typeof BlogSlugRoute
   MasiniSlugRoute: typeof MasiniSlugRoute
@@ -455,11 +494,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/confidentialitate': {
+      id: '/confidentialitate'
+      path: '/confidentialitate'
+      fullPath: '/confidentialitate'
+      preLoaderRoute: typeof ConfidentialitateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/despre': {
@@ -544,6 +597,13 @@ declare module '@tanstack/react-router' {
       path: '/stoc'
       fullPath: '/stoc'
       preLoaderRoute: typeof StocRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termeni': {
+      id: '/termeni'
+      path: '/termeni'
+      fullPath: '/termeni'
+      preLoaderRoute: typeof TermeniRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.well-known/oauth-protected-resource': {
@@ -650,7 +710,9 @@ const rootRouteChildren: RootRouteChildren = {
   LandingRoute: LandingRoute,
   AuthRoute: AuthRoute,
   CategoriiRoute: CategoriiRoute,
+  ConfidentialitateRoute: ConfidentialitateRoute,
   ContactRoute: ContactRoute,
+  CookiesRoute: CookiesRoute,
   DespreRoute: DespreRoute,
   GasesteMasinaRoute: GasesteMasinaRoute,
   McpRoute: McpRoute,
@@ -663,6 +725,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapStocDotxmlRoute: SitemapStocDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StocRoute: StocRoute,
+  TermeniRoute: TermeniRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BlogSlugRoute: BlogSlugRoute,
