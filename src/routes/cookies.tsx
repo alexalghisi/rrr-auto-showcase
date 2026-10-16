@@ -18,7 +18,7 @@ export const Route = createFileRoute("/cookies")({
       <h2>Publicitate (Google AdSense)</h2>
       <p>
         Google și partenerii săi pot folosi cookie-uri pentru a afișa și măsura reclame, inclusiv personalizate. Acestea
-        se activează doar dacă apeși „Accept toate". Fără acord, Google poate afișa doar reclame neprsonalizate, limitate.
+        se activează doar dacă apeși „Accept toate". Fără acord, Google poate afișa doar reclame nepersonalizate, limitate.
       </p>
       <h2>Cum îți schimbi alegerea</h2>
       <p>Poți modifica acordul oricând, de aici sau din linkul „Setări cookie-uri" din subsolul site-ului.</p>
