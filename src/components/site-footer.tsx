@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Facebook, Mail, MapPin, Phone, Clock } from "lucide-react";
 
 import { SITE } from "@/lib/site";
+import { openCookieSettings } from "@/components/cookie-consent";
 import { LANDING_PAGES } from "@/lib/landing-pages";
 
 export function SiteFooter() {
@@ -115,6 +116,13 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-border py-5 text-center text-xs text-muted-foreground">
+        <nav className="mb-2 flex flex-wrap justify-center gap-x-4 gap-y-1">
+          <Link to="/confidentialitate" className="hover:text-foreground">Confidențialitate</Link>
+          <Link to="/cookies" className="hover:text-foreground">Cookie-uri</Link>
+          <Link to="/termeni" className="hover:text-foreground">Termeni și condiții</Link>
+          <button type="button" onClick={openCookieSettings} className="hover:text-foreground">Setări cookie-uri</button>
+          <a href="https://anpc.ro" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">ANPC</a>
+        </nav>
         © {new Date().getFullYear()} {SITE.name} · Mașini second hand Cluj-Napoca & Florești
       </div>
     </footer>

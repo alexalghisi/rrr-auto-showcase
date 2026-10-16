@@ -14,6 +14,9 @@ export const Route = createFileRoute("/sitemap-static.xml")({
           { path: "/contact", changefreq: "monthly", priority: "0.7" },
           { path: "/despre", changefreq: "monthly", priority: "0.6" },
           { path: "/recenzii", changefreq: "monthly", priority: "0.5" },
+          { path: "/confidentialitate", changefreq: "yearly", priority: "0.3" },
+          { path: "/cookies", changefreq: "yearly", priority: "0.3" },
+          { path: "/termeni", changefreq: "yearly", priority: "0.3" },
         ];
         return renderUrlset(entries);
       },

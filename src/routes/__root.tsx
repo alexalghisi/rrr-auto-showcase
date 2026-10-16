@@ -123,6 +123,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       {
+        children:
+          "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;var c=null;try{c=localStorage.getItem('bremen-cookie-consent')}catch(e){}var g=c==='all'?'granted':'denied';gtag('consent','default',{ad_storage:g,ad_user_data:g,ad_personalization:g,analytics_storage:g,wait_for_update:500});(window.adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=c==='all'?0:1;",
+      },
+      {
         async: true,
         src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4079300108937036",
         crossOrigin: "anonymous",
