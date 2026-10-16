@@ -8,6 +8,9 @@ const NATIVE_SRC = `https://pl31754794.profitableratecpmnetwork.com/${NATIVE_KEY
 const SOCIAL_BAR_SRC =
   "https://pl31754796.profitableratecpmnetwork.com/44/3f/14/443f141a0ff3ecf271527c4207eb3e20.js";
 
+// Temporarily hidden while Google AdSense reviews the site — flip to false to bring them back.
+const ADSTERRA_HIDDEN = true;
+
 // Each banner lives in its own iframe because the Adsterra snippet uses a global `atOptions`.
 function IframeBanner({ keyId, width, height }: { keyId: string; width: number; height: number }) {
   const doc = `<!doctype html><html><body style="margin:0"><script>atOptions={'key':'${keyId}','format':'iframe','height':${height},'width':${width},'params':{}};</script><script src="https://www.highperformanceformat.com/${keyId}/invoke.js"></script></body></html>`;
@@ -30,6 +33,7 @@ export function AdBanner() {
   useEffect(() => {
     setMobile(window.matchMedia("(max-width: 767px)").matches);
   }, []);
+  if (ADSTERRA_HIDDEN) return <div style={{ minHeight: 50 }} />;
   if (mobile === null) return <div style={{ minHeight: 50 }} />;
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-1 px-4 py-4">
@@ -57,6 +61,7 @@ export function NativeAd() {
       s.remove();
     };
   }, []);
+  if (ADSTERRA_HIDDEN) return null;
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-4">
       <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Publicitate</span>
@@ -75,5 +80,6 @@ export function SocialBar() {
       s.remove();
     };
   }, []);
+  if (ADSTERRA_HIDDEN) return null;
   return null;
 }
