@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCw, Hand } from "lucide-react";
 import { spinFor } from "@/lib/spin360";
 import { loadSpinFrames, type SpinFrame } from "@/lib/spin-frames";
-import { coastTurn, followTurn, frameAt } from "@/lib/spin-motion";
+import { coastTurn, followTurn, frameBlendAt, dragTurn } from "@/lib/spin-motion";
 
 type Props = {
   slug: string;
@@ -86,7 +86,10 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       previous = now;
       const list = frames.current;
       if (!list.length) return;
-      if (state.dragging || Math.abs(state.target - state.position) > 0.0001) {
+      if (state.dragging) {
+        // Follow the actual pointer without spring lag, so reversing never continues the old direction.
+        state.position = state.target;
+      } else if (Math.abs(state.target - state.position) > 0.0001) {
         state.position = followTurn(state.position, state.target, delta);
       } else if (!state.reduced && (state.hover || state.auto)) {
         const goal = state.hover ? 0.085 : 0.045;
@@ -99,15 +102,24 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         state.velocity = Math.abs(coast.velocity) < 0.001 ? 0 : coast.velocity;
         state.target = state.position;
       }
-      const index = frameAt(state.position, list.length);
-      const frame = list[index];
-      if (frame && state.drawn !== index && canvas.width && canvas.height) {
+      const sample = frameBlendAt(state.position, list.length);
+      const frame = list[sample.first];
+      const next = list[sample.next];
+      const drawn = sample.first + sample.mix;
+      if (frame && next && state.drawn !== drawn && canvas.width && canvas.height) {
         const ratio = Math.max(canvas.width / frame.sw, canvas.height / frame.sh);
         const width = frame.sw * ratio, height = frame.sh * ratio;
         ctx.drawImage(frame.image, frame.sx, frame.sy, frame.sw, frame.sh,
           (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
-        state.drawn = index;
-        canvas.dataset["frame"] = String(index);
+        if (sample.mix > 0) {
+          ctx.globalAlpha = sample.mix;
+          ctx.drawImage(next.image, next.sx, next.sy, next.sw, next.sh,
+            (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+          ctx.globalAlpha = 1;
+        }
+        state.drawn = drawn;
+        canvas.dataset["frame"] = String(sample.first);
+        canvas.dataset["turn"] = String(state.position);
       }
       if (state.dragging || Math.abs(state.target - state.position) > 0.0001 || state.velocity ||
         (!state.reduced && (state.hover || state.auto))) raf = requestAnimationFrame(tick);
@@ -171,7 +183,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     // One drag across the whole photo = one full 360° turn.
     const pixelsPerTurn = Math.max(1, state.width);
     if (movedRef && Math.abs(event.clientX - state.startX) > 6) movedRef.current = true;
-    state.target = state.startTarget + (state.startX - event.clientX) / pixelsPerTurn;
+    state.target = dragTurn(state.startTarget, state.startX, event.clientX, pixelsPerTurn);
     const now = performance.now(), delta = (now - state.lastTime) / 1000;
     if (delta > 0.004) {
       const measured = Math.max(-0.35, Math.min(0.35, (state.lastX - event.clientX) / pixelsPerTurn / delta));

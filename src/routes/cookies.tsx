@@ -29,7 +29,9 @@ export const Route = createFileRoute("/cookies")({
       </p>
       <p>
         Reclamele nepersonalizate nu sunt automat scutite de consimțământ pentru cookie-uri. Disponibilitatea
-        reclamelor limitate depinde de alegerile tale și de regulile și setările Google. Adsterra este dezactivat.
+        reclamelor limitate depinde de alegerile tale și de regulile și setările Google.
+        Site-ul utilizează și Adsterra pentru bannere, publicitate nativă și Social Bar;
+        Google Privacy &amp; messaging gestionează consimțământul Google, nu autorizează automat alți furnizori.
       </p>
       <h2>Cum îți schimbi alegerea</h2>
       <p>

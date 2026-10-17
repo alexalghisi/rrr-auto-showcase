@@ -13,3 +13,14 @@ export function coastTurn(position: number, velocity: number, delta: number) {
 export function frameAt(turn: number, count: number) {
   return Math.floor(wrapTurn(turn) * count) % count;
 }
+
+/** Fractional sampling avoids snapping slow pointer movements to whole frames. */
+export function frameBlendAt(turn: number, count: number) {
+  const sample = wrapTurn(turn) * count;
+  const first = Math.floor(sample) % count;
+  return { first, next: (first + 1) % count, mix: sample - Math.floor(sample) };
+}
+
+export function dragTurn(start: number, startX: number, pointerX: number, width: number) {
+  return start + (startX - pointerX) / Math.max(1, width);
+}

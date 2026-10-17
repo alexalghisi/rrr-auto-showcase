@@ -8,8 +8,8 @@ const NATIVE_SRC = `https://pl31754794.profitableratecpmnetwork.com/${NATIVE_KEY
 const SOCIAL_BAR_SRC =
   "https://pl31754796.profitableratecpmnetwork.com/44/3f/14/443f141a0ff3ecf271527c4207eb3e20.js";
 
-// Temporarily hidden while Google AdSense reviews the site — flip to false to bring them back.
-const ADSTERRA_HIDDEN = true;
+// Explicitly reactivated by the publisher on 17 October 2026.
+const ADSTERRA_HIDDEN = false;
 
 // Each banner lives in its own iframe because the Adsterra snippet uses a global `atOptions`.
 function IframeBanner({ keyId, width, height }: { keyId: string; width: number; height: number }) {
