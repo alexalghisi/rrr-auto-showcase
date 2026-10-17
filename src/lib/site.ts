@@ -1,3 +1,5 @@
+import { REDACTED_PHOTOS } from "./redacted-photos";
+
 export const SITE = {
   name: "Bremen Auto",
   legalName: "Bremen Auto",
@@ -38,7 +40,8 @@ export function photoUrl(path: string): string {
       .replace(/;s=0x0$/, ";s=1000x700");
     return `/api/public/img?u=${encodeURIComponent(normalized)}`;
   }
-  return `/api/public/photo/${path.replace(/^\/+/, "")}`;
+  const url = `/api/public/photo/${path.replace(/^\/+/, "")}`;
+  return REDACTED_PHOTOS[url] ?? url;
 }
 
 /** Variantă absolută, pentru og:image și structured data. */
