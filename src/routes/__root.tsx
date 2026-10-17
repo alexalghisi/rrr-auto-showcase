@@ -18,6 +18,8 @@ import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AdBanner, NativeAd, SocialBar } from "@/components/ad-slots";
 import { trackView } from "@/lib/analytics.functions";
+import { CookieConsent } from "@/components/cookie-consent";
+import { GOOGLE_CONSENT_BOOTSTRAP } from "@/lib/google-consent";
 
 
 function NotFoundComponent() {
@@ -124,7 +126,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     scripts: [
       {
         children:
-          "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;var c=null;try{c=localStorage.getItem('bremen-cookie-consent')}catch(e){}var g=c==='all'?'granted':'denied';gtag('consent','default',{ad_storage:g,ad_user_data:g,ad_personalization:g,analytics_storage:g,wait_for_update:500});(window.adsbygoogle=window.adsbygoogle||[]).requestNonPersonalizedAds=c==='all'?0:1;",
+          GOOGLE_CONSENT_BOOTSTRAP,
       },
       {
         async: true,
@@ -186,6 +188,7 @@ function RootComponent() {
         {chrome && <SiteFooter />}
       </div>
       <Toaster position="top-center" />
+      {chrome && <CookieConsent />}
     </QueryClientProvider>
   );
 }
