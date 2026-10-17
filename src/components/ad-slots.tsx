@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useAdsterraConsent } from "@/lib/adsterra-consent";
 
 // Adsterra zones (publisher account of the site owner).
 const BANNER_728 = "04eba6e0b9b24743b164ff6f94dd40ad";
@@ -8,8 +9,8 @@ const NATIVE_SRC = `https://pl31754794.profitableratecpmnetwork.com/${NATIVE_KEY
 const SOCIAL_BAR_SRC =
   "https://pl31754796.profitableratecpmnetwork.com/44/3f/14/443f141a0ff3ecf271527c4207eb3e20.js";
 
-// Temporarily hidden while Google AdSense reviews the site — flip to false to bring them back.
-const ADSTERRA_HIDDEN = true;
+// Explicitly reactivated by the publisher on 17 October 2026.
+const ADSTERRA_HIDDEN = false;
 
 // Each banner lives in its own iframe because the Adsterra snippet uses a global `atOptions`.
 function IframeBanner({ keyId, width, height }: { keyId: string; width: number; height: number }) {
@@ -29,11 +30,12 @@ function IframeBanner({ keyId, width, height }: { keyId: string; width: number; 
 }
 
 export function AdBanner() {
+  const consent = useAdsterraConsent();
   const [mobile, setMobile] = useState<boolean | null>(null);
   useEffect(() => {
     setMobile(window.matchMedia("(max-width: 767px)").matches);
   }, []);
-  if (ADSTERRA_HIDDEN) return <div style={{ minHeight: 50 }} />;
+  if (ADSTERRA_HIDDEN || !consent) return null;
   if (mobile === null) return <div style={{ minHeight: 50 }} />;
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-1 px-4 py-4">
@@ -48,9 +50,10 @@ export function AdBanner() {
 }
 
 export function NativeAd() {
+  const consent = useAdsterraConsent();
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (ADSTERRA_HIDDEN) return;
+    if (ADSTERRA_HIDDEN || !consent) return;
     const el = ref.current;
     if (!el) return;
     const s = document.createElement("script");
@@ -61,8 +64,8 @@ export function NativeAd() {
     return () => {
       s.remove();
     };
-  }, []);
-  if (ADSTERRA_HIDDEN) return null;
+  }, [consent]);
+  if (ADSTERRA_HIDDEN || !consent) return null;
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-4">
       <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Publicitate</span>
@@ -72,8 +75,9 @@ export function NativeAd() {
 }
 
 export function SocialBar() {
+  const consent = useAdsterraConsent();
   useEffect(() => {
-    if (ADSTERRA_HIDDEN) return;
+    if (ADSTERRA_HIDDEN || !consent) return;
     const s = document.createElement("script");
     s.src = SOCIAL_BAR_SRC;
     s.async = true;
@@ -81,7 +85,7 @@ export function SocialBar() {
     return () => {
       s.remove();
     };
-  }, []);
+  }, [consent]);
   if (ADSTERRA_HIDDEN) return null;
   return null;
 }

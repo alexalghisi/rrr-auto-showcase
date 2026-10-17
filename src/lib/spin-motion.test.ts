@@ -1,8 +1,27 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
-import { coastTurn, followTurn, frameAt } from "./spin-motion";
+import { coastTurn, followTurn, frameAt, frameBlendAt, dragTurn } from "./spin-motion";
 
 describe("turntable motion", () => {
+  test("one image-width drag is exactly one turn for mouse and touch at every car size", () => {
+    for (const width of [320, 390, 640, 854]) {
+      assert.equal(dragTurn(0, width, 0, width), 1);
+      assert.equal(dragTurn(0, 0, width, width), -1);
+      assert.equal(dragTurn(0.25, width / 2, width / 4, width), 0.5);
+    }
+  });
+  test("samples between adjacent positions and blends the final frame into the first", () => {
+    for (const count of [106, 123, 124, 211, 245, 247, 248]) {
+      const mid = frameBlendAt(0.5 / count, count);
+      assert.equal(mid.first, 0);
+      assert.equal(mid.next, 1);
+      assert.ok(Math.abs(mid.mix - 0.5) < 1e-10);
+      const seam = frameBlendAt(1 - 0.5 / count, count);
+      assert.equal(seam.first, count - 1);
+      assert.equal(seam.next, 0);
+      assert.ok(Math.abs(seam.mix - 0.5) < 1e-10);
+    }
+  });
   test("wraps in both directions for every sequence length", () => {
     for (const count of [51, 60, 101, 119, 120, 238, 240]) {
       assert.equal(frameAt(1, count), 0);
