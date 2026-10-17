@@ -29,6 +29,11 @@ export const Route = createFileRoute("/confidentialitate")({
       </ul>
       <h2>Publicitate Google</h2>
       <p>
+        În SEE, Regatul Unit și Elveția, consimțământul pentru publicitate este gestionat prin CMP-ul certificat
+        Google Privacy &amp; messaging, după activarea mesajului pentru site. Îți poți modifica sau retrage acordul
+        din „Setări cookie-uri” în subsol. Bannerul personalizat anterior nu constituie un acord pentru AdSense.
+      </p>
+      <p>
         Folosim Google AdSense. Furnizorii terți, inclusiv Google, folosesc cookie-uri pentru a afișa reclame pe baza
         vizitelor tale anterioare pe acest site sau pe alte site-uri. Poți dezactiva publicitatea personalizată din{" "}
         <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Setările pentru reclame Google</a>{" "}

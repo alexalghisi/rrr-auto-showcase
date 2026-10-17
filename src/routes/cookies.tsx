@@ -17,11 +17,26 @@ export const Route = createFileRoute("/cookies")({
       <p>Păstrează alegerea ta privind cookie-urile și sesiunea de administrare. Nu pot fi dezactivate.</p>
       <h2>Publicitate (Google AdSense)</h2>
       <p>
-        Google și partenerii săi pot folosi cookie-uri pentru a afișa și măsura reclame, inclusiv personalizate. Acestea
-        se activează doar dacă apeși „Accept toate". Fără acord, Google poate afișa doar reclame nepersonalizate, limitate.
+        Google și partenerii săi pot folosi cookie-uri pentru a afișa și măsura reclame. Pentru vizitatorii din
+        Spațiul Economic European, Regatul Unit și Elveția, alegerea pentru publicitate este gestionată prin
+        platforma certificată Google Privacy &amp; messaging, după activarea mesajului pentru acest site.
+        Aceasta prezintă scopurile și furnizorii și permite acceptarea, refuzul și modificarea alegerilor.
+      </p>
+      <p>
+        Acordul nu se acordă printr-un banner personalizat al site-ului. O alegere veche „Accept toate” din acel banner
+        nu este folosită drept consimțământ Google. Înaintea semnalelor platformei certificate, setările Google
+        pentru stocare publicitară, date publicitare, personalizare și analiză sunt „refuzat”.
+      </p>
+      <p>
+        Reclamele nepersonalizate nu sunt automat scutite de consimțământ pentru cookie-uri. Disponibilitatea
+        reclamelor limitate depinde de alegerile tale și de regulile și setările Google. Adsterra este dezactivat.
       </p>
       <h2>Cum îți schimbi alegerea</h2>
-      <p>Poți modifica acordul oricând, de aici sau din linkul „Setări cookie-uri" din subsolul site-ului.</p>
+      <p>
+        Butonul „Setări cookie-uri” redeschide mesajul Google pentru modificarea sau retragerea consimțământului,
+        când acesta este disponibil. Dacă mesajul nu este activ sau încărcarea lui este blocată, site-ul te informează
+        și nu îți cere acordul printr-un formular alternativ.
+      </p>
       <Button onClick={openCookieSettings}>Setări cookie-uri</Button>
     </LegalPage>
   ),
