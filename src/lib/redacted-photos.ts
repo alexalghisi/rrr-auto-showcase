@@ -13,5 +13,20 @@ export const REDACTED_PHOTOS: Record<string, string> = {
   "/api/public/photo/dacia-sandero-stepway-2016-156000-2110006809/4.jpg": "/redacted/19c68cd8d27dfdff3b35.jpg",
   "/api/public/photo/dacia-sandero-stepway-2016-156000-2110006809/1.jpg": "/redacted/d50af906e38323c8f393.jpg",
   "/api/public/photo/dacia-sandero-stepway-2016-156000-2110006809/2.jpg": "/redacted/05c911dd4c2b53e9f04b.jpg",
-  "/api/public/photo/dacia-sandero-stepway-2016-156000-2110006809/3.jpg": "/redacted/8065ff817b8d7f85dea0.jpg"
+  "/api/public/photo/dacia-sandero-stepway-2016-156000-2110006809/3.jpg": "/redacted/8065ff817b8d7f85dea0.jpg",
+  "/api/public/photo/bmw-x6-2010-278000-1520006809/1.jpg": "/redacted/ba007faacfc2a42c784e.jpg",
+  "/api/public/photo/bmw-x6-2010-278000-1520006809/2.jpg": "/redacted/6ee84803d23554b8e394.jpg",
+  "/api/public/photo/bmw-x6-2010-278000-1520006809/3.jpg": "/redacted/206b859e1b6eae44ff8b.jpg",
+  "/api/public/photo/bmw-x6-2010-278000-1520006809/4.jpg": "/redacted/c40f3f8442845fce2a62.jpg",
+  "/api/public/photo/bmw-x6-2010-278000-1520006809/5.jpg": "/redacted/06e0eb2370aa996ce158.jpg",
+  "/api/public/photo/suzuki-vitara-2011-0-3444006809/1.jpg": "/redacted/e7b888a790bd4c0fbaa1.jpg",
+  "/api/public/photo/suzuki-vitara-2011-0-3444006809/2.jpg": "/redacted/8d76a0ee0162d653428a.jpg",
+  "/api/public/photo/suzuki-vitara-2011-0-3444006809/3.jpg": "/redacted/f3f246847c4ef76cf0d6.jpg",
+  "/api/public/photo/suzuki-vitara-2011-0-3444006809/4.jpg": "/redacted/15327f248375938e734c.jpg",
+  "/api/public/photo/suzuki-vitara-2011-0-3444006809/5.jpg": "/redacted/e34d19db6270fd1ff5bb.jpg",
+  "/api/public/photo/vw-touareg-4x4-automat-2008-296000-9136006809/1.jpg": "/redacted/cb282d53c696bd55a925.jpg",
+  "/api/public/photo/vw-touareg-4x4-automat-2008-296000-9136006809/2.jpg": "/redacted/d6dde5e516ef57f83b7a.jpg",
+  "/api/public/photo/vw-touareg-4x4-automat-2008-296000-9136006809/3.jpg": "/redacted/61ccba654f52f0aab616.jpg",
+  "/api/public/photo/vw-touareg-4x4-automat-2008-296000-9136006809/4.jpg": "/redacted/12108527520a7ffee3a8.jpg",
+  "/api/public/photo/vw-touareg-4x4-automat-2008-296000-9136006809/5.jpg": "/redacted/dc9b9f5bc107f473b20d.jpg"
 };
