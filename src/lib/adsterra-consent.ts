@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 
 export const ADSTERRA_CONSENT_KEY = "bremen-adsterra-consent";
 export const ADSTERRA_CONSENT_EVENT = "bremen:adsterra-consent";
-export function allowsAdsterra(choice: string | null) { return choice === "granted"; }
+// The owner removed the accept/refuse prompt on 18 October 2026: ads load by
+// default and only an explicit refusal ("denied") disables them.
+export function allowsAdsterra(choice: string | null) { return choice !== "denied"; }
 
 export function useAdsterraConsent() {
-  const [granted, setGranted] = useState(false);
+  const [granted, setGranted] = useState(true);
   useEffect(() => {
     const read = () => {
       try { setGranted(allowsAdsterra(localStorage.getItem(ADSTERRA_CONSENT_KEY))); }
-      catch { setGranted(false); }
+      catch { setGranted(true); }
     };
     read(); window.addEventListener(ADSTERRA_CONSENT_EVENT, read);
     return () => window.removeEventListener(ADSTERRA_CONSENT_EVENT, read);
