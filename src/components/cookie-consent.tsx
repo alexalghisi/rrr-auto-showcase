@@ -36,6 +36,5 @@ export function CookieConsent() {
         <Button variant="outline" onClick={() => setOpen(false)}>Închide</Button>
       </DialogContent>
     </Dialog>
-    </>
   );
 }
