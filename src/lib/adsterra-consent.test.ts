@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { allowsAdsterra } from "./adsterra-consent";
-test("Adsterra loads only after its own explicit consent, not a Google or legacy choice", () => {
-  for (const choice of [null, "denied", "all", "necessary"]) assert.equal(allowsAdsterra(choice), false);
-  assert.equal(allowsAdsterra("granted"), true);
+test("Adsterra loads by default; only an explicit refusal disables it", () => {
+  for (const choice of [null, "granted", "all", "necessary"]) assert.equal(allowsAdsterra(choice), true);
+  assert.equal(allowsAdsterra("denied"), false);
 });
