@@ -8,6 +8,7 @@ import { FinanceCalculator } from "@/components/finance-calculator";
 import { Viewer360 } from "@/components/viewer-360";
 import { Spin360 } from "@/components/spin-360";
 import { CarRating } from "@/components/car-rating";
+import { AdRectangle } from "@/components/ad-slots";
 import { spinFor } from "@/lib/spin360";
 
 import { getPublicCar } from "@/lib/cars.functions";
@@ -375,6 +376,8 @@ function CarPage() {
               carTitle={title}
             />
           </div>
+
+          <AdRectangle className="mt-6" />
         </aside>
 
       </div>

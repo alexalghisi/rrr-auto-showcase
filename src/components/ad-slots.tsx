@@ -1,26 +1,44 @@
 import { useEffect, useRef, useState } from "react";
 import { useAdsterraConsent } from "@/lib/adsterra-consent";
+import {
+  AD_ZONES,
+  NATIVE_KEY,
+  NATIVE_SRC,
+  SOCIAL_BAR_SRC,
+  bannerDocument,
+  bannerFor,
+  showsSideRails,
+  type AdZone,
+} from "@/lib/ad-placements";
 
-// Adsterra zones (publisher account of the site owner).
-const BANNER_728 = "04eba6e0b9b24743b164ff6f94dd40ad";
-const BANNER_320 = "c35999d84d7047d5ca021b0fc5ec417b";
-const NATIVE_KEY = "8380411ac102e792dca8cfde795da227";
-const NATIVE_SRC = `https://pl31754794.profitableratecpmnetwork.com/${NATIVE_KEY}/invoke.js`;
-const SOCIAL_BAR_SRC =
-  "https://pl31754796.profitableratecpmnetwork.com/44/3f/14/443f141a0ff3ecf271527c4207eb3e20.js";
+const BREAKPOINTS = ["(min-width: 768px)", "(min-width: 1024px)", "(min-width: 1600px)"];
 
-// Explicitly reactivated by the publisher on 17 October 2026.
-const ADSTERRA_HIDDEN = false;
+function useViewportWidth() {
+  const [width, setWidth] = useState<number | null>(null);
+  useEffect(() => {
+    const update = () => setWidth(window.innerWidth);
+    const queries = BREAKPOINTS.map((query) => window.matchMedia(query));
+    queries.forEach((query) => query.addEventListener("change", update));
+    update();
+    return () => queries.forEach((query) => query.removeEventListener("change", update));
+  }, []);
+  return width;
+}
 
-// Each banner lives in its own iframe because the Adsterra snippet uses a global `atOptions`.
-function IframeBanner({ keyId, width, height }: { keyId: string; width: number; height: number }) {
-  const doc = `<!doctype html><html><body style="margin:0"><script>atOptions={'key':'${keyId}','format':'iframe','height':${height},'width':${width},'params':{}};</script><script src="https://www.highperformanceformat.com/${keyId}/invoke.js"></script></body></html>`;
+function AdLabel() {
+  return (
+    <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Publicitate</span>
+  );
+}
+
+function IframeBanner({ zone }: { zone: AdZone }) {
   return (
     <iframe
+      key={zone.key}
       title="Publicitate"
-      srcDoc={doc}
-      width={width}
-      height={height}
+      srcDoc={bannerDocument(zone)}
+      width={zone.width}
+      height={zone.height}
       scrolling="no"
       loading="lazy"
       sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin"
@@ -31,21 +49,50 @@ function IframeBanner({ keyId, width, height }: { keyId: string; width: number; 
 
 export function AdBanner() {
   const consent = useAdsterraConsent();
-  const [mobile, setMobile] = useState<boolean | null>(null);
-  useEffect(() => {
-    setMobile(window.matchMedia("(max-width: 767px)").matches);
-  }, []);
-  if (ADSTERRA_HIDDEN || !consent) return null;
-  if (mobile === null) return <div style={{ minHeight: 50 }} />;
+  const width = useViewportWidth();
+  if (!consent) return null;
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-1 px-4 py-4">
-      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Publicitate</span>
-      {mobile ? (
-        <IframeBanner keyId={BANNER_320} width={320} height={50} />
+      <AdLabel />
+      {width === null ? (
+        <div style={{ minHeight: AD_ZONES.mobile.height }} />
       ) : (
-        <IframeBanner keyId={BANNER_728} width={728} height={90} />
+        <IframeBanner zone={bannerFor(width)} />
       )}
     </div>
+  );
+}
+
+export function AdRectangle({ className = "" }: { className?: string }) {
+  const consent = useAdsterraConsent();
+  if (!consent) return null;
+  return (
+    <div className={`flex flex-col items-center justify-center gap-1 ${className}`}>
+      <AdLabel />
+      <IframeBanner zone={AD_ZONES.rectangle} />
+    </div>
+  );
+}
+
+export function AdSideRails() {
+  const consent = useAdsterraConsent();
+  const width = useViewportWidth();
+  if (!consent || width === null || !showsSideRails(width)) return null;
+  const { skyscraper } = AD_ZONES;
+  return (
+    <>
+      {(["left-4", "right-4"] as const).map((side) => (
+        <aside
+          key={side}
+          aria-label="Publicitate"
+          className={`fixed top-28 z-30 flex flex-col items-center gap-1 ${side}`}
+          style={{ width: skyscraper.width }}
+        >
+          <AdLabel />
+          <IframeBanner zone={skyscraper} />
+        </aside>
+      ))}
+    </>
   );
 }
 
@@ -53,7 +100,7 @@ export function NativeAd() {
   const consent = useAdsterraConsent();
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (ADSTERRA_HIDDEN || !consent) return;
+    if (!consent) return;
     const el = ref.current;
     if (!el) return;
     const s = document.createElement("script");
@@ -65,10 +112,10 @@ export function NativeAd() {
       s.remove();
     };
   }, [consent]);
-  if (ADSTERRA_HIDDEN || !consent) return null;
+  if (!consent) return null;
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-4">
-      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Publicitate</span>
+      <AdLabel />
       <div ref={ref} id={`container-${NATIVE_KEY}`} />
     </div>
   );
@@ -77,15 +124,15 @@ export function NativeAd() {
 export function SocialBar() {
   const consent = useAdsterraConsent();
   useEffect(() => {
-    if (ADSTERRA_HIDDEN || !consent) return;
+    if (!consent) return;
     const s = document.createElement("script");
     s.src = SOCIAL_BAR_SRC;
     s.async = true;
+    s.setAttribute("data-cfasync", "false");
     document.body.appendChild(s);
     return () => {
       s.remove();
     };
   }, [consent]);
-  if (ADSTERRA_HIDDEN) return null;
   return null;
 }

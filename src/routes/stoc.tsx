@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 
 import { CarCard } from "@/components/car-card";
+import { AdRectangle } from "@/components/ad-slots";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -15,6 +16,7 @@ import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/seo";
 import { LANDING_PAGES } from "@/lib/landing-pages";
+import { inlineAdIndex } from "@/lib/ad-placements";
 
 const carsQuery = queryOptions({
   queryKey: ["cars", "public"],
@@ -171,8 +173,13 @@ function StockPage() {
         </div>
       ) : (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((car) => (
-            <CarCard key={car.id} car={car} />
+          {filtered.map((car, i) => (
+            <Fragment key={car.id}>
+              <CarCard car={car} />
+              {i === inlineAdIndex(filtered.length) && (
+                <AdRectangle className="surface-card rounded-xl p-4" />
+              )}
+            </Fragment>
           ))}
         </div>
       )}

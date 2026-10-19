@@ -6,6 +6,7 @@ import { getLandingPage } from "@/lib/landing-pages";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
+import { AdRectangle } from "@/components/ad-slots";
 import { getDbBlogPost } from "@/lib/blog-db.functions";
 
 export const Route = createFileRoute("/blog/$slug")({
@@ -219,6 +220,8 @@ function BlogPostRoute() {
           </ul>
         </section>
       )}
+
+      <AdRectangle className="mt-14" />
 
       <section className="mt-14">
         <h2 className="text-xl">Citește și</h2>
