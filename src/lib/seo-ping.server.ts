@@ -43,23 +43,20 @@ export async function buildIndexableUrls(): Promise<string[]> {
   return [...new Set(urls.map((path) => `${ORIGIN}${path}`))].slice(0, 9000);
 }
 
-/** Trimite lista de URL-uri la IndexNow + ping Bing pentru sitemap. */
+/** Trimite lista de URL-uri la IndexNow (Bing, Yandex, Seznam, Naver, Yep). */
 export async function pingSearchEngines(urlList: string[]): Promise<{ submitted: number }> {
   const list = [...new Set([`${ORIGIN}/`, `${ORIGIN}/stoc`, `${ORIGIN}/sitemap.xml`, ...urlList])].slice(0, 9000);
 
-  await Promise.allSettled([
-    fetch("https://api.indexnow.org/indexnow", {
-      method: "POST",
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify({
-        host: SEO_HOST,
-        key: INDEXNOW_KEY,
-        keyLocation: `${ORIGIN}/${INDEXNOW_KEY}.txt`,
-        urlList: list,
-      }),
+  await fetch("https://api.indexnow.org/indexnow", {
+    method: "POST",
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+    body: JSON.stringify({
+      host: SEO_HOST,
+      key: INDEXNOW_KEY,
+      keyLocation: `${ORIGIN}/${INDEXNOW_KEY}.txt`,
+      urlList: list,
     }),
-    fetch(`https://www.bing.com/ping?sitemap=${encodeURIComponent(`${ORIGIN}/sitemap.xml`)}`),
-  ]);
+  }).catch(() => undefined);
 
   return { submitted: list.length };
 }
