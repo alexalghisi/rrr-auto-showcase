@@ -59,7 +59,9 @@ export function formatPrice(price: number, currency = "EUR"): string {
   }).format(price);
 }
 
-export function formatKm(km: number): string {
+export function formatKm(km: number | null | undefined): string {
+  // 0 / missing mileage means "not entered yet" — never show "0 km" on a used car.
+  if (!km || km <= 0) return "km la cerere";
   return `${new Intl.NumberFormat("ro-RO").format(km)} km`;
 }
 

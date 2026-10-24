@@ -146,13 +146,13 @@ function CarPage() {
     ["Kilometraj", formatKm(car.mileage_km)],
     ["Combustibil", car.fuel],
     ["Cutie de viteze", car.gearbox],
-    ["Putere", car.power_hp ? `${car.power_hp} CP` : "—"],
-    ["Capacitate cilindrică", car.engine_cc ? `${car.engine_cc} cm³` : "—"],
-    ["Caroserie", car.body_type ?? "—"],
-    ["Tracțiune", car.drivetrain ?? "—"],
-    ["Culoare", car.color ?? "—"],
-    ["Număr portiere", car.doors ? String(car.doors) : "—"],
-  ] as const;
+    ["Putere", car.power_hp ? `${car.power_hp} CP` : ""],
+    ["Capacitate cilindrică", car.engine_cc ? `${car.engine_cc} cm³` : ""],
+    ["Caroserie", car.body_type ?? ""],
+    ["Tracțiune", car.drivetrain ?? ""],
+    ["Culoare", car.color ?? ""],
+    ["Număr portiere", car.doors ? String(car.doors) : ""],
+  ].filter(([, v]) => v) as [string, string][];
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
@@ -244,7 +244,7 @@ function CarPage() {
                 ["Marcă", car.make],
                 ["Model", `${car.model}${car.trim ? ` ${car.trim}` : ""}`],
                 ["An fabricație", String(car.year)],
-                ["Kilometraj", formatKm(car.mileage_km)],
+                ["Kilometraj", car.mileage_km > 0 ? formatKm(car.mileage_km) : null],
                 ["Combustibil", car.fuel],
                 ["Cutie de viteze", car.gearbox],
                 ["Putere", car.power_hp ? `${car.power_hp} CP` : null],

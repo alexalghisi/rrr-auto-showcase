@@ -18,7 +18,7 @@ export function RatingSummary({ average, count, className }: RatingSummaryProps)
 
   return (
     <div className={cn("flex items-center gap-2", className)} aria-label={`${average.toFixed(1)} din 5 stele, ${count} evaluări`}>
-      <span className="font-display text-sm font-bold tabular-nums">{count ? average.toFixed(1) : "Nou"}</span>
+      {count > 0 && <span className="font-display text-sm font-bold tabular-nums">{average.toFixed(1)}</span>}
       <span className="flex items-center gap-0.5" aria-hidden="true">
         {[1, 2, 3, 4, 5].map((value) => (
           <Star
@@ -31,7 +31,7 @@ export function RatingSummary({ average, count, className }: RatingSummaryProps)
         ))}
       </span>
       <span className="text-xs text-muted-foreground">
-        {count === 1 ? "1 evaluare" : `${count} evaluări`}
+        {count === 0 ? "Fără evaluări încă" : count === 1 ? "1 evaluare" : `${count} evaluări`}
       </span>
     </div>
   );
