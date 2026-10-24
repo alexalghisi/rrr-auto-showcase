@@ -273,9 +273,11 @@ export function CarCard({ car }: { car: Car }) {
           <span className="flex items-center gap-1.5">
             <Calendar className="size-3.5 text-primary" /> {car.year}
           </span>
-          <span className="flex items-center gap-1.5">
-            <Gauge className="size-3.5 text-primary" /> {car.power_hp ? `${car.power_hp} CP` : "—"}
-          </span>
+          {car.power_hp ? (
+            <span className="flex items-center gap-1.5">
+              <Gauge className="size-3.5 text-primary" /> {car.power_hp} CP
+            </span>
+          ) : null}
         </div>
 
         <div className="mt-5 flex items-end justify-between border-t border-border pt-4">
