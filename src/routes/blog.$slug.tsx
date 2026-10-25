@@ -2,7 +2,7 @@ import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { Fragment } from "react";
 import { CalendarDays, Clock, Phone, ArrowRight } from "lucide-react";
 
-import { getBlogPost, BLOG_POSTS, BLOG_AUTHOR } from "@/lib/blog";
+import { BLOG_POSTS, BLOG_AUTHOR } from "@/lib/blog";
 import { getLandingPage } from "@/lib/landing-pages";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
@@ -12,6 +12,8 @@ import { getDbBlogPost } from "@/lib/blog-db.functions";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
+    // Blog content is imported on demand so it never lands in the shared entry bundle.
+    const { getBlogPost } = await import("@/lib/blog");
     const post = getBlogPost(params.slug) ?? (await getDbBlogPost({ data: { slug: params.slug } }));
     if (!post) throw notFound();
     return { post };
@@ -24,7 +26,7 @@ export const Route = createFileRoute("/blog/$slug")({
       meta: [
         { title: post.metaTitle.slice(0, 60) },
         { name: "description", content: post.description.slice(0, 160) },
-        { name: "author", content: BLOG_AUTHOR },
+        { name: "author", content: SITE.name },
         { property: "og:title", content: post.metaTitle },
         { property: "og:description", content: post.description },
         { property: "og:type", content: "article" },
@@ -73,7 +75,7 @@ export const Route = createFileRoute("/blog/$slug")({
                 0,
               ),
             mainEntityOfPage: { "@type": "WebPage", "@id": url },
-            author: { "@type": "Organization", name: BLOG_AUTHOR, "@id": ORG_ID },
+            author: { "@type": "Organization", name: SITE.name, "@id": ORG_ID },
             publisher: { "@id": ORG_ID },
           }),
         },

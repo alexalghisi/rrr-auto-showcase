@@ -3,6 +3,7 @@ import { RotateCw, Hand } from "lucide-react";
 import { spinFor } from "@/lib/spin360";
 import { loadSpinFrames, type SpinFrame } from "@/lib/spin-frames";
 import { coastTurn, followTurn, frameBlendAt, dragTurn } from "@/lib/spin-motion";
+import { whenIdleAfterLoad } from "@/lib/after-load";
 
 type Props = {
   slug: string;
@@ -10,6 +11,11 @@ type Props = {
   alt: string;
   autoRotate?: boolean;
   movedRef?: React.MutableRefObject<boolean>;
+  /**
+   * true: fetch the frame sheets once the page has loaded and is idle.
+   * false: show the poster only and fetch the frames on the first interaction
+   * (hover, touch or drag).
+   */
   load?: boolean;
   hoverSpin?: boolean;
   className?: string;
@@ -32,13 +38,15 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const [touched, setTouched] = useState(false);
+  const [wanted, setWanted] = useState(false);
+  const want = () => { if (!wanted) setWanted(true); };
   const st = useRef({ position: 0, target: 0, velocity: 0, dragging: false,
     pointer: null as number | null, hover: false, auto: autoRotate, visible: false,
     reduced: false, startX: 0, startTarget: 0, lastX: 0, lastTime: 0,
     width: 0, height: 0, drawn: -1 });
 
   useEffect(() => {
-    if (!load) return;
+    if (!load && !wanted) return;
     let cancelled = false;
     let upgraded = false;
     const publish = (list: SpinFrame[]) => {
@@ -51,20 +59,25 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     // The small sequence is the same orbit: it is ready fast (one file, often cached
     // from the card) and keeps mobile memory bounded. Desktop upgrades to large frames.
     const upgrade = size === "lg" && !window.matchMedia("(max-width: 767px)").matches;
-    loadSpinFrames(slug, "sm").then((sequence) => {
-      if (cancelled || upgraded) return;
-      if (sequence.complete) publish(sequence.frames);
-      else if (!upgrade) setFailed(true);
-    });
-    if (upgrade) {
-      loadSpinFrames(slug, "lg").then((sequence) => {
-        if (cancelled) return;
-        if (sequence.complete) { upgraded = true; publish(sequence.frames); }
-        else if (!frames.current.length) setFailed(true);
+    const start = () => {
+      loadSpinFrames(slug, "sm").then((sequence) => {
+        if (cancelled || upgraded) return;
+        if (sequence.complete) publish(sequence.frames);
+        else if (!upgrade) setFailed(true);
       });
-    }
-    return () => { cancelled = true; };
-  }, [slug, size, load]);
+      if (upgrade) {
+        loadSpinFrames(slug, "lg").then((sequence) => {
+          if (cancelled) return;
+          if (sequence.complete) { upgraded = true; publish(sequence.frames); }
+          else if (!frames.current.length) setFailed(true);
+        });
+      }
+    };
+    // A user interaction loads immediately; otherwise wait until the page is idle
+    // so the sheets never compete with the first paint.
+    const cancelIdle = wanted ? (start(), () => {}) : whenIdleAfterLoad(start);
+    return () => { cancelled = true; cancelIdle(); };
+  }, [slug, size, load, wanted]);
 
   useEffect(() => {
     const box = boxRef.current;
@@ -165,7 +178,9 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
   }, [size]);
 
   const onDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!ready || !event.isPrimary || event.button !== 0) return;
+    if (!event.isPrimary || event.button !== 0) return;
+    // The gesture is tracked right away; frames are drawn as soon as they arrive.
+    want();
     const state = st.current;
     state.dragging = true; state.pointer = event.pointerId;
     state.auto = false; state.hover = false; state.velocity = 0;
@@ -206,11 +221,12 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     <div ref={boxRef} data-spin={slug} data-ready={ready} data-failed={failed}
       onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp}
       onPointerCancel={onUp} onLostPointerCapture={onUp}
-      onMouseEnter={() => { if (hoverSpin && !st.current.dragging) { st.current.hover = true; wake.current(); } }}
+      onMouseEnter={() => { want(); if (hoverSpin && !st.current.dragging) { st.current.hover = true; wake.current(); } }}
       onMouseLeave={() => { st.current.hover = false; wake.current(); }}
       style={{ touchAction: "pan-y" }}
-      className={`relative select-none overflow-hidden bg-surface-strong ${ready ? "cursor-grab active:cursor-grabbing" : "cursor-progress"} ${className}`}>
+      className={`relative select-none overflow-hidden bg-surface-strong ${ready || !(load || wanted) ? "cursor-grab active:cursor-grabbing" : "cursor-progress"} ${className}`}>
       <img src={spin.poster} alt={alt} width={size === "lg" ? 854 : 480} height={size === "lg" ? 480 : 270}
+        loading={size === "lg" ? "eager" : "lazy"} fetchPriority={size === "lg" ? "high" : "auto"}
         decoding="async" draggable={false} className="absolute inset-0 size-full object-cover" />
       <canvas ref={canvasRef} aria-hidden className={`absolute inset-0 size-full ${ready ? "visible" : "invisible"}`} />
       {size === "lg" && <>
@@ -224,7 +240,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       <span className={`pointer-events-none absolute rounded bg-background/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground ${size === "lg" ? "bottom-2 right-2" : "left-2 top-2"}`}>
         {size === "lg" ? "Simulare AI · pozele reale sunt mai jos" : "Simulare AI"}
       </span>
-      {load && !ready && <span role="status" className="pointer-events-none absolute bottom-2 left-2 rounded bg-background/90 px-2 py-1 text-xs text-muted-foreground">
+      {(load || wanted) && !ready && <span role="status" className="pointer-events-none absolute bottom-2 left-2 rounded bg-background/90 px-2 py-1 text-xs text-muted-foreground">
         {failed ? "Rotirea nu s-a încărcat" : "Se încarcă rotirea…"}
       </span>}
     </div>

@@ -13,7 +13,7 @@ export const SPIN_360: Record<string, { frames: number; small: number }> = {
   "suzuki-vitara-2011-0-3444006809": { frames: 211, small: 106 },
 };
 
-const V = "v=20261017-plates";
+const V = "v=20261025-q60";
 
 export type SpinSheet = { url: string; first: number; frames: number };
 
