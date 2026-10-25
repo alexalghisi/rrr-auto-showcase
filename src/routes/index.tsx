@@ -2,7 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { ShieldCheck, FileCheck2, Wrench, HandCoins, Phone, MapPin, ArrowRight } from "lucide-react";
 
-import heroImage from "@/assets/hero-bremen-auto.jpg";
+import hero640 from "@/assets/hero-bremen-auto-640.webp";
+import hero1024 from "@/assets/hero-bremen-auto-1024.webp";
+import hero1280 from "@/assets/hero-bremen-auto-1280.webp";
+import heroImage from "@/assets/hero-bremen-auto-1920.webp";
 import { AdsterraSlot } from "@/components/ad-slots";
 import { CarCard } from "@/components/car-card";
 import { Button } from "@/components/ui/button";
@@ -10,7 +13,7 @@ import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
 import { dealerSchema, faqSchema, ORG_ID, HOME_FAQS } from "@/lib/seo";
 import { getLandingPage } from "@/lib/landing-pages";
-import { BLOG_POSTS } from "@/lib/blog";
+import { listHomeGuides } from "@/lib/home.functions";
 
 const HOME_LANDING_LINKS = [
   "masini-second-hand-sub-5000-euro-cluj",
@@ -51,12 +54,28 @@ const carsQuery = queryOptions({
   queryFn: () => listPublicCars(),
 });
 
+const guidesQuery = queryOptions({
+  queryKey: ["home", "guides"],
+  queryFn: () => listHomeGuides(),
+  staleTime: Infinity,
+});
+
+const HERO_SRCSET = `${hero640} 640w, ${hero1024} 1024w, ${hero1280} 1280w, ${heroImage} 1920w`;
+const HERO_SIZES = "100vw";
+
 const TITLE = "Mașini second hand Cluj — Bremen Auto Florești";
 const DESCRIPTION =
   "Mașini second hand aduse din Germania, pe DN1 în Luna de Sus (Florești), lângă Cluj-Napoca: km verificați, carte service, acte complete, probă de drum.";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(carsQuery),
+  loader: async ({ context }) => {
+    // Both are fetched in parallel; the guides query only blocks on first SSR render.
+    const [cars] = await Promise.all([
+      context.queryClient.ensureQueryData(carsQuery),
+      context.queryClient.ensureQueryData(guidesQuery),
+    ]);
+    return cars;
+  },
   head: ({ loaderData }) => ({
     meta: [
       { title: TITLE },
@@ -73,7 +92,6 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://bremenauto.ro/" },
-      { rel: "preload", as: "image", href: heroImage, fetchPriority: "high" },
     ],
     scripts: [
       { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
@@ -137,6 +155,7 @@ const advantages = [
 
 function HomePage() {
   const { data: cars } = useSuspenseQuery(carsQuery);
+  const { data: guides } = useSuspenseQuery(guidesQuery);
   const featured = cars.filter((c) => c.featured).slice(0, 6);
   const list = (featured.length ? featured : cars).slice(0, 6);
 
@@ -145,6 +164,8 @@ function HomePage() {
       <section className="relative overflow-hidden">
         <img
           src={heroImage}
+          srcSet={HERO_SRCSET}
+          sizes={HERO_SIZES}
           alt="Parc auto Bremen Auto pe DN1, Luna de Sus, comuna Florești, județul Cluj, cu mașini rulate aduse din Germania"
           width={1920}
           height={1088}
@@ -277,7 +298,7 @@ function HomePage() {
           </Button>
         </div>
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {BLOG_POSTS.slice(0, 6).map((post) => (
+          {guides.map((post) => (
             <Link
               key={post.slug}
               to="/blog/$slug"

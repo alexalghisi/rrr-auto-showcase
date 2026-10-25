@@ -9,18 +9,32 @@ import {
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { Toaster } from "@/components/ui/sonner";
-import { AdsterraSlot, SocialBar } from "@/components/ad-slots";
+import { AdsterraSlot, SocialBar, GoogleAdSense, ADSENSE_CLIENT } from "@/components/ad-slots";
 import { trackView } from "@/lib/analytics.functions";
 import { CookieConsent } from "@/components/cookie-consent";
 import { GOOGLE_CONSENT_BOOTSTRAP } from "@/lib/google-consent";
+import { whenIdleAfterLoad } from "@/lib/after-load";
 
+
+// Toasts are only needed after an interaction, so sonner is kept out of the entry bundle.
+const Toaster = lazy(() => import("@/components/ui/sonner").then((m) => ({ default: m.Toaster })));
+
+function LazyToaster() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+  return (
+    <Suspense fallback={null}>
+      <LazyToaster />
+    </Suspense>
+  );
+}
 
 function NotFoundComponent() {
   return (
@@ -103,6 +117,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "google-site-verification",
         content: "qZYndZD3dGp89_ywsTSjcCZSkkNP_Cpb0Bt18J_OOME",
       },
+      { name: "google-adsense-account", content: ADSENSE_CLIENT },
       { name: "theme-color", content: "#fafaf7" },
       { name: "geo.region", content: "RO-CJ" },
       { name: "geo.placename", content: "Luna de Sus, Florești, Cluj" },
@@ -119,7 +134,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Barlow:wght@400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap",
       },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
@@ -127,11 +142,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         children:
           GOOGLE_CONSENT_BOOTSTRAP,
-      },
-      {
-        async: true,
-        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4079300108937036",
-        crossOrigin: "anonymous",
       },
     ],
   }),
@@ -165,7 +175,10 @@ function RootComponent() {
     const carSlug = pathname.startsWith("/masini/")
       ? decodeURIComponent(pathname.slice("/masini/".length))
       : null;
-    void trackView({ data: { path: pathname, carSlug } }).catch(() => {});
+    // Analytics never competes with the first paint.
+    return whenIdleAfterLoad(() => {
+      void trackView({ data: { path: pathname, carSlug } }).catch(() => {});
+    });
   }, [pathname, chrome]);
 
 
@@ -187,6 +200,7 @@ function RootComponent() {
         {chrome && <SiteFooter />}
       </div>
       <Toaster position="top-center" />
+      <GoogleAdSense />
       {chrome && <CookieConsent />}
     </QueryClientProvider>
   );

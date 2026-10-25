@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { AdsterraSlot } from "@/components/ad-slots";
 import { CalendarDays, Clock, ArrowRight } from "lucide-react";
 
-import { BLOG_POSTS, BLOG_CATEGORIES } from "@/lib/blog";
+import { BLOG_CATEGORIES } from "@/lib/blog";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema } from "@/lib/seo";
 import { listDbBlogPosts } from "@/lib/blog-db.functions";
@@ -15,7 +15,11 @@ const DESCRIPTION =
 
 export const Route = createFileRoute("/blog/")({
   loader: async () => {
-    const fresh = await listDbBlogPosts().catch(() => []);
+    // Blog content is imported on demand so it never lands in the shared entry bundle.
+    const [fresh, { BLOG_POSTS }] = await Promise.all([
+      listDbBlogPosts().catch(() => []),
+      import("@/lib/blog"),
+    ]);
     return { posts: [...fresh, ...BLOG_POSTS] };
   },
   head: ({ loaderData }) => ({
@@ -52,7 +56,7 @@ export const Route = createFileRoute("/blog/")({
           name: "Blog Bremen Auto",
           url: URL,
           inLanguage: "ro-RO",
-          blogPost: (loaderData?.posts ?? BLOG_POSTS).slice(0, 60).map((p) => ({
+          blogPost: (loaderData?.posts ?? []).slice(0, 60).map((p) => ({
             "@type": "BlogPosting",
             headline: p.title,
             url: `https://bremenauto.ro/blog/${p.slug}`,

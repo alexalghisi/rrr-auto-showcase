@@ -2,7 +2,6 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 
 type OAuthData = { client?: { name?: string }; redirect_url?: string; redirect_to?: string };
 type OAuthResult = { data: OAuthData | null; error: { message: string } | null };
@@ -11,7 +10,9 @@ type OAuthApi = {
   approveAuthorization: (id: string) => Promise<OAuthResult>;
   denyAuthorization: (id: string) => Promise<OAuthResult>;
 };
-const oauth = () => (supabase.auth as unknown as { oauth: OAuthApi }).oauth;
+// Loaded on demand so the Supabase client stays out of the shared entry bundle.
+const getSupabase = () => import("@/integrations/supabase/client").then((m) => m.supabase);
+const oauth = async () => ((await getSupabase()).auth as unknown as { oauth: OAuthApi }).oauth;
 
 export const Route = createFileRoute("/.lovable/oauth/consent")({
   ssr: false,
@@ -21,12 +22,12 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
   }),
   beforeLoad: async ({ search, location }) => {
     if (!search.authorization_id) throw new Error("Lipsește authorization_id");
-    const { data } = await supabase.auth.getSession();
+    const { data } = await (await getSupabase()).auth.getSession();
     if (!data.session) throw redirect({ to: "/auth", search: { next: location.pathname + location.searchStr } });
   },
   loader: async ({ location }) => {
     const id = new URLSearchParams(location.search).get("authorization_id")!;
-    const { data, error } = await oauth().getAuthorizationDetails(id);
+    const { data, error } = await (await oauth()).getAuthorizationDetails(id);
     if (error) throw new Error(error.message);
     const immediate = data?.redirect_url ?? data?.redirect_to;
     if (immediate && !data?.client) throw redirect({ href: immediate });
@@ -48,8 +49,8 @@ function Consent() {
   async function decide(approve: boolean) {
     setBusy(true);
     const { data, error } = approve
-      ? await oauth().approveAuthorization(authorization_id)
-      : await oauth().denyAuthorization(authorization_id);
+      ? await (await oauth()).approveAuthorization(authorization_id)
+      : await (await oauth()).denyAuthorization(authorization_id);
     if (error) { setBusy(false); setError(error.message); return; }
     const target = data?.redirect_url ?? data?.redirect_to;
     if (!target) { setBusy(false); setError("Nu s-a primit adresa de întoarcere."); return; }

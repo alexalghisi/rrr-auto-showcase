@@ -17,20 +17,6 @@ export function CarCard({ car }: { car: Car }) {
   const [active, setActive] = useState(false); // montează toate cadrele după prima interacțiune
   const boxRef = useRef<HTMLDivElement>(null);
   const spinMoved = useRef(false);
-  const [inView, setInView] = useState(false);
-
-  // download the 360° frames only when the card is near the screen
-  useEffect(() => {
-    if (!hasSpin || inView || !boxRef.current) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) setInView(true);
-      },
-      { rootMargin: "200px" },
-    );
-    io.observe(boxRef.current);
-    return () => io.disconnect();
-  }, [hasSpin, inView]);
   const s = useRef({
     pos: 0,
     vel: 0,
@@ -183,7 +169,7 @@ export function CarCard({ car }: { car: Car }) {
             size="sm"
             alt={altText}
             movedRef={spinMoved}
-            load={inView}
+            load={false}
             hoverSpin
             className="size-full"
           />
