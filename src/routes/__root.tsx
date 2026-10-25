@@ -16,7 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
-import { AdBanner, AdSideRails, NativeAd, SocialBar } from "@/components/ad-slots";
+import { AdsterraSlot, SocialBar } from "@/components/ad-slots";
 import { trackView } from "@/lib/analytics.functions";
 import { CookieConsent } from "@/components/cookie-consent";
 import { GOOGLE_CONSENT_BOOTSTRAP } from "@/lib/google-consent";
@@ -180,10 +180,8 @@ function RootComponent() {
         </main>
         {chrome && (
           <>
-            <AdBanner />
-            <NativeAd />
+            <AdsterraSlot />
             <SocialBar />
-            <AdSideRails />
           </>
         )}
         {chrome && <SiteFooter />}

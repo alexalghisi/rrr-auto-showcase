@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Fragment } from "react";
+import { AdsterraSlot } from "@/components/ad-slots";
 import { CalendarDays, Clock, ArrowRight } from "lucide-react";
 
 import { BLOG_POSTS, BLOG_CATEGORIES } from "@/lib/blog";
@@ -97,8 +99,9 @@ function BlogIndex() {
       </div>
 
       <div className="mt-12 grid gap-6 md:grid-cols-2">
-        {posts.map((post) => (
-          <article key={post.slug} className="surface-card flex flex-col rounded-xl p-6">
+        {posts.map((post, index) => (
+          <Fragment key={post.slug}>
+          <article className="surface-card flex flex-col rounded-xl p-6">
             <span className="eyebrow">{post.category}</span>
             <h2 className="mt-3 text-xl leading-snug">
               <Link
@@ -134,6 +137,8 @@ function BlogIndex() {
               Citește articolul <ArrowRight className="size-4" />
             </Link>
           </article>
+          {index === Math.max(0, Math.ceil(posts.length / 2) - 1) && <AdsterraSlot variant="native" className="md:col-span-2" />}
+          </Fragment>
         ))}
       </div>
 

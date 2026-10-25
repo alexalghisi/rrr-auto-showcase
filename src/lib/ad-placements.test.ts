@@ -5,20 +5,15 @@ import {
   bannerDocument,
   bannerFor,
   inlineAdIndex,
-  showsSideRails,
+
 } from "./ad-placements";
 
 test("leaderboard size follows the viewport width", () => {
   assert.equal(bannerFor(375), AD_ZONES.mobile);
   assert.equal(bannerFor(767), AD_ZONES.mobile);
-  assert.equal(bannerFor(768), AD_ZONES.tablet);
-  assert.equal(bannerFor(1023), AD_ZONES.tablet);
+  assert.equal(bannerFor(768), AD_ZONES.leaderboard);
+  assert.equal(bannerFor(1023), AD_ZONES.leaderboard);
   assert.equal(bannerFor(1024), AD_ZONES.leaderboard);
-});
-
-test("side rails only appear when they fit beside the content column", () => {
-  assert.equal(showsSideRails(1599), false);
-  assert.equal(showsSideRails(1600), true);
 });
 
 test("banner document loads the zone with its own atOptions", () => {

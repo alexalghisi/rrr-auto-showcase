@@ -3,7 +3,7 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { Fragment, useMemo, useState } from "react";
 
 import { CarCard } from "@/components/car-card";
-import { AdRectangle } from "@/components/ad-slots";
+import { AdsterraSlot } from "@/components/ad-slots";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -177,7 +177,7 @@ function StockPage() {
             <Fragment key={car.id}>
               <CarCard car={car} />
               {i === inlineAdIndex(filtered.length) && (
-                <AdRectangle className="surface-card rounded-xl p-4" />
+                <AdsterraSlot variant="native" className="sm:col-span-2 lg:col-span-3" />
               )}
             </Fragment>
           ))}
