@@ -14,6 +14,19 @@ import { SITE } from "@/lib/site";
 import { dealerSchema, faqSchema, ORG_ID, HOME_FAQS } from "@/lib/seo";
 import { getLandingPage } from "@/lib/landing-pages";
 import { listHomeGuides } from "@/lib/home.functions";
+import { PromoVideo, promoVideoLd, type PromoVideoConfig } from "@/components/promo-video";
+
+const PROMO: PromoVideoConfig = {
+  src: "/video/bremen-auto-prezentare.mp4",
+  poster: "/video/bremen-auto-prezentare.webp",
+  name: "Bremen Auto – mașini second hand verificate în Cluj",
+  description: "Prezentarea Bremen Auto: mașini second hand aduse din Germania, verificate, cu acte pregătite, în Florești / Luna de Sus, lângă Cluj-Napoca.",
+  duration: "PT42S",
+  uploadDate: "2026-10-25",
+  eyebrow: "Prezentare video",
+  heading: "Cunoaște Bremen Auto în 40 de secunde",
+};
+
 
 const HOME_LANDING_LINKS = [
   "masini-second-hand-sub-5000-euro-cluj",
@@ -94,6 +107,7 @@ export const Route = createFileRoute("/")({
       { rel: "canonical", href: "https://bremenauto.ro/" },
     ],
     scripts: [
+      { type: "application/ld+json", children: JSON.stringify(promoVideoLd("https://bremenauto.ro", PROMO)) },
       { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
       {
         type: "application/ld+json",
@@ -209,6 +223,8 @@ function HomePage() {
       </section>
 
       <AdsterraSlot />
+
+      <PromoVideo video={PROMO} />
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
         <div className="flex flex-wrap items-end justify-between gap-4">
