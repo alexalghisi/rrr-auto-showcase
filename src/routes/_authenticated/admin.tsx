@@ -46,11 +46,13 @@ import { SeoPanel } from "@/components/seo-panel";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Administrare stoc | Bremen Auto" },
+      { title: "Panou administrare | Bremen Auto" },
       { name: "description", content: "Panou de administrare a stocului de mașini Bremen Auto." },
       { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "Administrare stoc | Bremen Auto" },
+      { property: "og:title", content: "Panou administrare | Bremen Auto" },
       { property: "og:description", content: "Panou privat de administrare a anunțurilor." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AdminPage,

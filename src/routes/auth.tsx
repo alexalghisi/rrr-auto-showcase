@@ -21,6 +21,8 @@ export const Route = createFileRoute("/auth")({
       { name: "robots", content: "noindex, nofollow" },
       { property: "og:title", content: "Administrare stoc | Bremen Auto" },
       { property: "og:description", content: "Zonă privată pentru administrarea anunțurilor." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AuthPage,

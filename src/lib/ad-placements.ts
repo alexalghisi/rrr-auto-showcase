@@ -30,6 +30,13 @@ export function adDocument(zone: AdZone | null) {
   (() => {
     const loaded = new WeakSet();
     let scheduled = false;
+    document.addEventListener('load', (event) => {
+      if (event.target?.tagName === 'IFRAME') {
+        try { if (!event.target.contentDocument?.body?.children.length) return; } catch {}
+        loaded.add(event.target);
+      }
+      schedule();
+    }, true);
     const report = () => {
       scheduled = false;
       const root = document.getElementById('creative');
@@ -41,6 +48,7 @@ export function adDocument(zone: AdZone | null) {
         const visible = box.width > 20 && box.height > 20 && getComputedStyle(el).display !== 'none';
         if (!visible) continue;
         if (el.tagName === 'IFRAME') {
+          try { if (el.contentDocument?.readyState === 'complete' && el.contentDocument.body?.children.length) loaded.add(el); } catch {}
           if (!el.dataset.adWatched) {
             el.dataset.adWatched = 'true';
             el.addEventListener('load', () => {
