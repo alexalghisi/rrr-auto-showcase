@@ -3,6 +3,7 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { ShieldCheck, FileCheck2, Wrench, HandCoins, Phone, MapPin, ArrowRight } from "lucide-react";
 
 import heroImage from "@/assets/hero-bremen-auto.jpg";
+import { AdsterraSlot } from "@/components/ad-slots";
 import { CarCard } from "@/components/car-card";
 import { Button } from "@/components/ui/button";
 import { listPublicCars } from "@/lib/cars.functions";
@@ -185,6 +186,8 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      <AdsterraSlot />
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
         <div className="flex flex-wrap items-end justify-between gap-4">

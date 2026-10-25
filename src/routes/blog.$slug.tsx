@@ -1,4 +1,5 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { Fragment } from "react";
 import { CalendarDays, Clock, Phone, ArrowRight } from "lucide-react";
 
 import { getBlogPost, BLOG_POSTS, BLOG_AUTHOR } from "@/lib/blog";
@@ -6,7 +7,7 @@ import { getLandingPage } from "@/lib/landing-pages";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
-import { AdRectangle } from "@/components/ad-slots";
+import { AdsterraSlot } from "@/components/ad-slots";
 import { getDbBlogPost } from "@/lib/blog-db.functions";
 
 export const Route = createFileRoute("/blog/$slug")({
@@ -142,8 +143,9 @@ function BlogPostRoute() {
         </ol>
       </nav>
 
-      {post.sections.map((s) => (
-        <section key={s.h2} id={slugify(s.h2)} className="mt-12 scroll-mt-24">
+      {post.sections.map((s, index) => (
+        <Fragment key={s.h2}>
+        <section id={slugify(s.h2)} className="mt-12 scroll-mt-24">
           <h2 className="text-2xl sm:text-3xl">{s.h2}</h2>
           <div className="mt-4 space-y-4">
             {s.paragraphs.map((p) => (
@@ -163,6 +165,8 @@ function BlogPostRoute() {
             </ul>
           )}
         </section>
+        {index === Math.max(0, Math.ceil(post.sections.length / 2) - 1) && <AdsterraSlot variant="native" className="mt-12" />}
+        </Fragment>
       ))}
 
       <section className="surface-card mt-14 rounded-xl p-7">
@@ -221,7 +225,6 @@ function BlogPostRoute() {
         </section>
       )}
 
-      <AdRectangle className="mt-14" />
 
       <section className="mt-14">
         <h2 className="text-xl">Citește și</h2>

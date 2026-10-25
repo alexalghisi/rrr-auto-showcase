@@ -8,7 +8,7 @@ import { FinanceCalculator } from "@/components/finance-calculator";
 import { Viewer360 } from "@/components/viewer-360";
 import { Spin360 } from "@/components/spin-360";
 import { CarRating } from "@/components/car-rating";
-import { AdRectangle } from "@/components/ad-slots";
+import { AdsterraSlot } from "@/components/ad-slots";
 import { spinFor } from "@/lib/spin360";
 
 import { getPublicCar } from "@/lib/cars.functions";
@@ -268,6 +268,8 @@ function CarPage() {
             </dl>
           </section>
 
+          <AdsterraSlot variant="native" className="mt-10" />
+
           {car.description && (
             <section className="mt-10">
               <h2 className="text-2xl">Descriere</h2>
@@ -377,7 +379,6 @@ function CarPage() {
             />
           </div>
 
-          <AdRectangle className="mt-6" />
         </aside>
 
       </div>

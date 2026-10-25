@@ -1,0 +1,2 @@
+# Architecture rules
+- Keep Adsterra creatives in client-mounted srcDoc iframes through AdsterraSlot; only the single global Social Bar runs in the main document, to isolate zone settings and avoid duplicate scripts.
