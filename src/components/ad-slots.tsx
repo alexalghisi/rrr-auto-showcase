@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAdsterraConsent } from "@/lib/adsterra-consent";
 import { SOCIAL_BAR_SRC } from "@/lib/ad-placements";
 import { whenIdleAfterLoad } from "@/lib/after-load";
+import { isAdProductionHost } from "@/lib/ad-host";
 export { AdsterraSlot } from "./adsterra-slot";
 
 export const ADSENSE_CLIENT = "ca-pub-4079300108937036";
@@ -31,7 +32,7 @@ export function GoogleAdSense() {
   useEffect(
     () =>
       whenIdleAfterLoad(() => {
-        if (document.getElementById("bremen-adsense")) return;
+        if (!isAdProductionHost() || document.getElementById("bremen-adsense")) return;
         const script = document.createElement("script");
         script.id = "bremen-adsense";
         script.async = true;
