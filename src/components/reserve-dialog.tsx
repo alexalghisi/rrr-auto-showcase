@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { submitLead } from "@/lib/leads.functions";
-import { whatsappUrl } from "@/lib/site";
+import { carWhatsappUrl } from "@/lib/site";
 
 type Props = {
   carSlug: string;

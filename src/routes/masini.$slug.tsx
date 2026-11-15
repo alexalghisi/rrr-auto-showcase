@@ -1,6 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
-import { Phone, MapPin, Check, ArrowLeft, HandCoins } from "lucide-react";
+import { Phone, MapPin, Check, ArrowLeft, HandCoins, MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/reserve-dialog";

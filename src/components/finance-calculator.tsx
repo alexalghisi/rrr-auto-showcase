@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { calcFinance, eur, DEFAULT_APR } from "@/lib/finance";
 import { submitLead } from "@/lib/leads.functions";
-import { whatsappUrl } from "@/lib/site";
+import { carWhatsappUrl, whatsappUrl } from "@/lib/site";
 
 type Props = {
   price: number;
