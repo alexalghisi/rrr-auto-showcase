@@ -4,6 +4,7 @@ import { Phone, MapPin, Check, ArrowLeft, HandCoins, MessageCircle } from "lucid
 
 import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/reserve-dialog";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { FinanceCalculator } from "@/components/finance-calculator";
 import { Viewer360 } from "@/components/viewer-360";
 import { Spin360 } from "@/components/spin-360";
@@ -155,7 +156,7 @@ function CarPage() {
   ].filter(([, v]) => v) as [string, string][];
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+    <div className="mx-auto max-w-6xl px-4 py-10 pb-28 sm:px-6 sm:py-14 lg:pb-14">
       <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
         <Link to="/" className="hover:text-foreground">
           Acasă
@@ -328,7 +329,14 @@ function CarPage() {
             )}
 
             <div className="mt-6 flex flex-col gap-2">
-              <Button asChild size="lg">
+              <WhatsAppButton
+                carSlug={car.slug}
+                title={`${title} ${car.year}`}
+                label="Contactează-ne pe WhatsApp"
+                size="lg"
+                block
+              />
+              <Button asChild size="lg" variant="outline">
                 <a href={SITE.phoneHref}>
                   <Phone className="size-4" /> {SITE.phone}
                 </a>
@@ -340,16 +348,6 @@ function CarPage() {
                   price={formatPrice(Number(car.price), car.currency)}
                 />
               )}
-              <Button asChild size="lg" variant="outline">
-                <a
-                  href={carWhatsappUrl(car.slug)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Contactează-ne pe WhatsApp despre ${title} ${car.year}`}
-                >
-                  <MessageCircle className="size-4" /> Contactează-ne pe WhatsApp
-                </a>
-              </Button>
             </div>
 
 
