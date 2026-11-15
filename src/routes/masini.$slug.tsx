@@ -341,8 +341,13 @@ function CarPage() {
                 />
               )}
               <Button asChild size="lg" variant="outline">
-                <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer">
-                  Scrie pe WhatsApp
+                <a
+                  href={carWhatsappUrl(car.slug)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Contactează-ne pe WhatsApp despre ${title} ${car.year}`}
+                >
+                  <MessageCircle className="size-4" /> Contactează-ne pe WhatsApp
                 </a>
               </Button>
             </div>
