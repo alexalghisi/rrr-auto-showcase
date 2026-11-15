@@ -202,6 +202,8 @@ function RootComponent() {
       </div>
       <Toaster position="top-center" />
       <GoogleAdSense />
+      {/* Paginile de mașină își au balonul cu linkul anunțului; aici merge cel general. */}
+      {chrome && !pathname.startsWith("/masini/") && <WhatsAppFloat />}
       {chrome && <CookieConsent />}
     </QueryClientProvider>
   );
