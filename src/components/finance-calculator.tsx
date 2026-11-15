@@ -162,7 +162,11 @@ export function FinanceCalculator({ price, carSlug, carTitle }: Props) {
               {sending ? <Loader2 className="size-4 animate-spin" /> : null} Cere pre-aprobare
             </Button>
             <Button asChild size="lg" variant="outline" className="flex-1">
-              <a href={whatsappUrl(summary)} target="_blank" rel="noopener noreferrer">
+              <a
+                href={carSlug ? carWhatsappUrl(carSlug, summary) : whatsappUrl(summary)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Trimite pe WhatsApp
               </a>
             </Button>
