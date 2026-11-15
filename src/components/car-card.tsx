@@ -4,6 +4,7 @@ import { Fuel, Gauge, Settings2, Calendar, RotateCw } from "lucide-react";
 
 import type { Car } from "@/lib/cars.server";
 import { formatKm, formatPrice, photoUrl } from "@/lib/site";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { spinFor } from "@/lib/spin360";
 import { Spin360 } from "@/components/spin-360";
 import { RatingSummary } from "@/components/car-rating";
@@ -137,10 +138,12 @@ export function CarCard({ car }: { car: Car }) {
   };
 
   return (
-    <Link
-      to="/masini/$slug"
-      params={{ slug: car.slug }}
-      onMouseEnter={() => {
+    <article className="group surface-card flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/50">
+      <Link
+        to="/masini/$slug"
+        params={{ slug: car.slug }}
+        className="flex flex-1 flex-col"
+        onMouseEnter={() => {
         if (n > 1) {
           setActive(true);
           s.current.hover = true;
@@ -160,8 +163,7 @@ export function CarCard({ car }: { car: Car }) {
         }
       }}
       draggable={false}
-      className="group surface-card flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/50"
-    >
+      >
       {hasSpin ? (
         <div ref={boxRef} className="relative aspect-[4/3]">
           <Spin360
@@ -280,6 +282,11 @@ export function CarCard({ car }: { car: Car }) {
           </span>
         </div>
       </div>
-    </Link>
+      </Link>
+
+      <div className="px-5 pb-5">
+        <WhatsAppButton carSlug={car.slug} title={title} size="sm" block />
+      </div>
+    </article>
   );
 }
