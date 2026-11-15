@@ -4,6 +4,8 @@ import { Phone, MapPin, Check, ArrowLeft, HandCoins, MessageCircle } from "lucid
 
 import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/reserve-dialog";
+import { WhatsAppButton } from "@/components/whatsapp-button";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { FinanceCalculator } from "@/components/finance-calculator";
 import { Viewer360 } from "@/components/viewer-360";
 import { Spin360 } from "@/components/spin-360";
@@ -328,7 +330,14 @@ function CarPage() {
             )}
 
             <div className="mt-6 flex flex-col gap-2">
-              <Button asChild size="lg">
+              <WhatsAppButton
+                carSlug={car.slug}
+                title={`${title} ${car.year}`}
+                label="Contactează-ne pe WhatsApp"
+                size="lg"
+                block
+              />
+              <Button asChild size="lg" variant="outline">
                 <a href={SITE.phoneHref}>
                   <Phone className="size-4" /> {SITE.phone}
                 </a>
@@ -340,16 +349,6 @@ function CarPage() {
                   price={formatPrice(Number(car.price), car.currency)}
                 />
               )}
-              <Button asChild size="lg" variant="outline">
-                <a
-                  href={carWhatsappUrl(car.slug)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Contactează-ne pe WhatsApp despre ${title} ${car.year}`}
-                >
-                  <MessageCircle className="size-4" /> Contactează-ne pe WhatsApp
-                </a>
-              </Button>
             </div>
 
 
@@ -430,6 +429,9 @@ function CarPage() {
           </li>
         </ul>
       </section>
+
+      {/* Balon WhatsApp fix în dreapta-jos: te urmărește la scroll. */}
+      <WhatsAppFloat carSlug={car.slug} title={`${title} ${car.year}`} />
     </div>
   );
 }

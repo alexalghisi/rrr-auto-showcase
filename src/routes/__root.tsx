@@ -18,6 +18,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { AdsterraSlot, SocialBar, GoogleAdSense, ADSENSE_CLIENT } from "@/components/ad-slots";
 import { trackView } from "@/lib/analytics.functions";
 import { CookieConsent } from "@/components/cookie-consent";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { GOOGLE_CONSENT_BOOTSTRAP } from "@/lib/google-consent";
 import { whenIdleAfterLoad } from "@/lib/after-load";
 
@@ -201,6 +202,8 @@ function RootComponent() {
       </div>
       <Toaster position="top-center" />
       <GoogleAdSense />
+      {/* Paginile de mașină își au balonul cu linkul anunțului; aici merge cel general. */}
+      {chrome && !pathname.startsWith("/masini/") && <WhatsAppFloat />}
       {chrome && <CookieConsent />}
     </QueryClientProvider>
   );
