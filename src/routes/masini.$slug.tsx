@@ -428,6 +428,25 @@ function CarPage() {
           </li>
         </ul>
       </section>
+
+      {/* Acțiuni de contact mereu la îndemână pe telefon. */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
+        <div className="mx-auto flex max-w-6xl items-center gap-2">
+          <WhatsAppButton
+            carSlug={car.slug}
+            title={`${title} ${car.year}`}
+            label="Scrie pe WhatsApp"
+            size="lg"
+            className="flex-1"
+          />
+          <Button asChild size="lg" variant="outline" className="shrink-0 px-4">
+            <a href={SITE.phoneHref} aria-label={`Sună la ${SITE.phone}`}>
+              <Phone className="size-4" />
+              <span className="sr-only">Sună</span>
+            </a>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
