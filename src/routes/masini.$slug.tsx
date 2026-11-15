@@ -1,6 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
-import { Phone, MapPin, Check, ArrowLeft, HandCoins } from "lucide-react";
+import { Phone, MapPin, Check, ArrowLeft, HandCoins, MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/reserve-dialog";
@@ -12,7 +12,7 @@ import { AdsterraSlot } from "@/components/ad-slots";
 import { spinFor } from "@/lib/spin360";
 
 import { getPublicCar } from "@/lib/cars.functions";
-import { SITE, absolutePhotoUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
+import { SITE, absolutePhotoUrl, carWhatsappUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
 import { LANDING_PAGES, type LandingPage } from "@/lib/landing-pages";
 
@@ -341,8 +341,13 @@ function CarPage() {
                 />
               )}
               <Button asChild size="lg" variant="outline">
-                <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer">
-                  Scrie pe WhatsApp
+                <a
+                  href={carWhatsappUrl(car.slug)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Contactează-ne pe WhatsApp despre ${title} ${car.year}`}
+                >
+                  <MessageCircle className="size-4" /> Contactează-ne pe WhatsApp
                 </a>
               </Button>
             </div>

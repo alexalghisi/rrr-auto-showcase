@@ -30,6 +30,13 @@ export function whatsappUrl(message?: string): string {
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 
+/** Deschide WhatsApp cu anunțul identificat clar și spațiu pentru mesajul clientului. */
+export function carWhatsappUrl(carSlug: string, message = ""): string {
+  const listingUrl = `https://bremenauto.ro/masini/${encodeURIComponent(carSlug)}`;
+  const text = `Bună ziua! Am găsit anunțul tău pe linkul: ${listingUrl}\n\nMesajul meu: ${message}`;
+  return whatsappUrl(text);
+}
+
 export function photoUrl(path: string): string {
   if (!path) return "";
   if (path.startsWith("http://") || path.startsWith("https://")) {
