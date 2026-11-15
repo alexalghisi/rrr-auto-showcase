@@ -5,6 +5,7 @@ import { Phone, MapPin, Check, ArrowLeft, HandCoins, MessageCircle } from "lucid
 import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/reserve-dialog";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { FinanceCalculator } from "@/components/finance-calculator";
 import { Viewer360 } from "@/components/viewer-360";
 import { Spin360 } from "@/components/spin-360";
@@ -156,7 +157,7 @@ function CarPage() {
   ].filter(([, v]) => v) as [string, string][];
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 pb-28 sm:px-6 sm:py-14 lg:pb-14">
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
       <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
         <Link to="/" className="hover:text-foreground">
           Acasă
@@ -429,24 +430,8 @@ function CarPage() {
         </ul>
       </section>
 
-      {/* Acțiuni de contact mereu la îndemână pe telefon. */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
-        <div className="mx-auto flex max-w-6xl items-center gap-2">
-          <WhatsAppButton
-            carSlug={car.slug}
-            title={`${title} ${car.year}`}
-            label="Scrie pe WhatsApp"
-            size="lg"
-            className="flex-1"
-          />
-          <Button asChild size="lg" variant="outline" className="shrink-0 px-4">
-            <a href={SITE.phoneHref} aria-label={`Sună la ${SITE.phone}`}>
-              <Phone className="size-4" />
-              <span className="sr-only">Sună</span>
-            </a>
-          </Button>
-        </div>
-      </div>
+      {/* Balon WhatsApp fix în dreapta-jos: te urmărește la scroll. */}
+      <WhatsAppFloat carSlug={car.slug} title={`${title} ${car.year}`} />
     </div>
   );
 }
