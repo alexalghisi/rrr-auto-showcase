@@ -90,7 +90,7 @@ function AdvisorPage() {
       ]);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Consilierul nu răspunde. Sună-ne la 0751 692 335.",
+        error instanceof Error ? error.message : "Consilierul nu răspunde. Scrie-ne pe WhatsApp.",
       );
     } finally {
       setLoading(false);

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { SITE } from "@/lib/site";
+import { Link } from "@tanstack/react-router";
+import { SITE, whatsappUrl } from "@/lib/site";
 
 export function legalHead(path: string, title: string, description: string) {
   const url = `https://bremenauto.ro${path}`;
@@ -27,7 +28,11 @@ export function LegalPage({ eyebrow, title, children }: { eyebrow: string; title
         {children}
         <h2>Contact</h2>
         <p>
-          {SITE.name} · {SITE.addressLine} · Telefon {SITE.phone} · E-mail{" "}
+          {SITE.name} · {SITE.addressLine} ·{" "}
+          <a href={whatsappUrl("Bună ziua! Am văzut site-ul Bremen Auto și vreau detalii.")}>WhatsApp</a>
+          {" · "}
+          <Link to="/contact">Contact</Link>
+          {" · E-mail "}
           <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
         </p>
       </div>

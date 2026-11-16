@@ -31,7 +31,7 @@ export const BLOG_POSTS_D: BlogPost[] = [
       {
         h2: "2. Pasul 1: rezervarea mașinii pe telefon",
         paragraphs: [
-          "Totul pornește cu un telefon la 0751 692 335. Fiindcă suntem non-stop, poți suna și seara, și în weekend, fără să aștepți un program de lucru clasic. Îți recomandăm să ai deja în minte 2-3 anunțuri de pe care vrei detalii, ca discuția să fie eficientă.",
+          "Totul pornește cu un mesaj pe WhatsApp. Fiindcă suntem non-stop, poți scrie și seara, și în weekend, fără să aștepți un program de lucru clasic. Îți recomandăm să ai deja în minte 2-3 anunțuri de pe care vrei detalii, ca discuția să fie eficientă.",
           "La telefon, primești informații suplimentare față de anunț: starea reală a caroseriei, eventuale mici defecte estetice, zgomote observate la test, disponibilitatea pentru livrare și un interval estimativ de timp până la mașina ta.",
           "Dacă decizi să mergi mai departe, mașina poate fi rezervată pentru câteva zile, timp în care se face verificarea la distanță descrisă mai jos, fără ca altcineva să o poată cumpăra între timp.",
         ],

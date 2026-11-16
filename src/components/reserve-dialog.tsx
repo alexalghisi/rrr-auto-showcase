@@ -56,7 +56,7 @@ export function ReserveDialog({ carSlug, carTitle, price }: Props) {
       setDone(true);
       toast.success("Mașina e blocată 24h pe numele tău. Te sunăm pentru confirmare.");
     } catch {
-      toast.error("Nu am putut trimite rezervarea. Sună-ne la 0751 692 335.");
+      toast.error("Nu am putut trimite rezervarea. Scrie-ne pe WhatsApp.");
     } finally {
       setSending(false);
     }

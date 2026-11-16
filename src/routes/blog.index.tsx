@@ -5,6 +5,7 @@ import { CalendarDays, Clock, ArrowRight } from "lucide-react";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 
 import { BLOG_CATEGORIES } from "@/lib/blog";
+import { mediaForPost } from "@/lib/blog-media";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema } from "@/lib/seo";
 import { listDbBlogPosts } from "@/lib/blog-db.functions";
@@ -106,7 +107,18 @@ function BlogIndex() {
       <div className="mt-12 grid gap-6 md:grid-cols-2">
         {posts.map((post, index) => (
           <Fragment key={post.slug}>
-          <article className="surface-card flex flex-col rounded-xl p-6">
+          <article className="surface-card flex flex-col overflow-hidden rounded-xl">
+            <Link to="/blog/$slug" params={{ slug: post.slug }} className="block">
+              <img
+                src={mediaForPost(post.slug).cover.src}
+                alt={mediaForPost(post.slug).cover.alt}
+                width={1280}
+                height={720}
+                loading={index < 2 ? "eager" : "lazy"}
+                className="aspect-video w-full object-cover"
+              />
+            </Link>
+            <div className="flex flex-1 flex-col p-6">
             <span className="eyebrow">{post.category}</span>
             <h2 className="mt-3 text-xl leading-snug">
               <Link
@@ -141,6 +153,7 @@ function BlogIndex() {
             >
               Citește articolul <ArrowRight className="size-4" />
             </Link>
+            </div>
           </article>
           {index === Math.max(0, Math.ceil(posts.length / 2) - 1) && <AdsterraSlot variant="native" className="md:col-span-2" />}
           </Fragment>

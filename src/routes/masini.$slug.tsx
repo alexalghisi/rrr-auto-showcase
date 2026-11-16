@@ -282,6 +282,16 @@ function CarPage() {
                   .split(/\n+/)
                   .map((l: string) => l.trim())
                   .filter(Boolean)
+                  .map((line: string) =>
+                    line
+                      .replace(/\+?4?0?\s*0?751[\s.-]*692[\s.-]*335/g, "")
+                      .replace(/\s*sau\s+sună acum!?/gi, " pe WhatsApp")
+                      .replace(/sună acum:?/gi, "Scrie-ne pe WhatsApp")
+                      .replace(/\s{2,}/g, " ")
+                      .replace(/\s+([,.!])/g, "$1")
+                      .trim(),
+                  )
+                  .filter(Boolean)
                   .map((line: string, i: number) => {
                     const bullet = /^[-•*✅✔️▪️➡️🔹🔸👉]+\s*/u.test(line);
                     const clean = line.replace(/^[-•*✅✔️▪️➡️🔹🔸👉\s]+/u, "");

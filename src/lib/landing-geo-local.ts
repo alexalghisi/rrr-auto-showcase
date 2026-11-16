@@ -54,7 +54,7 @@ export const GEO_LOCAL: Record<string, GeoLocal> = {
       },
       {
         q: "Pot veni seara sau în weekend?",
-        a: "Da, programul este non-stop. Un telefon la 0751 692 335 înainte și scoatem mașina din rând pentru probă de drum.",
+        a: "Da, programul este non-stop. Un mesaj pe WhatsApp înainte și scoatem mașina din rând pentru probă de drum.",
       },
     ],
   },

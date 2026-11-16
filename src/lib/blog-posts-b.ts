@@ -564,7 +564,7 @@ export const BLOG_POSTS_B: BlogPost[] = [
     excerpt:
       "Un scenariu tipic, reconstituit din tranzacțiile obișnuite din parcul nostru, care arată pas cu pas cum funcționează preluarea la schimb pentru un client din Cluj-Napoca.",
     intro: [
-      "Preluarea la schimb este una dintre întrebările cele mai frecvente pe care le primim la telefonul non-stop, 0751 692 335. Clienții vor să știe cum se evaluează mașina veche, cât timp durează procesul și dacă diferența de preț poate fi plătită în rate.",
+      "Preluarea la schimb este una dintre întrebările cele mai frecvente pe care le primim pe WhatsApp. Clienții vor să știe cum se evaluează mașina veche, cât timp durează procesul și dacă diferența de preț poate fi plătită în rate.",
       "Exemplul de mai jos este un scenariu tipic, reconstituit din felul în care se desfășoară efectiv o astfel de tranzacție în parcul nostru de pe DN1, Luna de Sus, comuna Florești, nu un testimonial cu nume reale, ci o ilustrare a procesului complet, de la primul telefon până la predarea mașinii.",
     ],
     sections: [
@@ -627,7 +627,7 @@ export const BLOG_POSTS_B: BlogPost[] = [
         h2: "8. Concluzia practică pentru cine ia în calcul preluarea la schimb",
         paragraphs: [
           "Preluarea la schimb funcționează cel mai bine pentru cei care vor să scurteze tranzacția la o singură zi, fără să gestioneze separat vânzarea mașinii vechi. Este utilă mai ales atunci când mașina veche are defecte minore care ar complica o vânzare privată sau ar necesita reparații costisitoare înainte de anunț.",
-          "Recomandăm oricui ia în calcul această variantă să sune din timp la 0751 692 335, pentru o estimare orientativă, și să vină cu mașina veche la parcul de pe DN1 Florești pentru evaluarea fizică, indiferent de ora din zi, programul fiind non-stop.",
+          "Recomandăm oricui ia în calcul această variantă să scrie din timp pe WhatsApp, pentru o estimare orientativă, și să vină cu mașina veche la parcul de pe DN1 Florești pentru evaluarea fizică, indiferent de ora din zi, programul fiind non-stop.",
         ],
       },
     ],
@@ -646,7 +646,7 @@ export const BLOG_POSTS_B: BlogPost[] = [
       },
       {
         q: "Trebuie să programez o evaluare sau pot veni oricând?",
-        a: "Programul nostru este non-stop, la 0751 692 335, dar recomandăm un telefon în prealabil pentru o estimare orientativă și pentru a stabili un interval convenabil pentru evaluarea fizică.",
+        a: "Programul nostru este non-stop. Scrie-ne pe WhatsApp pentru o estimare orientativă și pentru a stabili un interval convenabil pentru evaluarea fizică.",
       },
     ],
     relatedLandings: [
