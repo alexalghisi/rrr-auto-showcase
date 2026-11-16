@@ -258,6 +258,35 @@ export function fingerprintFor(car: { make: string; model: string; year: number;
   return [slugify(car.make), slugify(car.model), car.year, Math.round(car.mileage_km / 1000), Math.round(car.price / 50)].join("|");
 }
 
+function normMake(make: string): string {
+  const value = slugify(make);
+  if (value === "vw") return "volkswagen";
+  if (value === "mercedes") return "mercedes-benz";
+  return value;
+}
+
+/** Primul token al modelului, ca „A7 Competition” și „A7” să fie aceeași mașină. */
+function modelToken(model: string): string {
+  const skip = new Set(["competition", "xdrive", "quattro", "automat", "automata", "diesel", "benzina"]);
+  return slugify(model).split("-").find((token) => token && !skip.has(token)) ?? slugify(model);
+}
+
+type ListingIdentity = { make: string; model: string; year: number; mileage_km: number; price: number };
+
+/**
+ * Aceeași mașină publicată și pe OLX și pe Facebook.
+ * Prețul și kilometrajul pot diferi puțin între cele două anunțuri.
+ */
+export function sameListing(a: ListingIdentity, b: ListingIdentity): boolean {
+  if (normMake(a.make) !== normMake(b.make)) return false;
+  if (a.year !== b.year) return false;
+  if (modelToken(a.model) !== modelToken(b.model)) return false;
+  const priceGap = Math.abs(a.price - b.price);
+  const priceClose = priceGap <= Math.max(400, 0.08 * Math.max(a.price, b.price));
+  const kmClose = a.mileage_km === 0 || b.mileage_km === 0 || Math.abs(a.mileage_km - b.mileage_km) <= 3000;
+  return priceClose && kmClose;
+}
+
 function normalizeFuel(value?: string | null): string {
   const normalized = (value ?? "").toLowerCase();
   if (normalized.includes("benz") || normalized.includes("petrol")) return "Benzina";
@@ -347,16 +376,33 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
     return result;
   }
 
-  const { data: existing } = await supabaseAdmin.from("cars").select("source_url, external_id, fingerprint");
-  const knownUrls = new Set((existing ?? []).map((car) => car.source_url).filter(Boolean) as string[]);
-  const knownIds = new Set((existing ?? []).map((car) => car.external_id).filter(Boolean) as string[]);
-  const knownPrints = new Set((existing ?? []).map((car) => car.fingerprint).filter(Boolean) as string[]);
+  const { data: existing } = await supabaseAdmin
+    .from("cars")
+    .select("id, source_url, external_id, fingerprint, make, model, year, mileage_km, price");
+  const known = (existing ?? []).map((car) => ({
+    id: car.id,
+    source_url: car.source_url,
+    external_id: car.external_id,
+    fingerprint: car.fingerprint,
+    make: car.make,
+    model: car.model,
+    year: car.year,
+    mileage_km: car.mileage_km,
+    price: Number(car.price),
+  }));
 
   for (const car of cars) {
     const fingerprint = fingerprintFor(car);
-    if (knownUrls.has(car.url) || knownIds.has(car.externalId) || knownPrints.has(fingerprint)) {
+    const match = known.find(
+      (row) =>
+        row.source_url === car.url ||
+        row.external_id === car.externalId ||
+        row.fingerprint === fingerprint ||
+        sameListing(row, car),
+    );
+    if (match) {
       result.skipped++;
-      await supabaseAdmin.from("cars").update({ last_seen_at: new Date().toISOString() }).eq("external_id", car.externalId);
+      await supabaseAdmin.from("cars").update({ last_seen_at: new Date().toISOString() }).eq("id", match.id);
       continue;
     }
     const suffix = slugify(car.externalId).slice(-10);
@@ -380,9 +426,17 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
       else result.errors.push(`${car.url}: ${error.message}`);
       continue;
     }
-    knownUrls.add(car.url);
-    knownIds.add(car.externalId);
-    knownPrints.add(fingerprint);
+    known.push({
+      id: slug,
+      source_url: car.url,
+      external_id: car.externalId,
+      fingerprint,
+      make: car.make,
+      model: car.model,
+      year: car.year,
+      mileage_km: car.mileage_km,
+      price: car.price,
+    });
     result.inserted++;
   }
   // Mașinile care nu mai apar în sursă sunt considerate vândute și dispar din stoc.
