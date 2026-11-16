@@ -43,12 +43,12 @@ export function WhatsAppFloat({ carSlug, title, className }: Props) {
       rel="noopener noreferrer"
       aria-label={label}
       className={cn(
-        "fixed bottom-4 right-4 z-40 inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp p-3.5 text-sm font-semibold text-whatsapp-foreground shadow-lg transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-whatsapp sm:px-4 sm:py-3",
+        "fixed bottom-4 right-4 z-40 inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp px-4 py-3 text-sm font-semibold text-whatsapp-foreground shadow-lg transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-whatsapp",
         className,
       )}
     >
       <WhatsAppGlyph className="size-5 shrink-0" />
-      <span className="hidden sm:inline">WhatsApp</span>
+      <span>WhatsApp</span>
     </a>
   );
 }

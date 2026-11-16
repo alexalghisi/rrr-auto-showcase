@@ -60,7 +60,7 @@ export async function refreshProgrammaticIntros(): Promise<{
     try {
       const stockLines = matches.slice(0, 8).map(describe).join("\n") || "(nicio mașină acum)";
       const intro = await askAi(
-        `Ești copywriter SEO pentru Bremen Auto, parc auto pe DN1, Luna de Sus, comuna Florești, jud. Cluj, care vinde mașini second hand aduse din Germania, cash sau în rate, cu livrare în toată România. Program non-stop, telefon 0751 692 335.
+        `Ești copywriter SEO pentru Bremen Auto, parc auto pe DN1, Luna de Sus, comuna Florești, jud. Cluj, care vinde mașini second hand aduse din Germania, cash sau în rate, cu livrare în toată România. Program non-stop. Contactul public este pe WhatsApp, nu dicta numărul de telefon.
 Scrii în română, natural, fără keyword stuffing, fără superlative goale și fără promisiuni care nu se pot verifica. 150-230 de cuvinte, un singur paragraf, informație utilă pentru cumpărător (prețuri realiste, ce verificăm, cum ajunge la parc, cum se livrează). Nu inventa mașini care nu sunt în listă. Returnezi DOAR textul.`,
         `Pagina: "${page.h1}".
 Context existent (poți reformula, nu copia): ${page.intro.slice(0, 700)}
@@ -194,7 +194,7 @@ export async function publishDailyArticles(): Promise<string[]> {
   for (let i = 0; i < remaining; i++) {
     try {
       const raw = await askAi(
-        `Ești editor senior de conținut auto pentru Bremen Auto: parc auto pe DN1, Luna de Sus, comuna Florești, jud. Cluj. Vinde EXCLUSIV mașini second hand aduse din Germania, cash sau în rate, livrare în toată România, program non-stop, telefon 0751 692 335.
+        `Ești editor senior de conținut auto pentru Bremen Auto: parc auto pe DN1, Luna de Sus, comuna Florești, jud. Cluj. Vinde EXCLUSIV mașini second hand aduse din Germania, cash sau în rate, livrare în toată România, program non-stop. Contactul public este pe WhatsApp, nu dicta numărul de telefon.
 NIȘA E STRICTĂ: cumpărarea unei mașini second hand / din Germania (alegere, modele, prețuri, verificări, istoric, acte, înmatriculare, finanțare/rate, livrare, comparații de modele, piața din Cluj și orașele României). INTERZIS: piese, service, reparații, accesorii, tuning, mașini noi, alte subiecte.
 Scrii în română corectă, cu diacritice, natural, pentru oameni (fraze scurte, exemple concrete, cifre realiste în euro/lei), SEO first: un keyword long-tail principal folosit în titlu, primul paragraf și un H2, variații semantice, fără keyword stuffing. Nu inventa statistici, studii, recenzii sau clienți.
 Returnezi DOAR JSON valid:

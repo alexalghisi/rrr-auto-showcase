@@ -313,7 +313,7 @@ const modelPages: LandingPage[] = MODEL_SEEDS.map((seed) => {
       },
       {
         q: `Se poate ${short} în rate la Bremen Auto?`,
-        a: `Da, prin credit auto sau leasing, cu aprobare rapidă. Sună la 0751 692 335 și calculăm rata în aceeași zi.`,
+        a: `Da, prin credit auto sau leasing, cu aprobare rapidă. Scrie-ne pe WhatsApp și calculăm rata în aceeași zi.`,
       },
     ],
   } satisfies LandingPage;
@@ -377,7 +377,7 @@ const pricePages: LandingPage[] = [
     },
     {
       q: "Pot cumpăra o mașină ieftină în rate?",
-      a: "Da, prin credit auto sau leasing. Rata se calculează în funcție de avans și de perioadă — sună la 0751 692 335.",
+      a: "Da, prin credit auto sau leasing. Rata se calculează în funcție de avans și de perioadă — scrie-ne pe WhatsApp.",
     },
   ],
 }));
@@ -526,7 +526,7 @@ const thematicPages: LandingPage[] = [
       },
       {
         h2: "Program non-stop, vizionare când poți tu",
-        body: "Nu ai program de lucru de 9-17 și nici noi nu îl impunem. Sună sau scrie pe WhatsApp la 0751 692 335 și stabilim o vizionare, inclusiv seara sau în weekend.",
+        body: "Nu ai program de lucru de 9-17 și nici noi nu îl impunem. Scrie pe WhatsApp și stabilim o vizionare, inclusiv seara sau în weekend.",
       },
       {
         h2: "Ce poți face în parc",
@@ -540,11 +540,11 @@ const thematicPages: LandingPage[] = [
       },
       {
         q: "Trebuie programare pentru vizionare?",
-        a: "Un telefon scurt ajută ca să fim siguri că mașina dorită este în parc, dar programul este non-stop.",
+        a: "Un mesaj pe WhatsApp ajută ca să fim siguri că mașina dorită este în parc, dar programul este non-stop.",
       },
       {
         q: "Există parc auto deschis 24/7 în Cluj?",
-        a: "Bremen Auto lucrează non-stop pe bază de telefon: 0751 692 335.",
+        a: "Bremen Auto lucrează non-stop. Scrie-ne pe WhatsApp și stabilim vizionarea.",
       },
     ],
   },

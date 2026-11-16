@@ -118,7 +118,7 @@ export const HOME_FAQS = [
   },
   {
     q: "Care este programul Bremen Auto?",
-    a: "Programul este non-stop, 24/7. Sună la 0751 692 335 sau scrie pe WhatsApp oricând și stabilim o vizionare.",
+    a: "Programul este non-stop, 24/7. Scrie pe WhatsApp oricând și stabilim o vizionare.",
   },
   {
     q: "De unde provin mașinile?",

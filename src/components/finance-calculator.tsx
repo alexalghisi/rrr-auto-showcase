@@ -62,7 +62,7 @@ export function FinanceCalculator({ price, carSlug, carTitle }: Props) {
       setDone(true);
       toast.success("Cererea a fost trimisă. Te sunăm în cel mai scurt timp.");
     } catch {
-      toast.error("Nu am putut trimite cererea. Sună-ne la 0751 692 335.");
+      toast.error("Nu am putut trimite cererea. Scrie-ne pe WhatsApp.");
     } finally {
       setSending(false);
     }

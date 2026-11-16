@@ -3,12 +3,12 @@ import { Phone, Mail, MapPin, Clock, Facebook, MessageCircle } from "lucide-reac
 
 import { Button } from "@/components/ui/button";
 import { WhatsAppButton } from "@/components/whatsapp-button";
-import { SITE, whatsappUrl } from "@/lib/site";
+import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema } from "@/lib/seo";
 
 const TITLE = "Contact Bremen Auto — parc auto DN1, Florești Cluj";
 const DESCRIPTION =
-  "Sună la 0751 692 335 sau scrie pe WhatsApp. Parc auto Bremen Auto pe DN1, Luna de Sus (Florești), jud. Cluj, program non-stop 24/7. Mașini din Germania.";
+  "Scrie pe WhatsApp sau sună la 0751 692 335. Parc auto Bremen Auto pe DN1, Luna de Sus (Florești), jud. Cluj, program non-stop 24/7. Mașini din Germania.";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -48,20 +48,18 @@ function ContactPage() {
       <p className="eyebrow">Hai la o cafea și o probă de drum</p>
       <h1 className="mt-2 text-4xl sm:text-5xl">Contact Bremen Auto</h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">
-        Suntem pe DN1, în Luna de Sus (comuna Florești), la 10 minute de Cluj-Napoca pe drumul spre Oradea. Sună
-        înainte și pregătim mașina care te interesează.
+        Suntem pe DN1, în Luna de Sus (comuna Florești), la 10 minute de Cluj-Napoca pe drumul spre Oradea. Scrie-ne
+        pe WhatsApp și pregătim mașina care te interesează.
       </p>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
         <div className="surface-card rounded-xl p-8">
           <ul className="space-y-6">
             <li className="flex gap-4">
-              <Phone className="mt-1 size-5 shrink-0 text-primary" />
+              <MessageCircle className="mt-1 size-5 shrink-0 text-whatsapp" />
               <div>
-                <p className="text-sm text-muted-foreground">Telefon</p>
-                <a href={SITE.phoneHref} className="font-display text-xl">
-                  {SITE.phone}
-                </a>
+                <p className="text-sm text-muted-foreground">WhatsApp</p>
+                <WhatsAppButton label="Scrie pe WhatsApp" size="lg" className="mt-2" />
               </div>
             </li>
             <li className="flex gap-4">
@@ -81,35 +79,24 @@ function ContactPage() {
               </div>
             </li>
             <li className="flex gap-4">
-              <MessageCircle className="mt-1 size-5 shrink-0 text-primary" />
-              <div>
-                <p className="text-sm text-muted-foreground">WhatsApp</p>
-                <a
-                  href={whatsappUrl("Bună ziua! Am văzut site-ul Bremen Auto și vreau detalii despre o mașină.")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-display text-xl"
-                >
-                  {SITE.phone}
-                </a>
-              </div>
-            </li>
-            <li className="flex gap-4">
               <Clock className="mt-1 size-5 shrink-0 text-primary" />
               <div>
                 <p className="text-sm text-muted-foreground">Program</p>
                 <p className="font-medium">{SITE.hours}</p>
               </div>
             </li>
+            <li className="flex gap-4">
+              <Phone className="mt-1 size-5 shrink-0 text-muted-foreground" />
+              <div>
+                <p className="text-sm text-muted-foreground">Telefon</p>
+                <a href={SITE.phoneHref} className="text-sm text-muted-foreground hover:text-foreground">
+                  {SITE.phone}
+                </a>
+              </div>
+            </li>
           </ul>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <WhatsAppButton label="Scrie pe WhatsApp" size="lg" />
-            <Button asChild size="lg" variant="outline">
-              <a href={SITE.phoneHref}>
-                <Phone className="size-4" /> Sună acum
-              </a>
-            </Button>
             <Button asChild size="lg" variant="outline">
               <a href={SITE.facebook} target="_blank" rel="noopener noreferrer">
                 <Facebook className="size-4" /> Facebook

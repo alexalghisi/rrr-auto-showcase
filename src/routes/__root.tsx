@@ -107,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Parc auto pe DN1, Luna de Sus (Florești), jud. Cluj: autoturisme rulate aduse din Germania, verificate, cu acte complete. Sună la 0751 692 335.",
+          "Parc auto pe DN1, Luna de Sus (Florești), jud. Cluj: autoturisme rulate aduse din Germania, verificate, cu acte complete. Scrie-ne pe WhatsApp.",
       },
       { name: "author", content: "Bremen Auto" },
       {

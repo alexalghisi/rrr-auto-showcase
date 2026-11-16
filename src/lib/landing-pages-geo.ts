@@ -268,7 +268,7 @@ export const GEO_LANDING_PAGES: LandingPage[] = GEO_SEEDS.map((seed) => {
         h2: isNational ? "Ce include livrarea" : `Cum ajungi la parcul nostru din ${seed.county}`,
         body: isNational
           ? "Transportul se face pe platformă auto, cu mașina asigurată pe durata drumului. Costul de transport îl comunicăm exact înainte de rezervare, în funcție de distanță, și nu se modifică ulterior. Actele merg prin curier cu confirmare de primire, iar dosarul de înmatriculare este complet."
-          : `${seed.route.charAt(0).toUpperCase()}${seed.route.slice(1)}. Programul este non-stop, deci poți veni și seara sau în weekend — sună înainte la 0751 692 335 ca să scoatem mașina din rând și să fie pregătită pentru probă de drum. ${seed.delivery}`,
+          : `${seed.route.charAt(0).toUpperCase()}${seed.route.slice(1)}. Programul este non-stop, deci poți veni și seara sau în weekend — scrie-ne pe WhatsApp înainte ca să scoatem mașina din rând și să fie pregătită pentru probă de drum. ${seed.delivery}`,
       },
       {
         h2: "Verificările pe care le facem înainte să intre mașina în stoc",

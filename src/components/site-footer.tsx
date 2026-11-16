@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Mail, MapPin, Phone, Clock, MessageCircle } from "lucide-react";
+import { Facebook, Mail, MapPin, Clock } from "lucide-react";
 
-import { SITE, whatsappUrl } from "@/lib/site";
+import { SITE } from "@/lib/site";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { openCookieSettings } from "@/components/cookie-consent";
 import { LANDING_PAGES } from "@/lib/landing-pages";
 import { Button } from "@/components/ui/button";
@@ -73,22 +74,8 @@ export function SiteFooter() {
         <div>
           <p className="eyebrow">Contact</p>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-            <li className="flex items-start gap-2">
-              <MessageCircle className="mt-0.5 size-4 text-primary" />
-              <a
-                href={whatsappUrl("Bună ziua! Am văzut site-ul Bremen Auto și vreau detalii despre o mașină.")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-foreground hover:text-primary"
-              >
-                Scrie pe WhatsApp
-              </a>
-            </li>
-            <li className="flex items-start gap-2">
-              <Phone className="mt-0.5 size-4 text-primary" />
-              <a href={SITE.phoneHref} className="hover:text-foreground">
-                {SITE.phone}
-              </a>
+            <li>
+              <WhatsAppButton label="Scrie pe WhatsApp" />
             </li>
             <li className="flex items-start gap-2">
               <Mail className="mt-0.5 size-4 text-primary" />

@@ -205,7 +205,7 @@ function faqCommon(city: City, subject: string) {
   return [
     {
       q: `Cum ajung din ${city.name} la parcul Bremen Auto?`,
-      a: `Parcul este pe DN1, în Luna de Sus (comuna Florești), jud. Cluj. Din ${city.name} faci ${city.route}. Programul este non-stop, deci suni la 0751 692 335 și venim să îți arătăm mașina la ora care îți convine.`,
+      a: `Parcul este pe DN1, în Luna de Sus (comuna Florești), jud. Cluj. Din ${city.name} faci ${city.route}. Programul este non-stop, deci scrie-ne pe WhatsApp și venim să îți arătăm mașina la ora care îți convine.`,
     },
     {
       q: `Livrați ${subject.toLowerCase()} în ${city.name}?`,
@@ -228,7 +228,7 @@ function brandPage(brand: BrandSeed, city: City): LandingPage {
     slug: `${brand.slug}-second-hand-${city.slug}`,
     h1,
     title: `${brand.label} second hand ${city.name} | Bremen Auto`,
-    description: `${brand.label} adus din Germania pentru cumpărători din ${city.name}: km verificați, acte complete, cash sau în rate. Sună la 0751 692 335.`.slice(
+    description: `${brand.label} adus din Germania pentru cumpărători din ${city.name}: km verificați, acte complete, cash sau în rate. Scrie-ne pe WhatsApp.`.slice(
       0,
       154,
     ),

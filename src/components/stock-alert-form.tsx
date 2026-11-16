@@ -35,7 +35,7 @@ export function StockAlertForm() {
       setDone(true);
       toast.success("Gata! Te anunțăm primul când intră mașina în parc.");
     } catch {
-      toast.error("Nu am putut salva alerta. Sună-ne la 0751 692 335.");
+      toast.error("Nu am putut salva alerta. Scrie-ne pe WhatsApp.");
     } finally {
       setSending(false);
     }
