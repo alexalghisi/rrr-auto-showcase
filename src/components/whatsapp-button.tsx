@@ -1,11 +1,15 @@
 import { MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { carWhatsappUrl } from "@/lib/site";
+import { carWhatsappUrl, whatsappUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
+const GENERAL =
+  "Bună ziua! Am văzut site-ul Bremen Auto și vreau detalii despre o mașină.";
+
 type Props = {
-  carSlug: string;
+  /** Lipsește pe butoanele generale; pe un anunț deschide conversația cu linkul mașinii. */
+  carSlug?: string;
   /** Numele mașinii, folosit doar pentru eticheta de accesibilitate. */
   title?: string;
   /** Textul butonului. */
@@ -28,6 +32,7 @@ export function WhatsAppButton({
   block = false,
   className,
 }: Props) {
+  const href = carSlug ? carWhatsappUrl(carSlug, message) : whatsappUrl(message || GENERAL);
   return (
     <Button
       asChild
@@ -36,7 +41,7 @@ export function WhatsAppButton({
       className={cn(block && "w-full", className)}
     >
       <a
-        href={carWhatsappUrl(carSlug, message)}
+        href={href}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={title ? `Scrie pe WhatsApp despre ${title}` : label}

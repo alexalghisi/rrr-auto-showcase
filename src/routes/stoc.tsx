@@ -3,6 +3,7 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { Fragment, useMemo, useState } from "react";
 
 import { CarCard } from "@/components/car-card";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { AdsterraSlot } from "@/components/ad-slots";
 import { Input } from "@/components/ui/input";
 import {
@@ -167,9 +168,10 @@ function StockPage() {
       {filtered.length === 0 ? (
         <div className="surface-card mt-8 rounded-xl p-12 text-center">
           <p className="text-muted-foreground">
-            Nicio mașină nu corespunde filtrelor. Sună la {SITE.phone} — găsim modelul dorit la
+            Nicio mașină nu corespunde filtrelor. Scrie-ne pe WhatsApp — găsim modelul dorit la
             comandă.
           </p>
+          <WhatsAppButton label="Scrie pe WhatsApp" className="mt-6" />
         </div>
       ) : (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

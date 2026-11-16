@@ -1,6 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
-import { Phone, MapPin, Check, ArrowLeft, HandCoins, MessageCircle } from "lucide-react";
+import { MapPin, Check, ArrowLeft, HandCoins } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/reserve-dialog";
@@ -339,11 +339,6 @@ function CarPage() {
                 size="lg"
                 block
               />
-              <Button asChild size="lg" variant="outline">
-                <a href={SITE.phoneHref}>
-                  <Phone className="size-4" /> {SITE.phone}
-                </a>
-              </Button>
               {car.status === "disponibila" && (
                 <ReserveDialog
                   carSlug={car.slug}
