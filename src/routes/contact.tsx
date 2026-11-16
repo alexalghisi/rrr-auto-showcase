@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Phone, Mail, MapPin, Clock, Facebook, MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { SITE, whatsappUrl } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema } from "@/lib/seo";
 
@@ -103,18 +104,10 @@ function ContactPage() {
           </ul>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg">
+            <WhatsAppButton label="Scrie pe WhatsApp" size="lg" />
+            <Button asChild size="lg" variant="outline">
               <a href={SITE.phoneHref}>
                 <Phone className="size-4" /> Sună acum
-              </a>
-            </Button>
-            <Button asChild size="lg" variant="secondary">
-              <a
-                href={whatsappUrl("Bună ziua! Am văzut site-ul Bremen Auto și vreau detalii despre o mașină.")}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MessageCircle className="size-4" /> Scrie pe WhatsApp
               </a>
             </Button>
             <Button asChild size="lg" variant="outline">

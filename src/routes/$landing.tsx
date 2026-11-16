@@ -1,9 +1,10 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { Phone, MapPin, ArrowRight, HandCoins, ShieldCheck } from "lucide-react";
+import { MapPin, ArrowRight, HandCoins, ShieldCheck } from "lucide-react";
 
 import { CarCard } from "@/components/car-card";
 import { Button } from "@/components/ui/button";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
@@ -112,16 +113,7 @@ function LandingRoute() {
       <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">{intro}</p>
 
       <div className="mt-7 flex flex-wrap gap-3">
-        <Button asChild size="lg">
-          <a href={SITE.phoneHref}>
-            <Phone className="size-4" /> Sună acum {SITE.phone}
-          </a>
-        </Button>
-        <Button asChild size="lg" variant="outline">
-          <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer">
-            WhatsApp 24/7
-          </a>
-        </Button>
+        <WhatsAppButton label="Scrie pe WhatsApp" size="lg" />
       </div>
 
       <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
@@ -141,14 +133,17 @@ function LandingRoute() {
         {matches.length === 0 ? (
           <div className="surface-card mt-6 rounded-xl p-10 text-center">
             <p className="text-muted-foreground">
-              Momentan nu avem această variantă în parc, dar o aducem la comandă din Germania. Sună
-              la {SITE.phone} și îți spunem ce găsim în bugetul tău.
+              Momentan nu avem această variantă în parc, dar o aducem la comandă din Germania.
+              Scrie-ne pe WhatsApp și îți spunem ce găsim în bugetul tău.
             </p>
-            <Button asChild className="mt-6" variant="outline">
-              <Link to="/stoc">
-                Vezi tot stocul <ArrowRight className="size-4" />
-              </Link>
-            </Button>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <WhatsAppButton label="Scrie pe WhatsApp" />
+              <Button asChild variant="outline">
+                <Link to="/stoc">
+                  Vezi tot stocul <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
         ) : (
           <>

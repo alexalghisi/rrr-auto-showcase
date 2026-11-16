@@ -1,12 +1,13 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { Fragment } from "react";
-import { CalendarDays, Clock, Phone, ArrowRight } from "lucide-react";
+import { CalendarDays, Clock, ArrowRight } from "lucide-react";
 
 import { BLOG_POSTS, BLOG_AUTHOR } from "@/lib/blog";
 import { getLandingPage } from "@/lib/landing-pages";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { AdsterraSlot } from "@/components/ad-slots";
 import { getDbBlogPost } from "@/lib/blog-db.functions";
 
@@ -178,20 +179,11 @@ function BlogPostRoute() {
           rate, program non-stop.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Button asChild>
-            <a href={SITE.phoneHref}>
-              <Phone className="size-4" /> {SITE.phone}
-            </a>
-          </Button>
+          <WhatsAppButton label="Scrie pe WhatsApp" />
           <Button asChild variant="outline">
             <Link to="/stoc">
               Vezi stocul <ArrowRight className="size-4" />
             </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer">
-              WhatsApp
-            </a>
           </Button>
         </div>
       </section>

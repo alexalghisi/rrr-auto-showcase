@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, Loader2, Send, Phone } from "lucide-react";
+import { Sparkles, Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { Input } from "@/components/ui/input";
 import { askAdvisor } from "@/lib/advisor.functions";
 import { StockAlertForm } from "@/components/stock-alert-form";
@@ -196,11 +197,7 @@ function AdvisorPage() {
       </div>
 
       <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-        <Button asChild variant="outline" className="flex-1">
-          <a href={SITE.phoneHref}>
-            <Phone className="size-4" /> Vorbește cu un om: {SITE.phone}
-          </a>
-        </Button>
+        <WhatsAppButton label="Scrie pe WhatsApp" className="flex-1" />
         <Button asChild variant="outline" className="flex-1">
           <Link to="/stoc">Vezi tot stocul</Link>
         </Button>

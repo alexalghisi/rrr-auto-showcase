@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment } from "react";
 import { AdsterraSlot } from "@/components/ad-slots";
 import { CalendarDays, Clock, ArrowRight } from "lucide-react";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 
 import { BLOG_CATEGORIES } from "@/lib/blog";
 import { SITE } from "@/lib/site";
@@ -149,7 +150,7 @@ function BlogIndex() {
       <section className="surface-card mt-16 rounded-xl p-8 text-center">
         <h2 className="text-2xl">Cauți deja o mașină?</h2>
         <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
-          Vezi stocul actualizat zilnic sau sună-ne la {SITE.phone}. Program non-stop, cash sau în
+          Vezi stocul actualizat zilnic sau scrie-ne pe WhatsApp. Program non-stop, cash sau în
           rate.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -159,12 +160,7 @@ function BlogIndex() {
           >
             Vezi stocul <ArrowRight className="size-4" />
           </Link>
-          <Link
-            to="/contact"
-            className="inline-flex items-center gap-2 rounded-md border border-border px-5 py-2.5 text-sm"
-          >
-            Contact
-          </Link>
+          <WhatsAppButton label="Scrie pe WhatsApp" />
         </div>
       </section>
     </div>
