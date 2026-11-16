@@ -8,13 +8,13 @@ export const SPIN_360: Record<string, { frames: number; small: number; ext?: "jp
   "vw-touareg-4x4-automat-2008-296000-9136006809": { frames: 245, small: 123 },
   "dacia-sandero-stepway-2016-156000-2110006809": { frames: 248, small: 124 },
   "audi-a6-2015-0-6008006809": { frames: 248, small: 124 },
-  "audi-a7-competition-2015-0-4648006809": { frames: 5, small: 5, ext: "jpg" },
+  "audi-a7-competition-2015-0-4648006809": { frames: 48, small: 48, ext: "jpg" },
   "bmw-x1-x-2013-24300-7838006809": { frames: 247, small: 124 },
   "bmw-x6-2010-278000-1520006809": { frames: 247, small: 124 },
   "suzuki-vitara-2011-0-3444006809": { frames: 211, small: 106 },
 };
 
-const V = "v=20261025-q60";
+const V = "v=20261116-a7";
 
 export type SpinSheet = { url: string; first: number; frames: number };
 
