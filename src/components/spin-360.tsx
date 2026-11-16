@@ -239,7 +239,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         </span>}
       </>}
       <span className={`pointer-events-none absolute rounded bg-background/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground ${size === "lg" ? "bottom-2 right-2" : "left-2 top-2"}`}>
-        {size === "lg" ? "Simulare AI · pozele reale sunt mai jos" : "Simulare AI"}
+        {size === "lg" ? "Rotire ilustrativă · pozele reale sunt mai jos" : "Rotire ilustrativă"}
       </span>
       {(load || wanted) && !ready && <span role="status" className="pointer-events-none absolute bottom-2 left-2 rounded bg-background/90 px-2 py-1 text-xs text-muted-foreground">
         {failed ? "Rotirea nu s-a încărcat" : "Se încarcă rotirea…"}

@@ -129,6 +129,33 @@ const MODEL_SEEDS: ModelSeed[] = [
     checks: "consumul de ulei, lanțul de distribuție și electronica de confort",
   },
   {
+    slug: "audi-a6-second-hand-cluj",
+    brand: "Audi",
+    model: "A6",
+    label: "Audi A6",
+    strengths:
+      "confort de limuzină pe drum lung, quattro pe versiunile echipate și motorizări TDI cu consum rezonabil pentru clasa mare",
+    checks: "cutia S tronic, suspensia pneumatică acolo unde există și consumul de ulei",
+  },
+  {
+    slug: "audi-a7-second-hand-cluj",
+    brand: "Audi",
+    model: "A7",
+    label: "Audi A7",
+    strengths:
+      "linie de coupé cu cinci uși și hayon practic, motoare 3.0 TDI puternice și tracțiune quattro",
+    checks: "cutia automată, suspensia pneumatică adaptivă și hayonul electric",
+  },
+  {
+    slug: "bmw-x1-second-hand-cluj",
+    brand: "BMW",
+    model: "X1",
+    label: "BMW X1",
+    strengths:
+      "poziție înaltă de condus într-un format compact, ușor de parcat în Cluj-Napoca, cu xDrive pentru iarnă",
+    checks: "lanțul de distribuție la N47, cutia de transfer xDrive și uzura brațelor de suspensie",
+  },
+  {
     slug: "ford-focus-second-hand-cluj",
     brand: "Ford",
     model: "Focus",

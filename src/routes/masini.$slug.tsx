@@ -33,7 +33,9 @@ export const Route = createFileRoute("/masini/$slug")({
     const clamp = (value: string, max: number) =>
       value.length <= max ? value : `${value.slice(0, max - 1).trimEnd()}…`;
     const name = `${car.make} ${car.model}${car.trim ? ` ${car.trim}` : ""} ${car.year}`;
-    const suffix = " | Bremen Auto Cluj";
+    // Interogarea reală este „<model> second hand Cluj”; numele lungi păstrează sufixul scurt.
+    const keyword = " second hand Cluj | Bremen Auto";
+    const suffix = name.length + keyword.length <= 59 ? keyword : " | Bremen Auto Cluj";
     const title = `${clamp(name, 59 - suffix.length)}${suffix}`;
     const description = clamp(
       `${name} — ${formatKm(car.mileage_km)}, ${car.fuel}, ${car.gearbox}${car.power_hp ? `, ${car.power_hp} CP` : ""}, ${formatPrice(Number(car.price), car.currency)}. Adusă din Germania, verificată, acte la zi. Vezi-o pe DN1, Luna de Sus (Florești), lângă Cluj-Napoca.`,
