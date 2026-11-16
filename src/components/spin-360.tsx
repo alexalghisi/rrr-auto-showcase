@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCw, Hand } from "lucide-react";
 import { spinFor } from "@/lib/spin360";
 import { loadSpinFrames, type SpinFrame } from "@/lib/spin-frames";
-import { coastTurn, followTurn, frameBlendAt, dragTurn } from "@/lib/spin-motion";
+import { coastTurn, followTurn, frameAt, frameBlendAt, dragTurn } from "@/lib/spin-motion";
 import { whenIdleAfterLoad } from "@/lib/after-load";
 
 type Props = {
@@ -115,7 +115,10 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         state.velocity = Math.abs(coast.velocity) < 0.001 ? 0 : coast.velocity;
         state.target = state.position;
       }
-      const sample = frameBlendAt(state.position, list.length);
+      // Dense video sequences cross-fade. A handful of real photos must cut, or two different shots ghost on top of each other.
+      const sample = list.length >= 48
+        ? frameBlendAt(state.position, list.length)
+        : { first: frameAt(state.position, list.length), next: 0, mix: 0 };
       const frame = list[sample.first];
       const next = list[sample.next];
       const drawn = sample.first + sample.mix;

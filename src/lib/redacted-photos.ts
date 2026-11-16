@@ -1,4 +1,9 @@
 export const REDACTED_PHOTOS: Record<string, string> = {
+  "/api/public/photo/audi-a7-competition-2015-0-4648006809/1.jpg": "/redacted/92694d478253e5d915ad.jpg",
+  "/api/public/photo/audi-a7-competition-2015-0-4648006809/2.jpg": "/redacted/d737476a62007ee04ac7.jpg",
+  "/api/public/photo/audi-a7-competition-2015-0-4648006809/3.jpg": "/redacted/24de73edd8bbe5d220a1.jpg",
+  "/api/public/photo/audi-a7-competition-2015-0-4648006809/4.jpg": "/redacted/ffd6ac51fa1fe2dc7cb6.jpg",
+  "/api/public/photo/audi-a7-competition-2015-0-4648006809/5.jpg": "/redacted/81fca4e2d91a551657c5.jpg",
   "/api/public/photo/audi-a6-2015-0-6008006809/5.jpg": "/redacted/cb4ecc682b6d7ac346f1.jpg",
   "/api/public/photo/audi-a6-2015-0-6008006809/1.jpg": "/redacted/95adaee776812ee5ee84.jpg",
   "/api/public/photo/audi-a6-2015-0-6008006809/3.jpg": "/redacted/56882093c9d2ff3f1e50.jpg",
