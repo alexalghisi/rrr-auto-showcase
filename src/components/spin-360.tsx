@@ -85,6 +85,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     if (!box || !canvas) return;
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
+    const blend = spinFor(slug, size)?.blend !== false;
     let raf = 0;
     let previous = 0;
     let disposed = false;
@@ -104,7 +105,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         state.position = state.target;
       } else if (Math.abs(state.target - state.position) > 0.0001) {
         state.position = followTurn(state.position, state.target, delta);
-      } else if (!state.reduced && (state.hover || state.auto)) {
+      } else if (!state.reduced && blend && (state.hover || state.auto)) {
         const goal = state.hover ? 0.085 : 0.045;
         state.velocity += (goal - state.velocity) * (1 - Math.exp(-3 * delta));
         state.position += state.velocity * delta;
@@ -115,8 +116,9 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         state.velocity = Math.abs(coast.velocity) < 0.001 ? 0 : coast.velocity;
         state.target = state.position;
       }
-      // Dense video sequences cross-fade. A handful of real photos must cut, or two different shots ghost on top of each other.
-      const sample = list.length >= 48
+      // Cross-fade only sequences shot on a locked turntable. A generated orbit
+      // does not share one background, so blending paints two cars at once.
+      const sample = blend
         ? frameBlendAt(state.position, list.length)
         : { first: frameAt(state.position, list.length), next: 0, mix: 0 };
       const frame = list[sample.first];
@@ -138,7 +140,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         canvas.dataset["turn"] = String(state.position);
       }
       if (state.dragging || Math.abs(state.target - state.position) > 0.0001 || state.velocity ||
-        (!state.reduced && (state.hover || state.auto))) raf = requestAnimationFrame(tick);
+        (!state.reduced && blend && (state.hover || state.auto))) raf = requestAnimationFrame(tick);
       else previous = 0;
     };
     const start = () => { if (!raf && active() && !disposed) raf = requestAnimationFrame(tick); };
@@ -179,7 +181,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       media.removeEventListener("change", reduced);
       wake.current = () => {};
     };
-  }, [size]);
+  }, [size, slug]);
 
   const onDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!event.isPrimary || event.button !== 0) return;
