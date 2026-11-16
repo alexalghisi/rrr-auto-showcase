@@ -21,6 +21,7 @@ import { CookieConsent } from "@/components/cookie-consent";
 import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { GOOGLE_CONSENT_BOOTSTRAP } from "@/lib/google-consent";
 import { whenIdleAfterLoad } from "@/lib/after-load";
+import { SOCIAL_IMAGE } from "@/lib/seo";
 
 
 // Toasts are only needed after an interaction, so sonner is kept out of the entry bundle.
@@ -127,7 +128,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "Bremen Auto" },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "ro_RO" },
+      { property: "og:image", content: SOCIAL_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: SOCIAL_IMAGE },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

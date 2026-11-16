@@ -14,7 +14,7 @@ export const Route = createFileRoute("/termeni")({
       <h2>Informații despre mașini</h2>
       <p>
         Anunțurile au caracter informativ și nu reprezintă o ofertă fermă. Prețurile, dotările și disponibilitatea se
-        confirmă la telefon sau la vizionare. Rotirile 360° marcate „Simulare generată cu AI" sunt ilustrative; pozele reale
+        confirmă la telefon sau la vizionare. Rotirile 360° marcate „Rotire ilustrativă" sunt ilustrative; pozele reale
         și vizionarea fac referință.
       </p>
       <h2>Rezervări și finanțare</h2>
