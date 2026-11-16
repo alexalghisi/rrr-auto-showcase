@@ -1,6 +1,6 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
-import { coastTurn, followTurn, frameAt, frameBlendAt, dragTurn } from "./spin-motion";
+import { coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn, wrapTurn } from "./spin-motion";
 
 describe("turntable motion", () => {
   test("one image-width drag is exactly one turn for mouse and touch at every car size", () => {
@@ -20,6 +20,14 @@ describe("turntable motion", () => {
       assert.equal(seam.first, count - 1);
       assert.equal(seam.next, 0);
       assert.ok(Math.abs(seam.mix - 0.5) < 1e-10);
+    }
+  });
+  test("a stopped spin lands on one frame with no mix", () => {
+    for (const count of [48, 124, 248]) {
+      for (const turn of [0.02, 0.5, 0.98, 1 - 0.1 / count, 2.5 / count]) {
+        const settled = settleTurn(turn, count);
+        assert.equal(frameAt(settled, count), Math.round(wrapTurn(turn) * count) % count);
+      }
     }
   });
   test("wraps in both directions for every sequence length", () => {

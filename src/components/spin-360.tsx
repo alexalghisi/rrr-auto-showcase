@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCw, Hand } from "lucide-react";
 import { spinFor } from "@/lib/spin360";
 import { loadSpinFrames, type SpinFrame } from "@/lib/spin-frames";
-import { coastTurn, followTurn, frameAt, frameBlendAt, dragTurn } from "@/lib/spin-motion";
+import { coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn } from "@/lib/spin-motion";
 import { whenIdleAfterLoad } from "@/lib/after-load";
 
 type Props = {
@@ -100,27 +100,35 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       previous = now;
       const list = frames.current;
       if (!list.length) return;
+      // Cards stay on hard cuts. A cross-fade of the small frames reads as a blur,
+      // and it used to freeze on screen when the pointer left.
+      const play = !state.reduced && (state.hover || state.auto) && (size === "sm" || blend);
       if (state.dragging) {
         // Follow the actual pointer without spring lag, so reversing never continues the old direction.
         state.position = state.target;
       } else if (Math.abs(state.target - state.position) > 0.0001) {
         state.position = followTurn(state.position, state.target, delta);
-      } else if (!state.reduced && blend && (state.hover || state.auto)) {
+      } else if (play) {
         const goal = state.hover ? 0.085 : 0.045;
         state.velocity += (goal - state.velocity) * (1 - Math.exp(-3 * delta));
         state.position += state.velocity * delta;
         state.target = state.position;
+      } else if (Math.abs(state.velocity) < 0.02) {
+        const settled = settleTurn(state.position, list.length);
+        state.position = settled;
+        state.target = settled;
+        state.velocity = 0;
       } else {
         const coast = coastTurn(state.position, state.velocity, delta);
         state.position = coast.position;
         state.velocity = Math.abs(coast.velocity) < 0.001 ? 0 : coast.velocity;
         state.target = state.position;
       }
-      // Cross-fade only sequences shot on a locked turntable. A generated orbit
-      // does not share one background, so blending paints two cars at once.
-      const sample = blend
+      const moving = state.dragging || Math.abs(state.target - state.position) > 0.0001 || state.velocity !== 0 || play;
+      // Cross-fade only a large, locked turntable while it is actually moving.
+      const sample = moving && blend && size === "lg"
         ? frameBlendAt(state.position, list.length)
-        : { first: frameAt(state.position, list.length), next: 0, mix: 0 };
+        : { first: frameAt(state.position, list.length), next: frameAt(state.position, list.length), mix: 0 };
       const frame = list[sample.first];
       const next = list[sample.next];
       const drawn = sample.first + sample.mix;
@@ -139,8 +147,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         canvas.dataset["frame"] = String(sample.first);
         canvas.dataset["turn"] = String(state.position);
       }
-      if (state.dragging || Math.abs(state.target - state.position) > 0.0001 || state.velocity ||
-        (!state.reduced && blend && (state.hover || state.auto))) raf = requestAnimationFrame(tick);
+      if (moving) raf = requestAnimationFrame(tick);
       else previous = 0;
     };
     const start = () => { if (!raf && active() && !disposed) raf = requestAnimationFrame(tick); };

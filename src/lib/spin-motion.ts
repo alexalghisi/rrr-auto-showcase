@@ -14,6 +14,12 @@ export function frameAt(turn: number, count: number) {
   return Math.floor(wrapTurn(turn) * count) % count;
 }
 
+/** Turn value inside one whole frame, so a stopped spin is never a cross-fade. */
+export function settleTurn(turn: number, count: number) {
+  const index = Math.round(wrapTurn(turn) * count) % count;
+  return (index + 1e-4) / count;
+}
+
 /** Fractional sampling avoids snapping slow pointer movements to whole frames. */
 export function frameBlendAt(turn: number, count: number) {
   const sample = wrapTurn(turn) * count;
