@@ -155,7 +155,8 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     resize.observe(box);
     const observer = new IntersectionObserver(([entry]) => {
       state.visible = !!entry?.isIntersecting;
-      if (state.visible) start();
+      // Fetch frames as soon as the car is on screen, so the first finger drag rotates immediately.
+      if (state.visible) { setWanted(true); start(); }
       else { cancelAnimationFrame(raf); raf = 0; previous = 0; }
     });
     observer.observe(box);
