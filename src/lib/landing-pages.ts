@@ -250,6 +250,17 @@ const MODEL_SEEDS: ModelSeed[] = [
     checks: "sistemul 4x4, cutia de transfer și uzura amortizoarelor",
   },
   {
+    slug: "masini-4x4-second-hand-cluj",
+    brand: "",
+    match: (car) =>
+      /4x4|awd|integral/.test(norm(car.drivetrain)) ||
+      /4x4|quattro|xdrive|4motion|4matic/.test(norm(`${car.model} ${car.trim ?? ""}`)),
+    label: "4x4",
+    strengths:
+      "tracțiune integrală pentru iernile din Apuseni, siguranță pe drumurile de munte și tractare fără griji",
+    checks: "cutia de transfer, diferențialele, cuplajul Haldex și uzura uniformă a anvelopelor",
+  },
+  {
     slug: "break-second-hand-cluj",
     brand: "",
     match: (car) => norm(car.body_type).includes("break") || norm(car.body_type).includes("combi"),
