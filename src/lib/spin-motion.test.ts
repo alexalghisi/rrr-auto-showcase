@@ -52,3 +52,9 @@ describe("turntable motion", () => {
     assert.ok(slow.velocity < 0.01);
   });
 });
+describe("settleTurn stride", () => {
+  test("rests only on every 4th frame when the in-betweens are generated", () => {
+    assert.equal(frameAt(settleTurn(6 / 192, 192, 4), 192), 8);
+    assert.equal(frameAt(settleTurn(5 / 192, 192, 4), 192), 4);
+  });
+});

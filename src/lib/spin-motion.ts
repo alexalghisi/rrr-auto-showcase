@@ -15,8 +15,10 @@ export function frameAt(turn: number, count: number) {
 }
 
 /** Turn value inside one whole frame, so a stopped spin is never a cross-fade. */
-export function settleTurn(turn: number, count: number) {
-  const index = Math.round(wrapTurn(turn) * count) % count;
+export function settleTurn(turn: number, count: number, stride = 1) {
+  // stride > 1: rest only on real photos, never on a generated in-between frame.
+  const step = Math.max(1, Math.floor(stride));
+  const index = (Math.round((wrapTurn(turn) * count) / step) * step) % count;
   return (index + 1e-4) / count;
 }
 

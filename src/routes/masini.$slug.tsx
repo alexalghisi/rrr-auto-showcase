@@ -16,6 +16,7 @@ import { spinFor } from "@/lib/spin360";
 import { getPublicCar } from "@/lib/cars.functions";
 import { SITE, absolutePhotoUrl, carWhatsappUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
+import { carFaq } from "@/lib/car-seo";
 import { LANDING_PAGES, type LandingPage } from "@/lib/landing-pages";
 
 export const Route = createFileRoute("/masini/$slug")({
@@ -109,8 +110,13 @@ export const Route = createFileRoute("/masini/$slug")({
                   },
                 }
               : {}),
+            sku: car.slug,
+            ...(car.power_hp ? { additionalProperty: [{ "@type": "PropertyValue", name: "Putere", value: `${car.power_hp} CP` }] } : {}),
             offers: {
               "@type": "Offer",
+              url,
+              areaServed: { "@type": "Country", name: "România" },
+              priceValidUntil: `${new Date().getFullYear() + 1}-12-31`,
               price: Number(car.price),
               priceCurrency: car.currency,
               itemCondition: "https://schema.org/UsedCondition",
@@ -306,6 +312,18 @@ function CarPage() {
               </div>
             </section>
           )}
+
+          <section className="mt-10">
+            <h2 className="text-2xl">Întrebări frecvente despre {title} {car.year}</h2>
+            <dl className="mt-4 space-y-4">
+              {carFaq(car).map((item) => (
+                <div key={item.q} className="surface-card rounded-xl p-4">
+                  <dt className="font-semibold">{item.q}</dt>
+                  <dd className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{item.a}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
 
           {car.features.length > 0 && (
             <section className="mt-10">

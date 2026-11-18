@@ -87,6 +87,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     if (!ctx) return;
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
     const blend = spinFor(slug, size)?.blend !== false;
+    const rest = spinFor(slug, size)?.rest ?? 1;
     let raf = 0;
     let previous = 0;
     let disposed = false;
@@ -115,10 +116,13 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         state.position += state.velocity * delta;
         state.target = state.position;
       } else if (Math.abs(state.velocity) < 0.02) {
-        const settled = settleTurn(state.position, list.length);
-        state.position = settled;
-        state.target = settled;
+        const settled = settleTurn(state.position, list.length, rest);
+        let offset = settled - (((state.position % 1) + 1) % 1);
+        if (offset > 0.5) offset -= 1; else if (offset < -0.5) offset += 1;
         state.velocity = 0;
+        // Ease onto the resting frame (the follow branch above) instead of snapping to it.
+        if (Math.abs(offset) > 0.0001) state.target = state.position + offset;
+        else { state.position = settled; state.target = settled; }
       } else {
         const coast = coastTurn(state.position, state.velocity, delta);
         state.position = coast.position;
@@ -127,7 +131,8 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       }
       const moving = state.dragging || Math.abs(state.target - state.position) > 0.0001 || state.velocity !== 0 || play;
       // Cross-fade only a large, locked turntable while it is actually moving.
-      const sample = moving && blend && size === "lg"
+      // Cards cross-fade too while a finger/mouse turns them (not during hover auto-play).
+      const sample = moving && blend && (size === "lg" || !play)
         ? frameBlendAt(state.position, list.length)
         : { first: frameAt(state.position, list.length), next: frameAt(state.position, list.length), mix: 0 };
       const frame = list[sample.first];
