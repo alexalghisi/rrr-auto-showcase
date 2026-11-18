@@ -20,6 +20,22 @@ async function slot<T>(work: () => Promise<T>): Promise<T> {
   }
 }
 
+/**
+ * Safari decodes/uploads an image the first time it is drawn, which froze the first
+ * pass of every sheet mid-drag (skipped frames, lag behind the finger). Drawing each
+ * sheet once into a tiny canvas before the frames are published moves that cost to load time.
+ */
+function warm(image: CanvasImageSource) {
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = 8; canvas.height = 8;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(image, 0, 0, 8, 8);
+    ctx.getImageData(0, 0, 1, 1); // force the draw to complete now
+  } catch { /* warming is best-effort */ }
+}
+
 async function loadSheet(url: string) {
   for (let attempt = 0; attempt < 2; attempt++) {
     const image = new Image();
@@ -29,8 +45,14 @@ async function loadSheet(url: string) {
       await image.decode();
       // A GPU-ready bitmap avoids a decode/upload hitch the first time each sheet is drawn mid-drag.
       if (typeof createImageBitmap === "function") {
-        try { return await createImageBitmap(image); } catch { /* fall back to the element */ }
+        try {
+          const bitmap = await createImageBitmap(image);
+          image.src = ""; // drop the second decoded copy; phones run out of image memory otherwise
+          warm(bitmap);
+          return bitmap;
+        } catch { /* fall back to the element */ }
       }
+      warm(image);
       return image;
     }
     catch { /* One retry for transient network failures. */ }
@@ -39,7 +61,7 @@ async function loadSheet(url: string) {
 }
 
 /** Decode whole sheets before publishing frames; share loads across cards and detail pages. */
-export function loadSpinFrames(slug: string, size: "lg" | "sm") {
+export function loadSpinFrames(slug: string, size: "lg" | "md" | "sm") {
   const key = `${slug}:${size}`;
   const existing = cache.get(key);
   if (existing) { cache.delete(key); cache.set(key, existing); return existing; }
@@ -63,6 +85,9 @@ export function loadSpinFrames(slug: string, size: "lg" | "sm") {
     });
     return { frames, complete: frames.length === spin.count };
   })();
+  // Keep only one large (md/lg) sequence decoded: several cars' worth of big frames
+  // exhausted Safari's image memory and caused re-decode stalls mid-drag.
+  if (size !== "sm") for (const other of [...cache.keys()]) if (other !== key && !other.endsWith(":sm")) cache.delete(other);
   cache.set(key, promise);
   while (cache.size > MAX_CACHED) {
     const oldest = cache.keys().next().value;

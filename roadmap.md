@@ -6,3 +6,7 @@
 # WhatsApp contact
 - [x] Put a WhatsApp button on every car: on each listing card and in the car page's price panel.
 - [x] Add the floating WhatsApp bubble fixed bottom-right that follows the scroll, car-specific on car pages, general elsewhere.
+
+- [ ] Rotire 360° urmărește degetul în timp real pe telefon (toate mașinile)
+- [ ] Rotire 360° pentru toate mașinile disponibile în stoc
+- [ ] Import constant mașini de pe Facebook și OLX (verificare + reparare)

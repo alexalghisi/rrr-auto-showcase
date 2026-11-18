@@ -16,23 +16,26 @@ export const SPIN_360: Record<string, { frames: number; small: number; ext?: "jp
   "suzuki-vitara-2011-0-3444006809": { frames: 211, small: 106 },
 };
 
-const V = "v=20261119-smooth";
+const V = "v=20261119-phone";
 
 export type SpinSheet = { url: string; first: number; frames: number };
 
-export function spinFor(slug: string, size: "lg" | "sm" = "lg") {
+export function spinFor(slug: string, size: "lg" | "md" | "sm" = "lg") {
   const s = SPIN_360[slug];
   if (!s) return null;
   const lg = size === "lg";
+  // md = the small sequence's frames (every other large frame) at 512×288, in 4×6 sheets:
+  // sharp on a phone screen, a third of the decoded memory of lg, so phones never stall mid-drag.
+  const md = size === "md";
   const count = lg ? s.frames : s.small;
-  const frameW = lg ? 640 : 320;
-  const frameH = lg ? 360 : 180;
-  const cols = lg ? 6 : 12;
-  const perSheet = lg ? 48 : count;
+  const frameW = lg ? 640 : md ? 512 : 320;
+  const frameH = lg ? 360 : md ? 288 : 180;
+  const cols = lg ? 6 : md ? 4 : 12;
+  const perSheet = lg ? 48 : md ? 24 : count;
   const sheets: SpinSheet[] = [];
   for (let first = 0, i = 0; first < count; first += perSheet, i++) {
     sheets.push({
-      url: `/spin/${slug}/${size}-${i}.${s.ext ?? "webp"}?${V}`,
+      url: `/spin/${slug}/${size}-${i}.${md ? "webp" : s.ext ?? "webp"}?${V}`,
       first,
       frames: Math.min(perSheet, count - first),
     });

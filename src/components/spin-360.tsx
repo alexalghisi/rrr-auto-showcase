@@ -34,6 +34,9 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const frames = useRef<SpinFrame[]>([]);
+  // Real-photo stops for the sequence currently on screen (lg, md and sm have different counts).
+  const pending = useRef<(() => void) | null>(null);
+  const stops = useRef<{ rest: number; generated: Array<[number, number]> }>({ rest: 1, generated: [] });
   const wake = useRef<() => void>(() => {});
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -49,7 +52,14 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     if (!load && !wanted) return;
     let cancelled = false;
     let upgraded = false;
-    const publish = (list: SpinFrame[]) => {
+    const publish = (list: SpinFrame[], which: "lg" | "md" | "sm") => {
+      // Never swap to the sharper sequence under a moving finger: it would jump/stall mid-drag.
+      if (st.current.dragging && frames.current.length) {
+        pending.current = () => publish(list, which);
+        return;
+      }
+      const info = spinFor(slug, which);
+      stops.current = { rest: info?.rest ?? 1, generated: info?.generated ?? [] };
       frames.current = list;
       st.current.drawn = -1;
       setReady(true);
@@ -58,17 +68,20 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     };
     // The small sequence is the same orbit: it is ready fast (one file, often cached
     // from the card) and keeps mobile memory bounded. Desktop upgrades to large frames.
-    const upgrade = size === "lg"; // sharp 640px frames on phones too
+    const upgrade = size === "lg";
+    // Phones/tablets get the 512px sequence: sharp on their screens and light enough
+    // to stay decoded in memory, so every frame is drawn instantly under the finger.
+    const sharp: "lg" | "md" = window.matchMedia("(max-width: 1023px), (pointer: coarse)").matches ? "md" : "lg";
     const start = () => {
       loadSpinFrames(slug, "sm").then((sequence) => {
         if (cancelled || upgraded) return;
-        if (sequence.complete) publish(sequence.frames);
+        if (sequence.complete) publish(sequence.frames, "sm");
         else if (!upgrade) setFailed(true);
       });
       if (upgrade) {
-        loadSpinFrames(slug, "lg").then((sequence) => {
+        loadSpinFrames(slug, sharp).then((sequence) => {
           if (cancelled) return;
-          if (sequence.complete) { upgraded = true; publish(sequence.frames); }
+          if (sequence.complete) { upgraded = true; publish(sequence.frames, sharp); }
           else if (!frames.current.length) setFailed(true);
         });
       }
@@ -87,8 +100,6 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     if (!ctx) return;
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
     const blend = spinFor(slug, size)?.blend !== false;
-    const rest = spinFor(slug, size)?.rest ?? 1;
-    const generated = spinFor(slug, size)?.generated ?? [];
     let raf = 0;
     let previous = 0;
     let disposed = false;
@@ -117,8 +128,8 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         state.position += state.velocity * delta;
         state.target = state.position;
       } else if (Math.abs(state.velocity) < 0.02) {
-        const near = frameAt(settleTurn(state.position, list.length, rest), list.length);
-        const settled = (avoidGenerated(near, list.length, generated) + 1e-4) / list.length;
+        const near = frameAt(settleTurn(state.position, list.length, stops.current.rest), list.length);
+        const settled = (avoidGenerated(near, list.length, stops.current.generated) + 1e-4) / list.length;
         let offset = settled - (((state.position % 1) + 1) % 1);
         if (offset > 0.5) offset -= 1; else if (offset < -0.5) offset += 1;
         state.velocity = 0;
@@ -233,6 +244,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     const state = st.current;
     if (state.pointer !== event.pointerId) return;
     state.dragging = false; state.pointer = null;
+    const swap = pending.current; pending.current = null; swap?.();
     if (event.type !== "pointerup" || performance.now() - state.lastTime > 100) state.velocity = 0;
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     wake.current();
