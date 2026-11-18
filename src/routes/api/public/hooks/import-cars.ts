@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
- * Import automat în fiecare oră, apelat de pg_cron.
+ * Import automat la fiecare 2 ore (OLX), Facebook la cel mult 8 ore; apelat de pg_cron.
  * Autentificare: header `apikey` cu cheia publishable a proiectului.
  */
 export const Route = createFileRoute("/api/public/hooks/import-cars")({
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/api/public/hooks/import-cars")({
             const { backfillImages } = await import("@/lib/import.server");
             return Response.json({ ok: true, backfill: await backfillImages(40) });
           }
-          const results = await importAll();
+          const results = await importAll({ force: new URL(request.url).searchParams.get("force") === "1" });
           return Response.json({ ok: true, results });
         } catch (error) {
           console.error("Import cars failed", error);

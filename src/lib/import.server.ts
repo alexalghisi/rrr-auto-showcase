@@ -1,3 +1,4 @@
+import { facebookDue } from "./import-schedule";
 /** Import automat OLX (API public OLX, fără Apify) + Facebook (Graph API; Apify doar ca rezervă). */
 import { slugify } from "./site";
 
@@ -572,10 +573,21 @@ async function logRun(result: ImportResult) {
   });
 }
 
-export async function importAll(): Promise<ImportResult[]> {
+
+export async function importAll(options: { force?: boolean } = {}): Promise<ImportResult[]> {
   const results: ImportResult[] = [];
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data: lastFb } = await supabaseAdmin
+    .from("import_runs")
+    .select("created_at")
+    .eq("source", "facebook")
+    .is("errors", null)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const sources: SourceKey[] = options.force || facebookDue(lastFb?.created_at ?? null) ? ["facebook", "olx"] : ["olx"];
   // Actorii sunt porniți serial pentru a evita timeout-urile gateway-ului la două rulări lungi simultan.
-  for (const source of ["facebook", "olx"] as SourceKey[]) results.push(await importSource(source));
+  for (const source of sources) results.push(await importSource(source));
   // Pozele vechi, încă găzduite extern, sunt mutate treptat în storage-ul propriu.
   await backfillImages(12);
   // Orice schimbare de stoc declanșează reindexarea completă (sitemap + IndexNow).
