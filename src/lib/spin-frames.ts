@@ -1,7 +1,7 @@
 import { spinFor } from "./spin360";
 
 /** One frame = a rectangle inside a decoded sprite sheet. */
-export type SpinFrame = { image: HTMLImageElement; sx: number; sy: number; sw: number; sh: number };
+export type SpinFrame = { image: CanvasImageSource; sx: number; sy: number; sw: number; sh: number };
 type Sequence = { frames: SpinFrame[]; complete: boolean };
 
 const cache = new Map<string, Promise<Sequence>>();
@@ -25,7 +25,14 @@ async function loadSheet(url: string) {
     const image = new Image();
     image.decoding = "async";
     image.src = url;
-    try { await image.decode(); return image; }
+    try {
+      await image.decode();
+      // A GPU-ready bitmap avoids a decode/upload hitch the first time each sheet is drawn mid-drag.
+      if (typeof createImageBitmap === "function") {
+        try { return await createImageBitmap(image); } catch { /* fall back to the element */ }
+      }
+      return image;
+    }
     catch { /* One retry for transient network failures. */ }
   }
   return null;

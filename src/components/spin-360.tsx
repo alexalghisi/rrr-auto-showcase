@@ -58,7 +58,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     };
     // The small sequence is the same orbit: it is ready fast (one file, often cached
     // from the card) and keeps mobile memory bounded. Desktop upgrades to large frames.
-    const upgrade = size === "lg" && !window.matchMedia("(max-width: 767px)").matches;
+    const upgrade = size === "lg"; // sharp 640px frames on phones too
     const start = () => {
       loadSpinFrames(slug, "sm").then((sequence) => {
         if (cancelled || upgraded) return;
@@ -85,6 +85,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     if (!box || !canvas) return;
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
     const blend = spinFor(slug, size)?.blend !== false;
     let raf = 0;
     let previous = 0;
@@ -157,10 +158,11 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       state.width = entry.contentRect.width;
       state.height = entry.contentRect.height;
       // Do not upscale 480/854px frames into huge retina canvases.
-      const dpr = Math.min(window.devicePixelRatio || 1, size === "sm" ? 1 : 1.5);
-      const scale = Math.min(dpr, (size === "sm" ? 480 : 854) / Math.max(1, state.width));
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const scale = Math.min(dpr, (size === "sm" ? 640 : 1280) / Math.max(1, state.width));
       canvas.width = Math.max(1, Math.round(state.width * scale));
       canvas.height = Math.max(1, Math.round(state.height * scale));
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
       state.drawn = -1;
       start();
     });
