@@ -1,4 +1,4 @@
-/** Import automat OLX + Facebook prin conexiunea Apify. */
+/** Import automat OLX (API public OLX, fără Apify) + Facebook (Graph API; Apify doar ca rezervă). */
 import { slugify } from "./site";
 
 const APIFY_GATEWAY = "https://connector-gateway.lovable.dev/apify";
@@ -235,6 +235,98 @@ async function scrapeFacebookGraph(token: string): Promise<ScrapedCar[]> {
   return cars;
 }
 
+/** OLX direct, prin API-ul public folosit chiar de site-ul olx.ro — gratuit, fără Apify. */
+const OLX_API = "https://www.olx.ro/api/v1/offers/";
+
+/** Parametri numerici: cheia OLX e valoarea brută ("185000"); la restul eticheta e textul afișat ("Seria 3"). */
+const OLX_NUMERIC_PARAMS = new Set(["year", "rulaj_pana", "engine_power", "enginesize", "door_count"]);
+
+function olxParamValue(entry: Json): string {
+  const value = entry["value"];
+  if (value && typeof value === "object") {
+    const v = value as Json;
+    if (typeof v["value"] === "number") return String(v["value"]);
+    const key = asText(v["key"]);
+    const label = asText(v["label"]);
+    return OLX_NUMERIC_PARAMS.has(asText(entry["key"])) ? key || label : label || key;
+  }
+  return asText(value);
+}
+
+function decodeEntities(text: string): string {
+  return text
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#(\d+);/g, (_, code: string) => String.fromCodePoint(Number(code)))
+    .replace(/&amp;/gi, "&");
+}
+
+/** Transformă o ofertă din API-ul OLX în forma așteptată de parseOlxItem. */
+export function olxApiOfferToItem(offer: Json): Json {
+  const rawParams = Array.isArray(offer["params"]) ? (offer["params"] as Json[]) : [];
+  let price = 0;
+  let currency = "EUR";
+  const params: Json[] = [];
+  for (const entry of rawParams) {
+    if (!entry || typeof entry !== "object") continue;
+    const key = asText(entry["key"]);
+    if (key === "price") {
+      const v = (entry["value"] ?? {}) as Json;
+      price = asNumber(v["value"]);
+      currency = asText(v["currency"]) || currency;
+      continue;
+    }
+    params.push({ key, value: olxParamValue(entry) });
+  }
+  const photos = Array.isArray(offer["photos"]) ? (offer["photos"] as Json[]) : [];
+  const images = photos
+    .map((p) => asText(p["link"]).replace("{width}", "1280").replace("{height}", "960"))
+    .filter(Boolean);
+  const user = (offer["user"] ?? {}) as Json;
+  return {
+    sellerId: user["id"],
+    url: offer["url"],
+    title: offer["title"],
+    listingId: String(offer["id"] ?? ""),
+    description: decodeEntities(
+      asText(offer["description"])
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<[^>]+>/g, ""),
+    ).trim(),
+    params,
+    price,
+    priceCurrency: currency,
+    images,
+  };
+}
+
+async function scrapeOlxDirect(): Promise<ScrapedCar[]> {
+  const cars: ScrapedCar[] = [];
+  let next: string | null = `${OLX_API}?user_id=${OLX_SELLER_ID}&limit=50&offset=0`;
+  for (let page = 0; next && page < 5; page++) {
+    const response = await fetch(next, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36",
+        Accept: "application/json",
+        "Accept-Language": "ro-RO,ro;q=0.9",
+      },
+    });
+    const raw = await response.text();
+    if (!response.ok) throw new Error(`OLX ${response.status}: ${raw.slice(0, 200)}`);
+    const body = JSON.parse(raw) as { data?: Json[]; links?: { next?: { href?: string } } };
+    for (const offer of body.data ?? []) {
+      const car = parseOlxItem(olxApiOfferToItem(offer));
+      if (car && isOwnListing("olx", car.url)) cars.push(car);
+    }
+    next = body.links?.next?.href ?? null;
+  }
+  return cars;
+}
+
 async function scrapeSource(source: SourceKey): Promise<ScrapedCar[]> {
   if (source === "facebook") {
     const graphToken = process.env["FB_PAGE_ACCESS_TOKEN"];
@@ -243,6 +335,12 @@ async function scrapeSource(source: SourceKey): Promise<ScrapedCar[]> {
     return items
       .map(parseFacebookPost)
       .filter((car): car is ScrapedCar => Boolean(car) && isOwnListing("facebook", car!.url));
+  }
+  try {
+    return await scrapeOlxDirect();
+  } catch (error) {
+    // Rezervă: dacă API-ul OLX blochează cererea și există conexiune Apify, o folosim.
+    if (!process.env["APIFY_API_KEY"]) throw error;
   }
   const items = await runActor(OLX_ACTOR, {
     mode: "search",
