@@ -1,6 +1,6 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
-import { coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn, wrapTurn } from "./spin-motion";
+import { avoidGenerated, coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn, wrapTurn } from "./spin-motion";
 
 describe("turntable motion", () => {
   test("one image-width drag is exactly one turn for mouse and touch at every car size", () => {
@@ -56,5 +56,13 @@ describe("settleTurn stride", () => {
   test("rests only on every 4th frame when the in-betweens are generated", () => {
     assert.equal(frameAt(settleTurn(6 / 192, 192, 4), 192), 8);
     assert.equal(frameAt(settleTurn(5 / 192, 192, 4), 192), 4);
+  });
+});
+
+describe("avoidGenerated", () => {
+  test("a stop inside a filled gap moves to the nearest real photo", () => {
+    assert.equal(avoidGenerated(122, 266, [[120, 138]]), 119);
+    assert.equal(avoidGenerated(136, 266, [[120, 138]]), 139);
+    assert.equal(avoidGenerated(50, 266, [[120, 138]]), 50);
   });
 });

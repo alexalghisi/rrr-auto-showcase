@@ -32,3 +32,13 @@ export function frameBlendAt(turn: number, count: number) {
 export function dragTurn(start: number, startX: number, pointerX: number, width: number) {
   return start + (startX - pointerX) / Math.max(1, width);
 }
+/** Move a resting frame out of generated in-between ranges to the nearest real photo. */
+export function avoidGenerated(index: number, count: number, ranges: Array<[number, number]>) {
+  for (const [a, b] of ranges) {
+    if (index >= a && index <= b) {
+      const before = (a - 1 + count) % count, after = (b + 1) % count;
+      return index - a < b - index ? before : after;
+    }
+  }
+  return index;
+}

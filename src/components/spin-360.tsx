@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCw, Hand } from "lucide-react";
 import { spinFor } from "@/lib/spin360";
 import { loadSpinFrames, type SpinFrame } from "@/lib/spin-frames";
-import { coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn } from "@/lib/spin-motion";
+import { avoidGenerated, coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn } from "@/lib/spin-motion";
 import { whenIdleAfterLoad } from "@/lib/after-load";
 
 type Props = {
@@ -88,6 +88,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
     const blend = spinFor(slug, size)?.blend !== false;
     const rest = spinFor(slug, size)?.rest ?? 1;
+    const generated = spinFor(slug, size)?.generated ?? [];
     let raf = 0;
     let previous = 0;
     let disposed = false;
@@ -116,7 +117,8 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         state.position += state.velocity * delta;
         state.target = state.position;
       } else if (Math.abs(state.velocity) < 0.02) {
-        const settled = settleTurn(state.position, list.length, rest);
+        const near = frameAt(settleTurn(state.position, list.length, rest), list.length);
+        const settled = (avoidGenerated(near, list.length, generated) + 1e-4) / list.length;
         let offset = settled - (((state.position % 1) + 1) % 1);
         if (offset > 0.5) offset -= 1; else if (offset < -0.5) offset += 1;
         state.velocity = 0;
