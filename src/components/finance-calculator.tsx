@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { calcFinance, eur, DEFAULT_APR } from "@/lib/finance";
 import { submitLead } from "@/lib/leads.functions";
-import { whatsappUrl } from "@/lib/site";
+import { carWhatsappUrl, whatsappUrl } from "@/lib/site";
 
 type Props = {
   price: number;
@@ -62,7 +62,7 @@ export function FinanceCalculator({ price, carSlug, carTitle }: Props) {
       setDone(true);
       toast.success("Cererea a fost trimisă. Te sunăm în cel mai scurt timp.");
     } catch {
-      toast.error("Nu am putut trimite cererea. Sună-ne la 0751 692 335.");
+      toast.error("Nu am putut trimite cererea. Scrie-ne pe WhatsApp.");
     } finally {
       setSending(false);
     }
@@ -162,7 +162,11 @@ export function FinanceCalculator({ price, carSlug, carTitle }: Props) {
               {sending ? <Loader2 className="size-4 animate-spin" /> : null} Cere pre-aprobare
             </Button>
             <Button asChild size="lg" variant="outline" className="flex-1">
-              <a href={whatsappUrl(summary)} target="_blank" rel="noopener noreferrer">
+              <a
+                href={carSlug ? carWhatsappUrl(carSlug, summary) : whatsappUrl(summary)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Trimite pe WhatsApp
               </a>
             </Button>

@@ -40,7 +40,7 @@ export const askAdvisor = createServerFn({ method: "POST" })
       )
       .join("\n");
 
-    const system = `Ești consilierul auto al Bremen Auto, parc auto pe DN1, Luna de Sus, comuna Florești, lângă Cluj-Napoca. Vindem mașini second hand aduse din Germania, cash sau în rate, cu livrare în toată România. Program non-stop, telefon 0751 692 335.
+    const system = `Ești consilierul auto al Bremen Auto, parc auto pe DN1, Luna de Sus, comuna Florești, lângă Cluj-Napoca. Vindem mașini second hand aduse din Germania, cash sau în rate, cu livrare în toată România. Program non-stop. Contactul este pe WhatsApp. Nu dicta numărul de telefon.
 
 Reguli:
 - Răspunzi DOAR în limba română, scurt, prietenos și concret (max 120 de cuvinte).

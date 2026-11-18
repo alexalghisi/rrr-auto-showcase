@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Star, Copy, Check, MessageCircle, Phone, MapPin } from "lucide-react";
+import { Star, Copy, Check, MessageCircle, MapPin } from "lucide-react";
 import { useState } from "react";
 
 import { SITE, whatsappUrl } from "@/lib/site";
@@ -104,10 +104,12 @@ function ReviewsPage() {
             <MessageCircle className="size-4 text-primary" /> Trimite pe WhatsApp
           </a>
           <a
-            href={SITE.phoneHref}
+            href={whatsappUrl("Bună ziua! Am văzut site-ul Bremen Auto și vreau detalii despre o mașină.")}
+            target="_blank"
+            rel="noopener noreferrer"
             className="surface-card flex items-center justify-center gap-2 rounded-lg p-4 text-sm font-medium transition-colors hover:border-primary/50"
           >
-            <Phone className="size-4 text-primary" /> {SITE.phone}
+            <MessageCircle className="size-4 text-primary" /> Scrie-ne pe WhatsApp
           </a>
         </div>
       </section>

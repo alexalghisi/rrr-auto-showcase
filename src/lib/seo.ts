@@ -1,14 +1,20 @@
+import heroImage from "@/assets/hero-bremen-auto.jpg";
 import { SITE } from "./site";
 
 /** Structured data reused across routes. Keep in sync with src/lib/site.ts. */
 
 export const ORG_ID = "#bremen-auto";
 
+/** Imaginea implicită pentru og:image / twitter:image; paginile de mașină o suprascriu cu poza proprie. */
+export const SOCIAL_IMAGE = `https://bremenauto.ro${heroImage}`;
+
 export const dealerSchema = {
   "@context": "https://schema.org",
   "@type": "AutoDealer",
   "@id": ORG_ID,
   name: SITE.name,
+  url: "https://bremenauto.ro/",
+  image: SOCIAL_IMAGE,
   alternateName: ["Bremen Auto Florești", "Bremen Auto Cluj", "Bremen Auto Luna de Sus"],
   description:
     "Parc auto pe DN1, în Luna de Sus (comuna Florești), județul Cluj: mașini second hand aduse din Germania, verificate tehnic, cu acte complete și livrare pe platformă în toată România.",
@@ -112,7 +118,7 @@ export const HOME_FAQS = [
   },
   {
     q: "Care este programul Bremen Auto?",
-    a: "Programul este non-stop, 24/7. Sună la 0751 692 335 sau scrie pe WhatsApp oricând și stabilim o vizionare.",
+    a: "Programul este non-stop, 24/7. Scrie pe WhatsApp oricând și stabilim o vizionare.",
   },
   {
     q: "De unde provin mașinile?",

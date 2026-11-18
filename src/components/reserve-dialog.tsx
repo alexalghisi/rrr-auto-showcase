@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { submitLead } from "@/lib/leads.functions";
-import { whatsappUrl } from "@/lib/site";
+import { carWhatsappUrl } from "@/lib/site";
 
 type Props = {
   carSlug: string;
@@ -56,7 +56,7 @@ export function ReserveDialog({ carSlug, carTitle, price }: Props) {
       setDone(true);
       toast.success("Mașina e blocată 24h pe numele tău. Te sunăm pentru confirmare.");
     } catch {
-      toast.error("Nu am putut trimite rezervarea. Sună-ne la 0751 692 335.");
+      toast.error("Nu am putut trimite rezervarea. Scrie-ne pe WhatsApp.");
     } finally {
       setSending(false);
     }
@@ -123,7 +123,7 @@ export function ReserveDialog({ carSlug, carTitle, price }: Props) {
                 {sending ? <Loader2 className="size-4 animate-spin" /> : null} Confirmă rezervarea
               </Button>
               <Button asChild variant="outline" className="flex-1">
-                <a href={whatsappUrl(message)} target="_blank" rel="noopener noreferrer">
+                <a href={carWhatsappUrl(carSlug, message)} target="_blank" rel="noopener noreferrer">
                   Rezervă pe WhatsApp
                 </a>
               </Button>

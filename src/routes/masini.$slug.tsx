@@ -1,9 +1,11 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
-import { Phone, MapPin, Check, ArrowLeft, HandCoins } from "lucide-react";
+import { MapPin, Check, ArrowLeft, HandCoins } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ReserveDialog } from "@/components/reserve-dialog";
+import { WhatsAppButton } from "@/components/whatsapp-button";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { FinanceCalculator } from "@/components/finance-calculator";
 import { Viewer360 } from "@/components/viewer-360";
 import { Spin360 } from "@/components/spin-360";
@@ -12,7 +14,7 @@ import { AdsterraSlot } from "@/components/ad-slots";
 import { spinFor } from "@/lib/spin360";
 
 import { getPublicCar } from "@/lib/cars.functions";
-import { SITE, absolutePhotoUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
+import { SITE, absolutePhotoUrl, carWhatsappUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
 import { LANDING_PAGES, type LandingPage } from "@/lib/landing-pages";
 
@@ -31,7 +33,9 @@ export const Route = createFileRoute("/masini/$slug")({
     const clamp = (value: string, max: number) =>
       value.length <= max ? value : `${value.slice(0, max - 1).trimEnd()}…`;
     const name = `${car.make} ${car.model}${car.trim ? ` ${car.trim}` : ""} ${car.year}`;
-    const suffix = " | Bremen Auto Cluj";
+    // Interogarea reală este „<model> second hand Cluj”; numele lungi păstrează sufixul scurt.
+    const keyword = " second hand Cluj | Bremen Auto";
+    const suffix = name.length + keyword.length <= 59 ? keyword : " | Bremen Auto Cluj";
     const title = `${clamp(name, 59 - suffix.length)}${suffix}`;
     const description = clamp(
       `${name} — ${formatKm(car.mileage_km)}, ${car.fuel}, ${car.gearbox}${car.power_hp ? `, ${car.power_hp} CP` : ""}, ${formatPrice(Number(car.price), car.currency)}. Adusă din Germania, verificată, acte la zi. Vezi-o pe DN1, Luna de Sus (Florești), lângă Cluj-Napoca.`,
@@ -278,6 +282,16 @@ function CarPage() {
                   .split(/\n+/)
                   .map((l: string) => l.trim())
                   .filter(Boolean)
+                  .map((line: string) =>
+                    line
+                      .replace(/\+?4?0?\s*0?751[\s.-]*692[\s.-]*335/g, "")
+                      .replace(/\s*sau\s+sună acum!?/gi, " pe WhatsApp")
+                      .replace(/sună acum:?/gi, "Scrie-ne pe WhatsApp")
+                      .replace(/\s{2,}/g, " ")
+                      .replace(/\s+([,.!])/g, "$1")
+                      .trim(),
+                  )
+                  .filter(Boolean)
                   .map((line: string, i: number) => {
                     const bullet = /^[-•*✅✔️▪️➡️🔹🔸👉]+\s*/u.test(line);
                     const clean = line.replace(/^[-•*✅✔️▪️➡️🔹🔸👉\s]+/u, "");
@@ -328,11 +342,13 @@ function CarPage() {
             )}
 
             <div className="mt-6 flex flex-col gap-2">
-              <Button asChild size="lg">
-                <a href={SITE.phoneHref}>
-                  <Phone className="size-4" /> {SITE.phone}
-                </a>
-              </Button>
+              <WhatsAppButton
+                carSlug={car.slug}
+                title={`${title} ${car.year}`}
+                label="Contactează-ne pe WhatsApp"
+                size="lg"
+                block
+              />
               {car.status === "disponibila" && (
                 <ReserveDialog
                   carSlug={car.slug}
@@ -340,11 +356,6 @@ function CarPage() {
                   price={formatPrice(Number(car.price), car.currency)}
                 />
               )}
-              <Button asChild size="lg" variant="outline">
-                <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer">
-                  Scrie pe WhatsApp
-                </a>
-              </Button>
             </div>
 
 
@@ -425,6 +436,9 @@ function CarPage() {
           </li>
         </ul>
       </section>
+
+      {/* Balon WhatsApp fix în dreapta-jos: te urmărește la scroll. */}
+      <WhatsAppFloat carSlug={car.slug} title={`${title} ${car.year}`} />
     </div>
   );
 }

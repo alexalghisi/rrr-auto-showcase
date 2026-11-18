@@ -43,10 +43,7 @@ function asText(value: unknown): string {
 
 function asNumber(value: unknown): number {
   if (typeof value === "number") return Number.isFinite(value) ? value : 0;
-  const clean = asText(value)
-    .replace(/\s/g, "")
-    .replace(/\.(?=\d{3}\b)/g, "")
-    .replace(",", ".");
+  const clean = asText(value).replace(/\s/g, "").replace(/\.(?=\d{3}\b)/g, "").replace(",", ".");
   const parsed = Number(clean.replace(/[^\d.]/g, ""));
   return Number.isFinite(parsed) ? parsed : 0;
 }
@@ -100,24 +97,17 @@ function imageUrls(value: unknown): string[] {
       if (typeof entry === "string") return [entry];
       if (!entry || typeof entry !== "object") return [];
       const item = entry as Json;
-      const nestedImage =
-        item["image"] && typeof item["image"] === "object" ? (item["image"] as Json) : {};
+      const nestedImage = item["image"] && typeof item["image"] === "object" ? (item["image"] as Json) : {};
       const photoImage =
-        item["photo_image"] && typeof item["photo_image"] === "object"
-          ? (item["photo_image"] as Json)
-          : {};
+        item["photo_image"] && typeof item["photo_image"] === "object" ? (item["photo_image"] as Json) : {};
       const url = asText(
-        nestedImage["uri"] ??
-          photoImage["uri"] ??
-          item["thumbnail"] ??
-          item["photoUrl"] ??
-          item["imageUrl"] ??
-          item["url"],
+        nestedImage["uri"] ?? photoImage["uri"] ?? item["thumbnail"] ?? item["photoUrl"] ?? item["imageUrl"] ?? item["url"],
       );
       return url ? [url] : [];
     })
     .filter(looksLikeImage);
 }
+
 
 function paramMap(item: Json): Record<string, string> {
   const list = Array.isArray(item["params"]) ? (item["params"] as Json[]) : [];
@@ -143,12 +133,8 @@ function parseOlxItem(item: Json): ScrapedCar | null {
   const words = cleanTitle.split(/\s+/).filter(Boolean);
   const make = words[0] ?? "Auto";
   const model = params["model"] || words.slice(1, 3).join(" ") || "Model";
-  const trim = cleanTitle
-    .replace(new RegExp(`^${make}\\s*`, "i"), "")
-    .replace(new RegExp(`^${model}\\s*`, "i"), "")
-    .trim();
-  const offerId =
-    asText(item["listingId"]) || url.match(/-ID([\w]+)\.html/i)?.[1] || slugify(title);
+  const trim = cleanTitle.replace(new RegExp(`^${make}\\s*`, "i"), "").replace(new RegExp(`^${model}\\s*`, "i"), "").trim();
+  const offerId = asText(item["listingId"]) || url.match(/-ID([\w]+)\.html/i)?.[1] || slugify(title);
 
   return {
     url,
@@ -173,46 +159,21 @@ function parseOlxItem(item: Json): ScrapedCar | null {
   };
 }
 
+
 function parseFacebookPost(item: Json): ScrapedCar | null {
   const description = asText(item["text"] ?? item["caption"]);
   const url = asText(item["url"] ?? item["postUrl"]);
   if (!description || !url) return null;
-  const year = asNumber(
-    firstMatch(description, [
-      /(?:an(?:ul)?|fabricatie|fabricație)\s*[:\-]?\s*((?:19|20)\d{2})/i,
-      /\b((?:19|20)\d{2})\b/,
-    ]),
-  );
-  const price = asNumber(
-    firstMatch(description, [
-      /(?:pre[tț]|price)\s*[:\-]?\s*([\d .]+)\s*(?:€|eur)/i,
-      /([\d .]+)\s*(?:€|eur)\b/i,
-    ]),
-  );
+  const year = asNumber(firstMatch(description, [/(?:an(?:ul)?|fabricatie|fabricație)\s*[:\-]?\s*((?:19|20)\d{2})/i, /\b((?:19|20)\d{2})\b/]));
+  const price = asNumber(firstMatch(description, [/(?:pre[tț]|price)\s*[:\-]?\s*([\d .]+)\s*(?:€|eur)/i, /([\d .]+)\s*(?:€|eur)\b/i]));
   if (!year || !price) return null;
-  const mileage = asNumber(
-    firstMatch(description, [/(?:km|kilometri|rulaj)\s*[:\-]?\s*([\d .]+)/i, /([\d .]+)\s*km\b/i]),
-  );
-  const knownMake =
-    "Audi|BMW|Mercedes(?:-Benz)?|Volkswagen|VW|Vw|Skoda|Dacia|Renault|Ford|Opel|Peugeot|Citroen|Toyota|Honda|Hyundai|Kia|Nissan|Mazda|Volvo|Seat|Fiat|Suzuki|Mitsubishi|Land Rover|Range Rover|Porsche";
-  const carLine = description.match(
-    new RegExp(`^\\s*[~\\-*✅🚗 ]*((?:${knownMake})\\s+[^\\n~]{1,60})`, "im"),
-  )?.[1];
-  const heading = (carLine ?? "")
-    .replace(/[✅🚗🔥🔴🟢⭐➡️]/gu, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-  const words =
-    heading
-      .split(/[|,–—-]/)[0]
-      ?.trim()
-      .split(/\s+/)
-      .filter(Boolean) ?? [];
+  const mileage = asNumber(firstMatch(description, [/(?:km|kilometri|rulaj)\s*[:\-]?\s*([\d .]+)/i, /([\d .]+)\s*km\b/i]));
+  const knownMake = "Audi|BMW|Mercedes(?:-Benz)?|Volkswagen|VW|Vw|Skoda|Dacia|Renault|Ford|Opel|Peugeot|Citroen|Toyota|Honda|Hyundai|Kia|Nissan|Mazda|Volvo|Seat|Fiat|Suzuki|Mitsubishi|Land Rover|Range Rover|Porsche";
+  const carLine = description.match(new RegExp(`^\\s*[~\\-*✅🚗 ]*((?:${knownMake})\\s+[^\\n~]{1,60})`, "im"))?.[1];
+  const heading = (carLine ?? "").replace(/[✅🚗🔥🔴🟢⭐➡️]/gu, " ").replace(/\s+/g, " ").trim();
+  const words = heading.split(/[|,–—-]/)[0]?.trim().split(/\s+/).filter(Boolean) ?? [];
   if (words.length < 2) return null;
-  const id =
-    asText(item["postId"] ?? item["id"]) ||
-    url.split("/").filter(Boolean).pop() ||
-    slugify(heading);
+  const id = asText(item["postId"] ?? item["id"]) || url.split("/").filter(Boolean).pop() || slugify(heading);
   return {
     url,
     externalId: `facebook:${id}`,
@@ -227,18 +188,14 @@ function parseFacebookPost(item: Json): ScrapedCar | null {
     fuel: firstMatch(description, [/(diesel|benzin[aă]|hibrid|hybrid|electric|gpl)/i]),
     gearbox: /automat|dsg|dct|tiptronic/i.test(description) ? "Automata" : "Manuala",
     power_hp: asNumber(firstMatch(description, [/([\d]{2,4})\s*(?:cp|cai)/i])) || null,
-    engine_cc:
-      asNumber(
-        firstMatch(description, [/(?:motor|cilindree)\s*[:\-]?\s*([\d.]+)\s*(?:cmc|cc|l)?/i]),
-      ) || null,
+    engine_cc: asNumber(firstMatch(description, [/(?:motor|cilindree)\s*[:\-]?\s*([\d.]+)\s*(?:cmc|cc|l)?/i])) || null,
     images: [...new Set([...imageUrls(item["media"]), ...imageUrls(item["images"])])],
   };
 }
 
 /** Ultima plasă de siguranță: acceptăm doar linkuri de pe pagina noastră de Facebook sau de pe OLX. */
 function isOwnListing(source: SourceKey, url: string): boolean {
-  if (source === "facebook")
-    return /facebook\.com\/(bremenautocj|[^/]*bremenauto[^/]*)\b/i.test(url);
+  if (source === "facebook") return /facebook\.com\/(bremenautocj|[^/]*bremenauto[^/]*)\b/i.test(url);
   return /(^|\.)olx\.ro\//i.test(url);
 }
 
@@ -256,18 +213,13 @@ async function scrapeFacebookGraph(token: string): Promise<ScrapedCar[]> {
   for (const post of data) {
     const images: string[] = [];
     const push = (m: unknown) => {
-      const src = asText(
-        ((m as Json)?.["media"] as Json | undefined)?.["image"] &&
-          (((m as Json)["media"] as Json)["image"] as Json)["src"],
-      );
+      const src = asText(((m as Json)?.["media"] as Json | undefined)?.["image"] && (((m as Json)["media"] as Json)["image"] as Json)["src"]);
       if (src) images.push(src);
     };
-    const attachments =
-      ((post["attachments"] as Json | undefined)?.["data"] as Json[] | undefined) ?? [];
+    const attachments = ((post["attachments"] as Json | undefined)?.["data"] as Json[] | undefined) ?? [];
     for (const att of attachments) {
       push(att);
-      const subs =
-        ((att["subattachments"] as Json | undefined)?.["data"] as Json[] | undefined) ?? [];
+      const subs = ((att["subattachments"] as Json | undefined)?.["data"] as Json[] | undefined) ?? [];
       for (const sub of subs) push(sub);
     }
     const full = asText(post["full_picture"]);
@@ -379,10 +331,7 @@ async function scrapeSource(source: SourceKey): Promise<ScrapedCar[]> {
   if (source === "facebook") {
     const graphToken = process.env["FB_PAGE_ACCESS_TOKEN"];
     if (graphToken) return scrapeFacebookGraph(graphToken);
-    const items = await runActor(FACEBOOK_ACTOR, {
-      startUrls: [{ url: SOURCES.facebook }],
-      resultsLimit: 20,
-    });
+    const items = await runActor(FACEBOOK_ACTOR, { startUrls: [{ url: SOURCES.facebook }], resultsLimit: 20 });
     return items
       .map(parseFacebookPost)
       .filter((car): car is ScrapedCar => Boolean(car) && isOwnListing("facebook", car!.url));
@@ -400,25 +349,40 @@ async function scrapeSource(source: SourceKey): Promise<ScrapedCar[]> {
     fetchDetails: true,
     maxListings: 40,
   });
-  return items
-    .map(parseOlxItem)
-    .filter((car): car is ScrapedCar => Boolean(car) && isOwnListing("olx", car!.url));
+  return items.map(parseOlxItem).filter((car): car is ScrapedCar => Boolean(car) && isOwnListing("olx", car!.url));
 }
 
-export function fingerprintFor(car: {
-  make: string;
-  model: string;
-  year: number;
-  mileage_km: number;
-  price: number;
-}): string {
-  return [
-    slugify(car.make),
-    slugify(car.model),
-    car.year,
-    Math.round(car.mileage_km / 1000),
-    Math.round(car.price / 50),
-  ].join("|");
+export function fingerprintFor(car: { make: string; model: string; year: number; mileage_km: number; price: number }): string {
+  return [slugify(car.make), slugify(car.model), car.year, Math.round(car.mileage_km / 1000), Math.round(car.price / 50)].join("|");
+}
+
+function normMake(make: string): string {
+  const value = slugify(make);
+  if (value === "vw") return "volkswagen";
+  if (value === "mercedes") return "mercedes-benz";
+  return value;
+}
+
+/** Primul token al modelului, ca „A7 Competition” și „A7” să fie aceeași mașină. */
+function modelToken(model: string): string {
+  const skip = new Set(["competition", "xdrive", "quattro", "automat", "automata", "diesel", "benzina"]);
+  return slugify(model).split("-").find((token) => token && !skip.has(token)) ?? slugify(model);
+}
+
+type ListingIdentity = { make: string; model: string; year: number; mileage_km: number; price: number };
+
+/**
+ * Aceeași mașină publicată și pe OLX și pe Facebook.
+ * Prețul și kilometrajul pot diferi puțin între cele două anunțuri.
+ */
+export function sameListing(a: ListingIdentity, b: ListingIdentity): boolean {
+  if (normMake(a.make) !== normMake(b.make)) return false;
+  if (a.year !== b.year) return false;
+  if (modelToken(a.model) !== modelToken(b.model)) return false;
+  const priceGap = Math.abs(a.price - b.price);
+  const priceClose = priceGap <= Math.max(400, 0.08 * Math.max(a.price, b.price));
+  const kmClose = a.mileage_km === 0 || b.mileage_km === 0 || Math.abs(a.mileage_km - b.mileage_km) <= 3000;
+  return priceClose && kmClose;
 }
 
 function normalizeFuel(value?: string | null): string {
@@ -434,13 +398,7 @@ function normalizeGearbox(value?: string | null): string {
   return /autom|dsg|dct|tiptronic/i.test(value ?? "") ? "Automata" : "Manuala";
 }
 
-export type ImportResult = {
-  source: SourceKey;
-  found: number;
-  inserted: number;
-  skipped: number;
-  errors: string[];
-};
+export type ImportResult = { source: SourceKey; found: number; inserted: number; skipped: number; errors: string[] };
 
 const BROWSER_HEADERS = {
   "User-Agent":
@@ -502,6 +460,7 @@ export async function backfillImages(limit = 12): Promise<{ updated: number; err
   return { updated, errors };
 }
 
+
 export async function importSource(source: SourceKey): Promise<ImportResult> {
   const result: ImportResult = { source, found: 0, inserted: 0, skipped: 0, errors: [] };
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -517,69 +476,65 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
 
   const { data: existing } = await supabaseAdmin
     .from("cars")
-    .select("source_url, external_id, fingerprint");
-  const knownUrls = new Set(
-    (existing ?? []).map((car) => car.source_url).filter(Boolean) as string[],
-  );
-  const knownIds = new Set(
-    (existing ?? []).map((car) => car.external_id).filter(Boolean) as string[],
-  );
-  const knownPrints = new Set(
-    (existing ?? []).map((car) => car.fingerprint).filter(Boolean) as string[],
-  );
+    .select("id, source_url, external_id, fingerprint, make, model, year, mileage_km, price");
+  const known = (existing ?? []).map((car) => ({
+    id: car.id,
+    source_url: car.source_url,
+    external_id: car.external_id,
+    fingerprint: car.fingerprint,
+    make: car.make,
+    model: car.model,
+    year: car.year,
+    mileage_km: car.mileage_km,
+    price: Number(car.price),
+  }));
 
   for (const car of cars) {
     const fingerprint = fingerprintFor(car);
-    if (knownUrls.has(car.url) || knownIds.has(car.externalId) || knownPrints.has(fingerprint)) {
+    const match = known.find(
+      (row) =>
+        row.source_url === car.url ||
+        row.external_id === car.externalId ||
+        row.fingerprint === fingerprint ||
+        sameListing(row, car),
+    );
+    if (match) {
       result.skipped++;
-      await supabaseAdmin
-        .from("cars")
-        .update({ last_seen_at: new Date().toISOString() })
-        .eq("external_id", car.externalId);
+      await supabaseAdmin.from("cars").update({ last_seen_at: new Date().toISOString() }).eq("id", match.id);
       continue;
     }
     const suffix = slugify(car.externalId).slice(-10);
     const slug = `${slugify(`${car.make}-${car.model}-${car.year}-${car.mileage_km}`)}-${suffix}`;
-    const externalImages = (car.images ?? [])
-      .filter((url) => /^https?:\/\//.test(url))
-      .slice(0, 15);
+    const externalImages = (car.images ?? []).filter((url) => /^https?:\/\//.test(url)).slice(0, 15);
     const storedImages = await mirrorImages(externalImages, slug);
     const { error } = await supabaseAdmin.from("cars").insert({
       slug,
-      make: car.make.trim(),
-      model: car.model.trim(),
-      trim: car.trim ?? null,
-      year: car.year,
-      mileage_km: car.mileage_km,
-      fuel: normalizeFuel(car.fuel),
-      gearbox: normalizeGearbox(car.gearbox),
-      power_hp: car.power_hp ?? null,
-      engine_cc: car.engine_cc ?? null,
-      body_type: car.body_type ?? null,
-      color: car.color ?? null,
-      doors: car.doors ?? null,
-      price: car.price,
-      currency: (car.currency ?? "EUR").toUpperCase(),
-      description: car.description ?? null,
-      features: (car.features ?? []).slice(0, 40),
-      images: storedImages.length ? storedImages : externalImages,
+      make: car.make.trim(), model: car.model.trim(), trim: car.trim ?? null,
+      year: car.year, mileage_km: car.mileage_km, fuel: normalizeFuel(car.fuel), gearbox: normalizeGearbox(car.gearbox),
+      power_hp: car.power_hp ?? null, engine_cc: car.engine_cc ?? null, body_type: car.body_type ?? null,
+      color: car.color ?? null, doors: car.doors ?? null, price: car.price,
+      currency: (car.currency ?? "EUR").toUpperCase(), description: car.description ?? null,
+      features: (car.features ?? []).slice(0, 40), images: storedImages.length ? storedImages : externalImages,
 
-      published: true,
-      status: "disponibila",
-      source,
-      source_url: car.url,
-      external_id: car.externalId,
-      fingerprint,
-      last_seen_at: new Date().toISOString(),
+      published: true, status: "disponibila", source, source_url: car.url,
+      external_id: car.externalId, fingerprint, last_seen_at: new Date().toISOString(),
     });
     if (error) {
       if (error.code === "23505") result.skipped++;
       else result.errors.push(`${car.url}: ${error.message}`);
       continue;
     }
-    knownUrls.add(car.url);
-    knownIds.add(car.externalId);
-    knownPrints.add(fingerprint);
+    known.push({
+      id: slug,
+      source_url: car.url,
+      external_id: car.externalId,
+      fingerprint,
+      make: car.make,
+      model: car.model,
+      year: car.year,
+      mileage_km: car.mileage_km,
+      price: car.price,
+    });
     result.inserted++;
   }
   // Mașinile care nu mai apar în sursă sunt considerate vândute și dispar din stoc.
@@ -593,18 +548,13 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
       .eq("source", source)
       .eq("published", true);
     const gone = (current ?? []).filter(
-      (car) =>
-        !(car.external_id && seenIds.has(car.external_id)) &&
-        !(car.fingerprint && seenPrints.has(car.fingerprint)),
+      (car) => !(car.external_id && seenIds.has(car.external_id)) && !(car.fingerprint && seenPrints.has(car.fingerprint)),
     );
     if (gone.length && gone.length <= Math.ceil(cars.length / 2)) {
       await supabaseAdmin
         .from("cars")
         .update({ status: "vanduta", published: false })
-        .in(
-          "id",
-          gone.map((car) => car.id),
-        );
+        .in("id", gone.map((car) => car.id));
     }
   }
   await logRun(result);

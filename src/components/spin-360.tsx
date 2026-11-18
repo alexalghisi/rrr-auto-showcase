@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCw, Hand } from "lucide-react";
 import { spinFor } from "@/lib/spin360";
 import { loadSpinFrames, type SpinFrame } from "@/lib/spin-frames";
-import { coastTurn, followTurn, frameBlendAt, dragTurn } from "@/lib/spin-motion";
+import { coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn } from "@/lib/spin-motion";
 import { whenIdleAfterLoad } from "@/lib/after-load";
 
 type Props = {
@@ -85,6 +85,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     if (!box || !canvas) return;
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
+    const blend = spinFor(slug, size)?.blend !== false;
     let raf = 0;
     let previous = 0;
     let disposed = false;
@@ -99,23 +100,35 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       previous = now;
       const list = frames.current;
       if (!list.length) return;
+      // Cards stay on hard cuts. A cross-fade of the small frames reads as a blur,
+      // and it used to freeze on screen when the pointer left.
+      const play = !state.reduced && (state.hover || state.auto) && (size === "sm" || blend);
       if (state.dragging) {
         // Follow the actual pointer without spring lag, so reversing never continues the old direction.
         state.position = state.target;
       } else if (Math.abs(state.target - state.position) > 0.0001) {
         state.position = followTurn(state.position, state.target, delta);
-      } else if (!state.reduced && (state.hover || state.auto)) {
+      } else if (play) {
         const goal = state.hover ? 0.085 : 0.045;
         state.velocity += (goal - state.velocity) * (1 - Math.exp(-3 * delta));
         state.position += state.velocity * delta;
         state.target = state.position;
+      } else if (Math.abs(state.velocity) < 0.02) {
+        const settled = settleTurn(state.position, list.length);
+        state.position = settled;
+        state.target = settled;
+        state.velocity = 0;
       } else {
         const coast = coastTurn(state.position, state.velocity, delta);
         state.position = coast.position;
         state.velocity = Math.abs(coast.velocity) < 0.001 ? 0 : coast.velocity;
         state.target = state.position;
       }
-      const sample = frameBlendAt(state.position, list.length);
+      const moving = state.dragging || Math.abs(state.target - state.position) > 0.0001 || state.velocity !== 0 || play;
+      // Cross-fade only a large, locked turntable while it is actually moving.
+      const sample = moving && blend && size === "lg"
+        ? frameBlendAt(state.position, list.length)
+        : { first: frameAt(state.position, list.length), next: frameAt(state.position, list.length), mix: 0 };
       const frame = list[sample.first];
       const next = list[sample.next];
       const drawn = sample.first + sample.mix;
@@ -134,8 +147,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         canvas.dataset["frame"] = String(sample.first);
         canvas.dataset["turn"] = String(state.position);
       }
-      if (state.dragging || Math.abs(state.target - state.position) > 0.0001 || state.velocity ||
-        (!state.reduced && (state.hover || state.auto))) raf = requestAnimationFrame(tick);
+      if (moving) raf = requestAnimationFrame(tick);
       else previous = 0;
     };
     const start = () => { if (!raf && active() && !disposed) raf = requestAnimationFrame(tick); };
@@ -155,7 +167,8 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
     resize.observe(box);
     const observer = new IntersectionObserver(([entry]) => {
       state.visible = !!entry?.isIntersecting;
-      if (state.visible) start();
+      // Fetch frames as soon as the car is on screen, so the first finger drag rotates immediately.
+      if (state.visible) { setWanted(true); start(); }
       else { cancelAnimationFrame(raf); raf = 0; previous = 0; }
     });
     observer.observe(box);
@@ -175,7 +188,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
       media.removeEventListener("change", reduced);
       wake.current = () => {};
     };
-  }, [size]);
+  }, [size, slug]);
 
   const onDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!event.isPrimary || event.button !== 0) return;
@@ -238,7 +251,7 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
         </span>}
       </>}
       <span className={`pointer-events-none absolute rounded bg-background/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground ${size === "lg" ? "bottom-2 right-2" : "left-2 top-2"}`}>
-        {size === "lg" ? "Simulare AI · pozele reale sunt mai jos" : "Simulare AI"}
+        {size === "lg" ? "Rotire ilustrativă · pozele reale sunt mai jos" : "Rotire ilustrativă"}
       </span>
       {(load || wanted) && !ready && <span role="status" className="pointer-events-none absolute bottom-2 left-2 rounded bg-background/90 px-2 py-1 text-xs text-muted-foreground">
         {failed ? "Rotirea nu s-a încărcat" : "Se încarcă rotirea…"}

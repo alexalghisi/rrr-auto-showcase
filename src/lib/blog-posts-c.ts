@@ -98,7 +98,7 @@ export const BLOG_POSTS_C: BlogPost[] = [
         h2: "9. Concluzie: cum alegi corect",
         paragraphs: [
           "O mașină automată second hand nu este mai riscantă decât una manuală dacă știi ce să verifici și dacă cumperi de la o sursă care îți poate arăta istoricul real de întreținere. Prioritizează dovezile de service față de promisiunile verbale.",
-          "Dacă vrei să vezi mai multe modele cu cutie automată disponibile acum, poți trece pe la parcul nostru de pe DN1, în Luna de Sus, comuna Florești, unde suntem disponibili non-stop, 24/7, sau poți suna direct la 0751 692 335 pentru detalii despre stocul curent.",
+          "Dacă vrei să vezi mai multe modele cu cutie automată disponibile acum, poți trece pe la parcul nostru de pe DN1, în Luna de Sus, comuna Florești, unde suntem disponibili non-stop, 24/7, sau ne poți scrie pe WhatsApp pentru detalii despre stocul curent.",
         ],
       },
     ],
@@ -222,7 +222,7 @@ export const BLOG_POSTS_C: BlogPost[] = [
         h2: "9. Concluzie: BMW sau Audi?",
         paragraphs: [
           "Nu există un câștigător universal. Dacă preferi un feeling mai sportiv la condus și accepți costuri ocazionale mai mari la electronică, BMW este alegerea firească. Dacă preferi confort constant și un aspect mai discret, Audi este varianta potrivită.",
-          "Decizia corectă se ia întotdeauna după verificarea istoricului real al exemplarului, nu după preferința de brand. Treci pe la parcul nostru de pe DN1, Luna de Sus, comuna Florești, disponibil non-stop 24/7, sau sună la 0751 692 335 pentru a vedea stocul actual de BMW și Audi.",
+          "Decizia corectă se ia întotdeauna după verificarea istoricului real al exemplarului, nu după preferința de brand. Treci pe la parcul nostru de pe DN1, Luna de Sus, comuna Florești, disponibil non-stop 24/7, sau scrie-ne pe WhatsApp pentru a vedea stocul actual de BMW și Audi.",
         ],
       },
     ],
@@ -340,7 +340,7 @@ export const BLOG_POSTS_C: BlogPost[] = [
         h2: "9. Concluzie: momentul contează, dar pregătirea contează mai mult",
         paragraphs: [
           "Deși sezonalitatea influențează prețurile, cel mai important factor rămâne pregătirea ta ca și cumpărător: buget clar, listă de verificări și răbdare să compari mai multe oferte. Un cumpărător pregătit obține un preț bun indiferent de lună.",
-          "Dacă vrei să vezi stocul actual sau să discuți despre cel mai bun moment pentru achiziția ta, treci pe la parcul nostru de pe DN1, Luna de Sus, comuna Florești, sau sună la 0751 692 335 — suntem disponibili non-stop, iar plata se poate face cash sau în rate.",
+          "Dacă vrei să vezi stocul actual sau să discuți despre cel mai bun moment pentru achiziția ta, treci pe la parcul nostru de pe DN1, Luna de Sus, comuna Florești, sau scrie-ne pe WhatsApp — suntem disponibili non-stop, iar plata se poate face cash sau în rate.",
         ],
       },
     ],
@@ -461,7 +461,7 @@ export const BLOG_POSTS_C: BlogPost[] = [
         h2: "9. Concluzie: așteptări realiste, decizie bună",
         paragraphs: [
           "Cu sub 5.000 € în Cluj, poți găsi o mașină funcțională, cu compromisuri clare la dotări și kilometraj, dar sigură dacă verifici corect istoricul și piesele de uzură. Cheia este să accepți realitatea bugetului, nu să cauți combinația imposibilă.",
-          "Dacă vrei să vezi variantele disponibile la acest preț, poți trece pe la parcul nostru de pe DN1, Luna de Sus, comuna Florești, disponibil non-stop 24/7, sau poți suna la 0751 692 335 pentru detalii despre stocul actual.",
+          "Dacă vrei să vezi variantele disponibile la acest preț, poți trece pe la parcul nostru de pe DN1, Luna de Sus, comuna Florești, disponibil non-stop 24/7, sau ne poți scrie pe WhatsApp pentru detalii despre stocul actual.",
         ],
       },
     ],
@@ -584,7 +584,7 @@ export const BLOG_POSTS_C: BlogPost[] = [
         h2: "9. Concluzie: negocierea bună e o discuție, nu o luptă",
         paragraphs: [
           "Cea mai eficientă negociere este cea bazată pe informații corecte, argumente tehnice și o atitudine calmă. Vânzătorii serioși respectă acest tip de abordare și sunt mult mai deschiși la concesii reale.",
-          "Dacă vrei să pui în practică aceste tehnici, treci pe la parcul nostru de pe DN1, Luna de Sus, comuna Florești, disponibil non-stop 24/7, sau sună la 0751 692 335 — suntem obișnuiți cu discuții deschise, iar plata se poate face cash sau în rate, cu posibilitate de preluare a mașinii vechi la schimb.",
+          "Dacă vrei să pui în practică aceste tehnici, treci pe la parcul nostru de pe DN1, Luna de Sus, comuna Florești, disponibil non-stop 24/7, sau scrie-ne pe WhatsApp — suntem obișnuiți cu discuții deschise, iar plata se poate face cash sau în rate, cu posibilitate de preluare a mașinii vechi la schimb.",
         ],
       },
     ],

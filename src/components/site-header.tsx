@@ -1,9 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Car, Phone, Menu, X } from "lucide-react";
+import { Car, Menu, X } from "lucide-react";
 import { useState } from "react";
 
-import { SITE } from "@/lib/site";
-import { Button } from "@/components/ui/button";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 
 const links = [
   { to: "/", label: "Acasă" },
@@ -44,12 +43,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button asChild size="sm" className="hidden sm:inline-flex">
-            <a href={SITE.phoneHref}>
-              <Phone className="size-4" />
-              {SITE.phone}
-            </a>
-          </Button>
+          <WhatsAppButton label="WhatsApp" size="sm" className="hidden sm:inline-flex" />
           <button
             type="button"
             aria-label="Meniu"
@@ -73,11 +67,7 @@ export function SiteHeader() {
               {l.label}
             </Link>
           ))}
-          <Button asChild className="mt-2 w-full">
-            <a href={SITE.phoneHref}>
-              <Phone className="size-4" /> Sună acum
-            </a>
-          </Button>
+          <WhatsAppButton label="Scrie pe WhatsApp" block className="mt-2" />
         </nav>
       )}
     </header>

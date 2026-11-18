@@ -1,12 +1,14 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { Fragment } from "react";
-import { CalendarDays, Clock, Phone, ArrowRight } from "lucide-react";
+import { CalendarDays, Clock, ArrowRight } from "lucide-react";
 
 import { BLOG_POSTS, BLOG_AUTHOR } from "@/lib/blog";
+import { mediaForPost, type BlogFigure } from "@/lib/blog-media";
 import { getLandingPage } from "@/lib/landing-pages";
 import { SITE } from "@/lib/site";
 import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { AdsterraSlot } from "@/components/ad-slots";
 import { getDbBlogPost } from "@/lib/blog-db.functions";
 
@@ -22,6 +24,8 @@ export const Route = createFileRoute("/blog/$slug")({
     const post = loaderData?.post;
     if (!post) return {};
     const url = `https://bremenauto.ro/blog/${post.slug}`;
+    const media = mediaForPost(post.slug);
+    const image = `https://bremenauto.ro${media.cover.src}`;
     return {
       meta: [
         { title: post.metaTitle.slice(0, 60) },
@@ -33,12 +37,15 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:locale", content: "ro_RO" },
         { property: "og:site_name", content: SITE.name },
         { property: "og:url", content: url },
+        { property: "og:image", content: image },
+        { property: "og:image:alt", content: media.cover.alt },
         { property: "article:published_time", content: post.published },
         { property: "article:modified_time", content: post.updated },
         { property: "article:section", content: post.category },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: post.metaTitle },
         { name: "twitter:description", content: post.description },
+        { name: "twitter:image", content: image },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -65,6 +72,14 @@ export const Route = createFileRoute("/blog/$slug")({
             inLanguage: "ro-RO",
             datePublished: post.published,
             dateModified: post.updated,
+            image,
+            video: {
+              "@type": "VideoObject",
+              name: media.video.name,
+              thumbnailUrl: `https://bremenauto.ro${media.video.poster}`,
+              contentUrl: `https://bremenauto.ro${media.video.src}`,
+              uploadDate: "2026-10-25",
+            },
             wordCount:
               post.intro.join(" ").split(/\s+/).length +
               post.sections.reduce(
@@ -87,6 +102,7 @@ export const Route = createFileRoute("/blog/$slug")({
 
 function BlogPostRoute() {
   const { post } = Route.useLoaderData();
+  const media = mediaForPost(post.slug);
   const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
   const landings = post.relatedLandings
     .map((s) => getLandingPage(s))
@@ -124,6 +140,8 @@ function BlogPostRoute() {
         <span>de {BLOG_AUTHOR}, DN1 Florești</span>
       </div>
 
+      <BlogFigureView figure={media.cover} priority />
+
       <div className="mt-8 space-y-4">
         {post.intro.map((p) => (
           <p key={p} className="text-base leading-relaxed text-muted-foreground">
@@ -131,6 +149,21 @@ function BlogPostRoute() {
           </p>
         ))}
       </div>
+
+      <figure className="mt-10 overflow-hidden rounded-xl bg-black">
+        <video
+          src={media.video.src}
+          poster={media.video.poster}
+          controls
+          playsInline
+          preload="metadata"
+          className="aspect-video w-full"
+          aria-label={media.video.name}
+        />
+        <figcaption className="bg-surface px-4 py-3 text-xs text-muted-foreground">
+          {media.video.caption}
+        </figcaption>
+      </figure>
 
       <nav aria-label="Cuprins" className="surface-card mt-10 rounded-xl p-6">
         <h2 className="text-lg">Cuprins</h2>
@@ -167,6 +200,9 @@ function BlogPostRoute() {
             </ul>
           )}
         </section>
+        {(index === 0 || index === Math.floor(post.sections.length / 2)) && (
+          <BlogFigureView figure={media.inline[index === 0 ? 0 : 1]!} />
+        )}
         {index === Math.max(0, Math.ceil(post.sections.length / 2) - 1) && <AdsterraSlot variant="native" className="mt-12" />}
         </Fragment>
       ))}
@@ -178,20 +214,11 @@ function BlogPostRoute() {
           rate, program non-stop.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Button asChild>
-            <a href={SITE.phoneHref}>
-              <Phone className="size-4" /> {SITE.phone}
-            </a>
-          </Button>
+          <WhatsAppButton label="Scrie pe WhatsApp" />
           <Button asChild variant="outline">
             <Link to="/stoc">
               Vezi stocul <ArrowRight className="size-4" />
             </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer">
-              WhatsApp
-            </a>
           </Button>
         </div>
       </section>
@@ -245,6 +272,22 @@ function BlogPostRoute() {
         </ul>
       </section>
     </article>
+  );
+}
+
+function BlogFigureView({ figure, priority = false }: { figure: BlogFigure; priority?: boolean }) {
+  return (
+    <figure className="mt-8 overflow-hidden rounded-xl">
+      <img
+        src={figure.src}
+        alt={figure.alt}
+        width={1280}
+        height={720}
+        loading={priority ? "eager" : "lazy"}
+        className="aspect-video w-full object-cover"
+      />
+      <figcaption className="mt-2 text-xs text-muted-foreground">{figure.caption}</figcaption>
+    </figure>
   );
 }
 

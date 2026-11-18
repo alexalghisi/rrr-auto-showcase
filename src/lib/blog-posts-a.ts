@@ -74,7 +74,7 @@ export const BLOG_POSTS_A: BlogPost[] = [
         h2: "6. Ce se întâmplă dacă ești respins la o instituție",
         paragraphs: [
           "Un refuz de la o bancă sau o firmă de leasing nu înseamnă că nu poți lua mașina în rate. Lucrăm cu mai mulți parteneri financiari tocmai pentru situațiile în care primul dosar nu trece: venit mai mic, contract de muncă recent sau istoric de credit cu întârzieri vechi.",
-          "În multe cazuri, o soluție este un avans ceva mai mare sau un girant. Discutăm concret variantele la telefon, la 0751 692 335, înainte să te programezi la parc, ca să nu faci drum degeaba.",
+          "În multe cazuri, o soluție este un avans ceva mai mare sau un girant. Discutăm concret variantele pe WhatsApp, înainte să te programezi la parc, ca să nu faci drum degeaba.",
         ],
       },
       {
@@ -116,7 +116,7 @@ export const BLOG_POSTS_A: BlogPost[] = [
       },
       {
         q: "Programul Bremen Auto permite vizionarea mașinilor și seara sau în weekend?",
-        a: "Da, parcul funcționează non-stop, 24/7, iar pentru discuții despre finanțare recomandăm un apel în avans la 0751 692 335 pentru a pregăti dosarul.",
+        a: "Da, parcul funcționează non-stop, 24/7, iar pentru discuții despre finanțare scrie-ne pe WhatsApp ca să pregătim dosarul.",
       },
     ],
     relatedLandings: [
@@ -203,7 +203,7 @@ export const BLOG_POSTS_A: BlogPost[] = [
         h2: "8. De ce contează să cauți în parc, nu doar online",
         paragraphs: [
           "Multe dintre mașinile cele mai căutate ajung la un cumpărător înainte ca anunțul să fie văzut de toată lumea, pentru că cei care sună direct sau trec pe la parc au prioritate practică. Programul non-stop de la Bremen Auto face posibil ca cineva care termină tura de seară să vină la 22:00 și să vadă mașina fizic, nu doar în poze.",
-          "Dacă un model din top este pe lista ta, cel mai bun sfat e să suni din timp la 0751 692 335 și să ceri să fii anunțat imediat ce intră un exemplar din segmentul căutat, cash sau în rate.",
+          "Dacă un model din top este pe lista ta, cel mai bun sfat e să scrii din timp pe WhatsApp și să ceri să fii anunțat imediat ce intră un exemplar din segmentul căutat, cash sau în rate.",
         ],
       },
     ],

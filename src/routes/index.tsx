@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { ShieldCheck, FileCheck2, Wrench, HandCoins, Phone, MapPin, ArrowRight } from "lucide-react";
+import { ShieldCheck, FileCheck2, Wrench, HandCoins, MapPin, ArrowRight } from "lucide-react";
 
 import hero640 from "@/assets/hero-bremen-auto-640.webp";
 import hero1024 from "@/assets/hero-bremen-auto-1024.webp";
@@ -9,6 +9,7 @@ import heroImage from "@/assets/hero-bremen-auto-1920.webp";
 import { AdsterraSlot } from "@/components/ad-slots";
 import { CarCard } from "@/components/car-card";
 import { Button } from "@/components/ui/button";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { listPublicCars } from "@/lib/cars.functions";
 import { SITE } from "@/lib/site";
 import { dealerSchema, faqSchema, ORG_ID, HOME_FAQS } from "@/lib/seo";
@@ -207,11 +208,7 @@ function HomePage() {
                 Vezi mașinile din stoc <ArrowRight className="size-4" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <a href={SITE.phoneHref}>
-                <Phone className="size-4" /> {SITE.phone}
-              </a>
-            </Button>
+            <WhatsAppButton label="Scrie pe WhatsApp" size="lg" />
           </div>
           <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-muted-foreground">
             <span className="flex items-center gap-2">
@@ -240,7 +237,7 @@ function HomePage() {
         {list.length === 0 ? (
           <div className="surface-card mt-8 rounded-xl p-10 text-center">
             <p className="text-muted-foreground">
-              Stocul se actualizează. Sună la {SITE.phone} și îți spunem ce mașini sunt pe drum.
+              Stocul se actualizează. Scrie-ne pe WhatsApp și îți spunem ce mașini sunt pe drum.
             </p>
           </div>
         ) : (
@@ -386,20 +383,11 @@ function HomePage() {
           <div className="surface-card rounded-2xl p-8">
             <h2 className="text-2xl">Ai o întrebare despre o mașină?</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Sună sau scrie-ne pe WhatsApp și primești poze suplimentare, raportul de kilometraj și
-              un preț final în aceeași zi.
+              Scrie-ne pe WhatsApp și primești poze suplimentare, raportul de kilometraj și un preț
+              final în aceeași zi.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild size="lg">
-                <a href={SITE.phoneHref}>
-                  <Phone className="size-4" /> {SITE.phone}
-                </a>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <a href={SITE.whatsapp} target="_blank" rel="noopener noreferrer">
-                  WhatsApp
-                </a>
-              </Button>
+              <WhatsAppButton label="Scrie pe WhatsApp" size="lg" />
             </div>
             <p className="mt-6 text-sm text-muted-foreground">
               {SITE.addressLine}
