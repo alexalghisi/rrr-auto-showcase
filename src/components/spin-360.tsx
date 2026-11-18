@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCw, Hand } from "lucide-react";
 import { spinFor } from "@/lib/spin360";
 import { loadSpinFrames, type SpinFrame } from "@/lib/spin-frames";
-import { avoidGenerated, coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn } from "@/lib/spin-motion";
+import { avoidGenerated, coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn, pixelsPerTurn } from "@/lib/spin-motion";
 import { whenIdleAfterLoad } from "@/lib/after-load";
 
 type Props = {
@@ -228,13 +228,12 @@ function SpinSequence({ slug, size = "lg", alt, autoRotate = false, movedRef,
   const onMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const state = st.current;
     if (!state.dragging || state.pointer !== event.pointerId) return;
-    // One drag across the whole photo = one full 360° turn.
-    const pixelsPerTurn = Math.max(1, state.width);
+    const perTurn = pixelsPerTurn(state.width);
     if (movedRef && Math.abs(event.clientX - state.startX) > 6) movedRef.current = true;
-    state.target = dragTurn(state.startTarget, state.startX, event.clientX, pixelsPerTurn);
+    state.target = dragTurn(state.startTarget, state.startX, event.clientX, perTurn);
     const now = performance.now(), delta = (now - state.lastTime) / 1000;
     if (delta > 0.004) {
-      const measured = Math.max(-0.35, Math.min(0.35, (state.lastX - event.clientX) / pixelsPerTurn / delta));
+      const measured = Math.max(-0.35, Math.min(0.35, (state.lastX - event.clientX) / perTurn / delta));
       state.velocity += (measured - state.velocity) * (1 - Math.exp(-18 * delta));
     }
     state.lastX = event.clientX; state.lastTime = now;

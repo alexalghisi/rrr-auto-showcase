@@ -1,8 +1,24 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
-import { avoidGenerated, coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn, wrapTurn } from "./spin-motion";
+import { avoidGenerated, coastTurn, followTurn, frameAt, frameBlendAt, settleTurn, dragTurn, wrapTurn, pixelsPerTurn, FOLLOW_RATIO } from "./spin-motion";
 
 describe("turntable motion", () => {
+  test("the car follows the finger: one swipe across the photo is half a turn, at every size", () => {
+    for (const width of [320, 390, 412, 640, 854, 1280]) {
+      const perTurn = pixelsPerTurn(width);
+      assert.equal(perTurn, width * FOLLOW_RATIO);
+      assert.equal(dragTurn(0, width, 0, perTurn), 0.5);
+      assert.equal(dragTurn(0, 0, width, perTurn), -0.5);
+      assert.equal(dragTurn(0.3, 100, 100, perTurn), 0.3);
+    }
+  });
+  test("a frame never jumps more than a few pixels of finger travel on a phone", () => {
+    const pxPerFrame = pixelsPerTurn(360) / 124;
+    assert.ok(pxPerFrame > 4 && pxPerFrame < 8, String(pxPerFrame));
+  });
+  test("zero width never divides by zero", () => {
+    assert.ok(Number.isFinite(dragTurn(0, 10, 0, pixelsPerTurn(0))));
+  });
   test("one image-width drag is exactly one turn for mouse and touch at every car size", () => {
     for (const width of [320, 390, 640, 854]) {
       assert.equal(dragTurn(0, width, 0, width), 1);
