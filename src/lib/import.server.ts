@@ -286,14 +286,30 @@ async function scrapeFacebookGraph(token: string): Promise<ScrapedCar[]> {
 /** OLX direct, prin API-ul public folosit chiar de site-ul olx.ro — gratuit, fără Apify. */
 const OLX_API = "https://www.olx.ro/api/v1/offers/";
 
+/** Parametri numerici: cheia OLX e valoarea brută ("185000"); la restul eticheta e textul afișat ("Seria 3"). */
+const OLX_NUMERIC_PARAMS = new Set(["year", "rulaj_pana", "engine_power", "enginesize", "door_count"]);
+
 function olxParamValue(entry: Json): string {
   const value = entry["value"];
   if (value && typeof value === "object") {
     const v = value as Json;
     if (typeof v["value"] === "number") return String(v["value"]);
-    return asText(v["key"]) || asText(v["label"]);
+    const key = asText(v["key"]);
+    const label = asText(v["label"]);
+    return OLX_NUMERIC_PARAMS.has(asText(entry["key"])) ? key || label : label || key;
   }
   return asText(value);
+}
+
+function decodeEntities(text: string): string {
+  return text
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#(\d+);/g, (_, code: string) => String.fromCodePoint(Number(code)))
+    .replace(/&amp;/gi, "&");
 }
 
 /** Transformă o ofertă din API-ul OLX în forma așteptată de parseOlxItem. */
@@ -323,9 +339,11 @@ export function olxApiOfferToItem(offer: Json): Json {
     url: offer["url"],
     title: offer["title"],
     listingId: String(offer["id"] ?? ""),
-    description: asText(offer["description"])
-      .replace(/<br\s*\/?>/gi, "\n")
-      .replace(/<[^>]+>/g, ""),
+    description: decodeEntities(
+      asText(offer["description"])
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<[^>]+>/g, ""),
+    ).trim(),
     params,
     price,
     priceCurrency: currency,
