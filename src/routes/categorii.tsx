@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site";
 const URL = "https://bremenauto.ro/categorii";
 const TITLE = "Categorii mașini second hand Cluj | Bremen Auto";
 const DESCRIPTION =
-  "Toate categoriile de mașini second hand Bremen Auto: după marcă, buget, an de fabricație și oraș de livrare. Auto rulate din Germania, DN1 Florești, lângă Cluj-Napoca.";
+  "Categorii de mașini second hand Bremen Auto: după marcă, buget, an și oraș de livrare. Auto rulate din Germania, DN1 Florești, lângă Cluj-Napoca.";
 
 export const Route = createFileRoute("/categorii")({
   head: () => ({
