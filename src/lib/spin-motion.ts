@@ -29,6 +29,12 @@ export function frameBlendAt(turn: number, count: number) {
   return { first, next: (first + 1) % count, mix: sample - Math.floor(sample) };
 }
 
+export const FOLLOW_RATIO = 2;
+
+export function pixelsPerTurn(width: number) {
+  return Math.max(1, width) * FOLLOW_RATIO;
+}
+
 export function dragTurn(start: number, startX: number, pointerX: number, width: number) {
   return start + (startX - pointerX) / Math.max(1, width);
 }
