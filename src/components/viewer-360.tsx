@@ -1,14 +1,42 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { RotateCw, Play, Pause } from "lucide-react";
 
 import { photoUrl } from "@/lib/site";
+import { orbitImages, orbitSourceIndexes } from "@/lib/orbit-order";
 
 /**
  * Showroom 3D: fotografiile reale ale mașinii sunt așezate pe o platformă 3D (cilindru)
  * care se rotește liber și continuu cu degetul / mouse-ul, cu perspectivă, inerție,
  * umbrire în funcție de unghi, reflexie pe podea și rotire automată lină.
  */
+/** Page viewer: the 3D carousel shows only the exterior walk-around; thumbnails keep every photo. */
 export function Viewer360({
+  images,
+  alt,
+  index,
+  onIndexChange,
+}: {
+  images: string[];
+  alt: string;
+  index: number;
+  onIndexChange: (i: number) => void;
+}) {
+  const orbit = useMemo(() => orbitImages(images), [images]);
+  const map = useMemo(() => orbitSourceIndexes(images.length), [images.length]);
+  const last = useRef(0);
+  const oi = map.indexOf(index);
+  if (oi >= 0) last.current = oi;
+  return (
+    <OrbitViewer
+      images={orbit}
+      alt={alt}
+      index={last.current}
+      onIndexChange={(i) => onIndexChange(map[i] ?? 0)}
+    />
+  );
+}
+
+function OrbitViewer({
   images,
   alt,
   index,

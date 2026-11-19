@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { orbitImages } from "@/lib/orbit-order";
 import { Fuel, Gauge, Settings2, Calendar, RotateCw } from "lucide-react";
 
 import type { Car } from "@/lib/cars.server";
@@ -13,7 +14,8 @@ const ease = (t: number) => t * t * (3 - 2 * t); // smoothstep
 
 export function CarCard({ car }: { car: Car }) {
   const hasSpin = !!spinFor(car.slug);
-  const n = hasSpin ? 0 : car.images.length;
+  const orbit = useMemo(() => orbitImages(car.images), [car.images]);
+  const n = hasSpin ? 0 : orbit.length;
   const [pos, setPos] = useState(0);
   const [active, setActive] = useState(false); // montează toate cadrele după prima interacțiune
   const boxRef = useRef<HTMLDivElement>(null);
@@ -121,20 +123,20 @@ export function CarCard({ car }: { car: Car }) {
   const altText = `${title} de vânzare la Bremen Auto, DN1 Florești, Cluj`;
 
   const layer = (i: number) => {
-    if (n < 2 || !active) return i === 0 ? { opacity: 1, transform: "none", z: 1 } : null;
+    if (n < 2 || !active) return i === 0 ? { transform: "none", origin: "center", z: 1 } : null;
     if (i === i0)
       return {
-        opacity: 1,
-        transform: `translateX(${-t * 7}%) rotateY(${-t * 14}deg) scale(1.12)`,
-        z: 1,
+        transform: `translateX(${-100 * t}%) rotateY(${-90 * t}deg)`,
+        origin: "right center",
+        z: 2,
       };
     if (i === i1)
       return {
-        opacity: t,
-        transform: `translateX(${(1 - t) * 7}%) rotateY(${(1 - t) * 14}deg) scale(1.12)`,
-        z: 2,
+        transform: `translateX(${100 * (1 - t)}%) rotateY(${90 * (1 - t)}deg)`,
+        origin: "left center",
+        z: 1,
       };
-    return { opacity: 0, transform: "scale(1.12)", z: 0 };
+    return null;
   };
 
   return (
@@ -191,11 +193,11 @@ export function CarCard({ car }: { car: Car }) {
         onPointerMove={onMove}
         onPointerUp={onUp}
         onPointerCancel={onUp}
-        style={{ touchAction: "pan-y", perspective: "900px" }}
+        style={{ touchAction: "pan-y", perspective: "1200px" }}
         className={`relative aspect-[4/3] select-none overflow-hidden bg-surface-strong ${n > 1 ? "cursor-grab active:cursor-grabbing" : ""}`}
       >
         {n > 0 ? (
-          car.images.map((src, i) => {
+          (active ? orbit : car.images.slice(0, 1)).map((src, i) => {
             const l = layer(i);
             if (!l) return null;
             return (
@@ -210,7 +212,14 @@ export function CarCard({ car }: { car: Car }) {
                 height={600}
                 draggable={false}
                 className="absolute inset-0 size-full select-none object-cover will-change-transform"
-                style={{ opacity: l.opacity, transform: l.transform, zIndex: l.z }}
+                style={{
+                  opacity: 1,
+                  transform: l.transform,
+                  transformOrigin: l.origin,
+                  zIndex: l.z,
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
               />
             );
           })
