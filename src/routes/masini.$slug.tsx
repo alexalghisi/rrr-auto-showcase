@@ -15,8 +15,8 @@ import { spinFor } from "@/lib/spin360";
 
 import { getPublicCar } from "@/lib/cars.functions";
 import { SITE, absolutePhotoUrl, carWhatsappUrl, formatKm, formatPrice, photoUrl } from "@/lib/site";
-import { breadcrumbSchema, dealerSchema, ORG_ID } from "@/lib/seo";
-import { carFaq } from "@/lib/car-seo";
+import { breadcrumbSchema, dealerSchema, faqSchema, ORG_ID } from "@/lib/seo";
+import { carEditorial, carFaq } from "@/lib/car-seo";
 import { LANDING_PAGES, type LandingPage } from "@/lib/landing-pages";
 
 export const Route = createFileRoute("/masini/$slug")({
@@ -38,10 +38,19 @@ export const Route = createFileRoute("/masini/$slug")({
     const keyword = " second hand Cluj | Bremen Auto";
     const suffix = name.length + keyword.length <= 59 ? keyword : " | Bremen Auto Cluj";
     const title = `${clamp(name, 59 - suffix.length)}${suffix}`;
-    const description = clamp(
-      `${name} — ${formatKm(car.mileage_km)}, ${car.fuel}, ${car.gearbox}${car.power_hp ? `, ${car.power_hp} CP` : ""}, ${formatPrice(Number(car.price), car.currency)}. Adusă din Germania, verificată, acte la zi. Vezi-o pe DN1, Luna de Sus (Florești), lângă Cluj-Napoca.`,
-      158,
-    );
+    const editorial = carEditorial(car.slug);
+    const price = formatPrice(Number(car.price), car.currency);
+    const km = car.mileage_km > 0 ? `${formatKm(car.mileage_km)}, ` : "";
+    const description = editorial
+      ? clamp(
+          `${editorial.pitch}. ${car.year}, ${km}${price}. Vezi-o pe DN1, Florești, lângă Cluj-Napoca — cash sau în rate.`,
+          158,
+        )
+      : clamp(
+          `${name} — ${formatKm(car.mileage_km)}, ${car.fuel}, ${car.gearbox}${car.power_hp ? `, ${car.power_hp} CP` : ""}, ${price}. Adusă din Germania, verificată, acte la zi. Vezi-o pe DN1, Luna de Sus (Florești), lângă Cluj-Napoca.`,
+          158,
+        );
+    const faqs = [...carFaq(car), ...(editorial?.faqs ?? [])];
     const cover = car.images?.[0] ? absolutePhotoUrl(car.images[0]) : null;
     const url = `https://bremenauto.ro/masini/${params.slug}`;
     return {
@@ -74,7 +83,7 @@ export const Route = createFileRoute("/masini/$slug")({
             "@context": "https://schema.org",
             "@type": "Car",
             name: `${car.make} ${car.model} ${car.year}`,
-            description,
+            description: editorial ? `${editorial.intro} ${description}` : description,
             url,
             image: (car.images ?? []).slice(0, 6).map((p: string) => absolutePhotoUrl(p)),
             brand: { "@type": "Brand", name: car.make },
@@ -111,7 +120,9 @@ export const Route = createFileRoute("/masini/$slug")({
                 }
               : {}),
             sku: car.slug,
-            ...(car.power_hp ? { additionalProperty: [{ "@type": "PropertyValue", name: "Putere", value: `${car.power_hp} CP` }] } : {}),
+            ...(car.power_hp
+              ? { additionalProperty: [{ "@type": "PropertyValue", name: "Putere", value: `${car.power_hp} CP` }] }
+              : {}),
             offers: {
               "@type": "Offer",
               url,
@@ -120,15 +131,13 @@ export const Route = createFileRoute("/masini/$slug")({
               price: Number(car.price),
               priceCurrency: car.currency,
               itemCondition: "https://schema.org/UsedCondition",
-              availability:
-                car.status === "vanduta"
-                  ? "https://schema.org/SoldOut"
-                  : "https://schema.org/InStock",
+              availability: car.status === "vanduta" ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
               seller: { "@id": ORG_ID },
             },
           }),
         },
         { type: "application/ld+json", children: JSON.stringify(dealerSchema) },
+        { type: "application/ld+json", children: JSON.stringify(faqSchema(faqs)) },
         {
           type: "application/ld+json",
           children: JSON.stringify(
@@ -150,6 +159,7 @@ function CarPage() {
   const [active, setActive] = useState(0);
   const title = `${car.make} ${car.model}${car.trim ? ` ${car.trim}` : ""}`;
   const related = LANDING_PAGES.filter((p) => p.match(car)).slice(0, 8);
+  const editorial = carEditorial(car.slug);
 
   const specs = [
     ["An fabricație", String(car.year)],
@@ -180,7 +190,6 @@ function CarPage() {
         </span>
       </nav>
 
-
       <div className="mt-6 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
         <div>
           {spinFor(car.slug) && (
@@ -202,23 +211,23 @@ function CarPage() {
                 alt={`${title} ${car.year} de vânzare la Bremen Auto, DN1 Luna de Sus, Florești, Cluj`}
               />
             ) : (
-            <div className="aspect-[4/3] bg-surface-strong">
-              {car.images[active] ? (
-                <img
-                  src={photoUrl(car.images[active]!)}
-                  alt={`${title} ${car.year} de vânzare la Bremen Auto, DN1 Luna de Sus, Florești, Cluj`}
-                  width={1200}
-                  height={900}
-                  fetchPriority="high"
-                  decoding="async"
-                  className="size-full object-cover"
-                />
-              ) : (
-                <div className="flex size-full items-center justify-center text-muted-foreground">
-                  Fotografii în curând
-                </div>
-              )}
-            </div>
+              <div className="aspect-[4/3] bg-surface-strong">
+                {car.images[active] ? (
+                  <img
+                    src={photoUrl(car.images[active]!)}
+                    alt={`${title} ${car.year} de vânzare la Bremen Auto, DN1 Luna de Sus, Florești, Cluj`}
+                    width={1200}
+                    height={900}
+                    fetchPriority="high"
+                    decoding="async"
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <div className="flex size-full items-center justify-center text-muted-foreground">
+                    Fotografii în curând
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
@@ -235,7 +244,7 @@ function CarPage() {
                 >
                   <img
                     src={photoUrl(img)}
-                    alt={`${title} — fotografia ${i + 1}`}
+                    alt={`${title} ${car.year} second hand Cluj — fotografia ${i + 1}`}
                     loading="lazy"
                     decoding="async"
                     width={320}
@@ -278,6 +287,25 @@ function CarPage() {
             </dl>
           </section>
 
+          {editorial && (
+            <section className="mt-10">
+              <h2 className="text-2xl">
+                De ce să alegi acest {title} {car.year}
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{editorial.intro}</p>
+              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                {editorial.highlights.map((h) => (
+                  <li key={h} className="flex items-start gap-2 text-sm">
+                    <Check className="mt-0.5 size-4 shrink-0 text-primary" /> {h}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">Potrivită pentru:</span> {editorial.idealFor}.
+              </p>
+            </section>
+          )}
+
           <AdsterraSlot variant="native" className="mt-10" />
 
           {car.description && (
@@ -314,9 +342,11 @@ function CarPage() {
           )}
 
           <section className="mt-10">
-            <h2 className="text-2xl">Întrebări frecvente despre {title} {car.year}</h2>
+            <h2 className="text-2xl">
+              Întrebări frecvente despre {title} {car.year}
+            </h2>
             <dl className="mt-4 space-y-4">
-              {carFaq(car).map((item) => (
+              {[...carFaq(car), ...(editorial?.faqs ?? [])].map((item) => (
                 <div key={item.q} className="surface-card rounded-xl p-4">
                   <dt className="font-semibold">{item.q}</dt>
                   <dd className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{item.a}</dd>
@@ -376,7 +406,6 @@ function CarPage() {
               )}
             </div>
 
-
             <p className="mt-5 flex items-start gap-2 text-sm text-muted-foreground">
               <MapPin className="mt-0.5 size-4 shrink-0 text-primary" /> {SITE.addressLine}
             </p>
@@ -401,15 +430,9 @@ function CarPage() {
           </div>
 
           <div className="mt-6">
-            <FinanceCalculator
-              price={Number(car.price)}
-              carSlug={car.slug}
-              carTitle={title}
-            />
+            <FinanceCalculator price={Number(car.price)} carSlug={car.slug} carTitle={title} />
           </div>
-
         </aside>
-
       </div>
 
       <section className="mt-14 border-t border-border pt-10">
@@ -460,4 +483,3 @@ function CarPage() {
     </div>
   );
 }
-
