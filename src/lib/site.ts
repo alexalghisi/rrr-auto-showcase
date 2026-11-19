@@ -14,9 +14,9 @@ export const SITE = {
   county: "Cluj",
   nearCity: "Cluj-Napoca",
   postalCode: "407280",
-  street: "DN1",
-  mapsQuery: "QC2J%2BWR%20Luna%20de%20Sus%2C%20Floresti%2C%20Cluj",
-  addressLine: "DN1, Luna de Sus, comuna Florești, jud. Cluj (10 min de Cluj-Napoca)",
+  street: "DN1 (E60)",
+  mapsQuery: "46.750849%2C23.432288",
+  addressLine: "DN1 (E60), Luna de Sus, comuna Florești, jud. Cluj, lângă OMV (10 min de Cluj-Napoca)",
   hours: "Non-stop, 24/7 — sună oricând",
   // Se înlocuiește cu linkul direct „scrie recenzie” după verificarea Google Business Profile:
   // https://search.google.com/local/writereview?placeid=<PLACE_ID>

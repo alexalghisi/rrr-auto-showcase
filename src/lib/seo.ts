@@ -54,14 +54,14 @@ export const dealerSchema = {
   },
   address: {
     "@type": "PostalAddress",
-    streetAddress: "DN1, Luna de Sus",
+    streetAddress: "DN1 (E60), Luna de Sus",
     addressLocality: "Florești",
     addressRegion: "Cluj",
     postalCode: "407280",
     addressCountry: "RO",
   },
-  hasMap: "https://www.google.com/maps?q=QC2J%2BWR+Luna+de+Sus,+Floresti,+Cluj",
-  geo: { "@type": "GeoCoordinates", latitude: 46.752312, longitude: 23.432062 },
+  hasMap: "https://www.google.com/maps?q=46.750849,23.432288",
+  geo: { "@type": "GeoCoordinates", latitude: 46.750849, longitude: 23.432288 },
   sameAs: [SITE.facebook],
   openingHoursSpecification: [
     {
