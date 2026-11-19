@@ -109,7 +109,7 @@ function ContactPage() {
         <div className="surface-card overflow-hidden rounded-xl">
           <iframe
             title="Harta către Bremen Auto, DN1 Luna de Sus, comuna Florești, județul Cluj"
-            src="https://www.google.com/maps?q=QC2J%2BWR%20Luna%20de%20Sus%2C%20Floresti%2C%20Cluj&output=embed"
+            src="https://www.google.com/maps?q=46.750849%2C23.432288&z=17&output=embed"
             loading="lazy"
             className="h-full min-h-80 w-full border-0"
             referrerPolicy="no-referrer-when-downgrade"
