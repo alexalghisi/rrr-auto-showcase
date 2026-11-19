@@ -8,6 +8,12 @@ const AUTO_SPEED = 1 / 14;
 const HOVER_SPEED = 1 / 6;
 /** Part of each 45° step spent on one angle before it glides into the next. */
 const HOLD = 0.5;
+/** While dragging, angles blend over almost the whole step so the turn feels continuous. */
+const DRAG_HOLD = 0.08;
+/** How quickly the drawn position catches up with the finger (per second). */
+const FOLLOW = 22;
+/** Small sideways drift during a blend, so the car seems to turn instead of fading. */
+const DRIFT = 0.018;
 
 /**
  * Studio turntable: the car turns on a grey studio floor; drag (finger or mouse) to walk
@@ -44,6 +50,10 @@ export function Studio360({
   const [touched, setTouched] = useState(false);
   const st = useRef({
     pos: 0,
+    goal: 0,
+    vel: 0,
+    lastX: 0,
+    lastT: 0,
     target: null as number | null,
     dragging: false,
     pointer: -1,
@@ -143,7 +153,7 @@ export function Studio360({
         s.drawn = -1;
       }
       const p = (((s.pos % 1) + 1) % 1) * n;
-      const q = Math.round(p * 48);
+      const q = Math.round(p * 160);
       if (q === s.drawn) return;
       const i = Math.floor(p) % n;
       const f = p - Math.floor(p);
@@ -154,12 +164,15 @@ export function Studio360({
         return;
       }
       s.drawn = q;
-      paint(ctx, a!, w, h, 1);
+      const hold =
+        s.dragging || Math.abs(s.goal - s.pos) > 0.002 || s.target !== null ? DRAG_HOLD : HOLD;
       const b = images.current[(i + 1) % n];
-      if (f > HOLD && ready(b)) {
-        const t = (f - HOLD) / (1 - HOLD);
-        paint(ctx, b!, w, h, t * t * (3 - 2 * t));
-      }
+      const t = f > hold ? (f - hold) / (1 - hold) : 0;
+      const e = t * t * (3 - 2 * t);
+      ctx.fillStyle = "#e9e9e7";
+      ctx.fillRect(0, 0, w, h);
+      paint(ctx, a!, w, h, 1, e > 0 && ready(b) ? -DRIFT * e : 0);
+      if (e > 0 && ready(b)) paint(ctx, b!, w, h, e, DRIFT * (1 - e));
       ctx.globalAlpha = 1;
     };
 
@@ -167,7 +180,9 @@ export function Studio360({
       const dt = Math.min(0.05, (now - (s.prev || now)) / 1000);
       s.prev = now;
       let moving = false;
-      if (!s.dragging && s.visible && !s.reduced) {
+      if (s.dragging) {
+        s.pos += (s.goal - s.pos) * Math.min(1, dt * FOLLOW);
+      } else if (s.visible && !s.reduced) {
         if (s.hover && hoverSpin) {
           s.pos += HOVER_SPEED * dt;
           s.target = null;
@@ -178,7 +193,7 @@ export function Studio360({
             s.pos = s.target;
             s.target = null;
           } else {
-            s.pos += d * Math.min(1, dt * 7);
+            s.pos += d * Math.min(1, dt * 6);
             moving = true;
           }
         } else if (s.auto) {
@@ -205,9 +220,11 @@ export function Studio360({
     };
   }, [n, hoverSpin]);
 
-  const snap = () => {
+  const snap = (momentum = 0) => {
     const s = st.current;
-    s.target = Math.round(s.pos * n) / n;
+    // Coast a little in the direction of the flick, then settle on the nearest real angle.
+    const coast = Math.max(-0.25, Math.min(0.25, momentum * 0.18));
+    s.target = Math.round((s.pos + coast) * n) / n;
     s.kick();
   };
 
@@ -220,6 +237,10 @@ export function Studio360({
     s.target = null;
     s.startX = e.clientX;
     s.startPos = s.pos;
+    s.goal = s.pos;
+    s.vel = 0;
+    s.lastX = e.clientX;
+    s.lastT = performance.now();
     s.distance = dragTurnDistance(e.currentTarget.getBoundingClientRect().width);
     if (movedRef) movedRef.current = false;
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -232,17 +253,24 @@ export function Studio360({
     const s = st.current;
     if (!s.dragging || e.pointerId !== s.pointer) return;
     if (Math.abs(e.clientX - s.startX) > 6 && movedRef) movedRef.current = true;
-    s.pos = draggedPosition(s.startPos, s.startX, e.clientX, s.distance);
-    s.paint();
+    s.goal = draggedPosition(s.startPos, s.startX, e.clientX, s.distance);
+    const now = performance.now();
+    const dt = (now - s.lastT) / 1000;
+    if (dt > 0) s.vel = s.vel * 0.6 + ((s.lastX - e.clientX) / s.distance / dt) * 0.4;
+    s.lastX = e.clientX;
+    s.lastT = now;
+    s.kick();
   };
   const onUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const s = st.current;
     if (!s.dragging || e.pointerId !== s.pointer) return;
     s.dragging = false;
     s.pointer = -1;
+    s.pos = s.goal;
+    const momentum = performance.now() - s.lastT < 80 ? s.vel : 0;
     if (e.currentTarget.hasPointerCapture(e.pointerId))
       e.currentTarget.releasePointerCapture(e.pointerId);
-    snap();
+    snap(momentum);
   };
   const onKey = (e: React.KeyboardEvent<HTMLCanvasElement>) => {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
@@ -325,10 +353,12 @@ function paint(
   w: number,
   h: number,
   alpha: number,
+  shift = 0,
 ) {
-  const scale = Math.max(w / im.naturalWidth, h / im.naturalHeight);
+  // Slight overscan so the sideways drift never shows an edge.
+  const scale = Math.max(w / im.naturalWidth, h / im.naturalHeight) * 1.04;
   const dw = im.naturalWidth * scale;
   const dh = im.naturalHeight * scale;
   ctx.globalAlpha = alpha;
-  ctx.drawImage(im, (w - dw) / 2, (h - dh) / 2, dw, dh);
+  ctx.drawImage(im, (w - dw) / 2 + shift * w, (h - dh) / 2, dw, dh);
 }
