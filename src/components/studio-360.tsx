@@ -160,8 +160,15 @@ export function Studio360({
       const f = p - Math.floor(p);
       const a = images.current[i];
       if (!ready(a)) {
-        // Angle not loaded yet: keep showing the first one.
-        if (ready(images.current[0]) && s.drawn === -1) paint(ctx, images.current[0]!, w, h, 1);
+        // Angle not loaded yet: show the first angle cleanly rather than leave a half blend on screen.
+        if (ready(images.current[0])) {
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = "#e9e9e7";
+          ctx.fillRect(0, 0, w, h);
+          paint(ctx, images.current[0]!, w, h, 1);
+          ctx.globalAlpha = 1;
+        }
+        s.drawn = -1;
         return;
       }
       s.drawn = q;
@@ -170,6 +177,7 @@ export function Studio360({
       const b = images.current[(i + 1) % n];
       const t = f > hold ? (f - hold) / (1 - hold) : 0;
       const e = t * t * (3 - 2 * t);
+      ctx.globalAlpha = 1;
       ctx.fillStyle = "#e9e9e7";
       ctx.fillRect(0, 0, w, h);
       paint(ctx, a!, w, h, 1, e > 0 && ready(b) ? -DRIFT * e : 0);
@@ -181,6 +189,12 @@ export function Studio360({
       const dt = Math.min(0.05, (now - (s.prev || now)) / 1000);
       s.prev = now;
       let moving = false;
+      if (!s.dragging && s.target !== null && (s.reduced || !s.visible)) {
+        // Reduced motion (or off-screen): no settle animation, jump straight to the real angle.
+        s.pos = s.target;
+        s.target = null;
+        s.drawn = -1;
+      }
       if (s.dragging) {
         s.pos += (s.goal - s.pos) * Math.min(1, dt * FOLLOW);
       } else if (s.visible && !s.reduced) {
