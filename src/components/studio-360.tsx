@@ -152,8 +152,9 @@ export function Studio360({
         el.height = h;
         s.drawn = -1;
       }
-      const p = (((s.pos % 1) + 1) % 1) * n;
-      const q = Math.round(p * 160);
+      const raw = (((s.pos % 1) + 1) % 1) * n;
+      const p = Math.abs(raw - Math.round(raw)) < 1e-4 ? Math.round(raw) % n : raw;
+      const q = Math.round(p * 160) * 2 + (s.dragging || s.target !== null ? 1 : 0);
       if (q === s.drawn) return;
       const i = Math.floor(p) % n;
       const f = p - Math.floor(p);
@@ -192,6 +193,7 @@ export function Studio360({
           if (Math.abs(d) < 0.0005) {
             s.pos = s.target;
             s.target = null;
+            s.drawn = -1; // force a clean redraw of the exact angle, no blend residue
           } else {
             s.pos += d * Math.min(1, dt * 6);
             moving = true;
