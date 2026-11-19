@@ -328,6 +328,7 @@ export async function runStudio360(
     max?: number | undefined;
     slug?: string | undefined;
     reset?: boolean | undefined;
+    redo?: number[] | undefined;
   } = {},
 ): Promise<StudioRunResult> {
   const max = Math.max(1, Math.min(4, options.max ?? 2));
@@ -336,6 +337,17 @@ export async function runStudio360(
   try {
     const db = await admin();
     const manifest = await readManifest();
+    if (options.redo?.length && options.slug) {
+      const entry = manifest.cars[options.slug];
+      if (entry) {
+        for (const angle of options.redo) {
+          delete entry.files[angle];
+          if (entry.failures) delete entry.failures[angle];
+        }
+        entry.v = String(Date.now());
+        await writeManifest(manifest);
+      }
+    }
     if (options.reset && options.slug) {
       manifest.cars[options.slug] = { files: {}, v: String(Date.now()) };
       await writeManifest(manifest);

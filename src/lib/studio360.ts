@@ -21,15 +21,15 @@ export const STUDIO_ANGLES = [
   },
   {
     view: "rear-left",
-    text: "rear three-quarter view from the car's LEFT side (135°): rear and left flank visible, car nose pointing to the right of the image",
+    text: "rear three-quarter view from the car's LEFT side (135°): rear and left flank visible, rear of the car on the RIGHT side of the image and the nose on the LEFT side, nose pointing left and away from the camera",
   },
   {
     view: "rear",
-    text: "straight-on rear view (180°): tail lights and boot centred, car symmetric",
+    text: "straight-on rear view (180°): tail lights and boot centred, car symmetric, rear plate blank",
   },
   {
     view: "rear-right",
-    text: "rear three-quarter view from the car's RIGHT side (225°): rear and right flank visible, car nose pointing to the left of the image",
+    text: "rear three-quarter view from the car's RIGHT side (225°): rear and right flank visible, rear of the car on the LEFT side of the image and the nose on the RIGHT side, nose pointing right and away from the camera",
   },
   {
     view: "right",

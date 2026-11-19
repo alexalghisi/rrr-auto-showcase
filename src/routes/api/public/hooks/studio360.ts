@@ -21,6 +21,11 @@ export const Route = createFileRoute("/api/public/hooks/studio360")({
           const result = await runStudio360({
             slug: params.get("slug") ?? undefined,
             reset: params.get("reset") === "1",
+            redo: (params.get("redo") ?? "")
+              .split(",")
+              .filter(Boolean)
+              .map(Number)
+              .filter((n) => n >= 0 && n < 8),
             max: Number(params.get("max")) || undefined,
           });
           return Response.json({ ok: true, ...result });
