@@ -121,7 +121,78 @@ async function gateway(body: Record<string, unknown>) {
   });
 }
 
+// ---------- Google Gemini direct (used when GEMINI_API_KEY is set) ----------
+
+const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
+const GEMINI_IMAGE_MODELS = [
+  process.env["STUDIO360_GEMINI_MODEL"],
+  "gemini-3-pro-image-preview",
+  "gemini-2.5-flash-image",
+].filter((m): m is string => Boolean(m));
+const GEMINI_CHECK_MODEL = "gemini-2.5-flash";
+
+type GeminiPart = { text: string } | { inline_data: { mime_type: string; data: string } };
+
+function geminiParts(parts: Part[]): GeminiPart[] {
+  return parts.map((part) => {
+    if (part.type === "text") return { text: part.text };
+    const [, mime = "image/jpeg", data = ""] =
+      part.image_url.url.match(/^data:([^;]+);base64,(.*)$/s) ?? [];
+    return { inline_data: { mime_type: mime, data } };
+  });
+}
+
+async function gemini(model: string, body: Record<string, unknown>) {
+  return fetch(`${GEMINI_BASE}/${model}:generateContent`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-goog-api-key": process.env["GEMINI_API_KEY"] ?? "",
+    },
+    body: JSON.stringify(body),
+  });
+}
+
+type GeminiResponse = {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{ text?: string; inlineData?: { mimeType?: string; data?: string } }>;
+    };
+  }>;
+};
+
+async function geminiImage(parts: Part[]): Promise<string> {
+  let lastError = "niciun model Gemini de imagine disponibil";
+  for (const model of GEMINI_IMAGE_MODELS) {
+    const response = await gemini(model, {
+      contents: [{ role: "user", parts: geminiParts(parts) }],
+      generationConfig: { responseModalities: ["IMAGE"], imageConfig: { aspectRatio: "4:3" } },
+    });
+    if (!response.ok) {
+      lastError = `${model} ${response.status}: ${(await response.text()).slice(0, 200)}`;
+      if (response.status === 400 || response.status === 404) continue;
+      throw new Error(lastError);
+    }
+    const json = (await response.json()) as GeminiResponse;
+    const image = json.candidates?.[0]?.content?.parts?.find((p) => p.inlineData?.data)?.inlineData;
+    if (image?.data) return `data:${image.mimeType ?? "image/png"};base64,${image.data}`;
+    lastError = `${model}: răspuns fără imagine`;
+  }
+  throw new Error(lastError);
+}
+
+async function geminiText(parts: Part[]): Promise<string | null> {
+  const response = await gemini(GEMINI_CHECK_MODEL, {
+    contents: [{ role: "user", parts: geminiParts(parts) }],
+    generationConfig: { responseMimeType: "application/json", maxOutputTokens: 200 },
+  });
+  if (!response.ok) return null;
+  const json = (await response.json()) as GeminiResponse;
+  return json.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? null;
+}
+
 async function generateImage(parts: Part[]): Promise<string> {
+  if (process.env["GEMINI_API_KEY"]) return geminiImage(parts);
   let lastError = "niciun model de imagine disponibil";
   for (const model of IMAGE_MODELS) {
     const response = await gateway({
@@ -150,6 +221,23 @@ async function generateImage(parts: Part[]): Promise<string> {
 /** Asks a vision model whether the frame shows the same car from the requested angle. */
 async function checkFrame(frame: string, reference: string, angle: number): Promise<boolean> {
   try {
+    if (process.env["GEMINI_API_KEY"]) {
+      const text = await geminiText([
+        {
+          type: "text",
+          text: `Image A is a real photo of a car. Image B should show THE SAME car (same make, model, body, colour, wheels) in a plain studio, seen from this angle: ${STUDIO_ANGLES[angle]!.text}. Reply JSON {"sameCar": boolean, "rightAngle": boolean, "clean": boolean} where clean means no text, no people, no duplicated or deformed parts.`,
+        },
+        { type: "image_url", image_url: { url: reference } },
+        { type: "image_url", image_url: { url: frame } },
+      ]);
+      if (!text) return true;
+      const verdict = JSON.parse(text) as Record<string, unknown>;
+      return (
+        verdict["sameCar"] !== false &&
+        verdict["rightAngle"] !== false &&
+        verdict["clean"] !== false
+      );
+    }
     const response = await gateway({
       model: CHECK_MODEL,
       response_format: { type: "json_object" },
