@@ -1,4 +1,4 @@
-import { facebookDue } from "./import-schedule";
+import { importSources } from "./import-schedule";
 /** Import automat OLX (API public OLX, fără Apify) + Facebook (Graph API; Apify doar ca rezervă). */
 import { slugify } from "./site";
 
@@ -585,7 +585,7 @@ export async function importAll(options: { force?: boolean } = {}): Promise<Impo
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
-  const sources: SourceKey[] = options.force || facebookDue(lastFb?.created_at ?? null) ? ["facebook", "olx"] : ["olx"];
+  const sources = importSources(lastFb?.created_at ?? null, Boolean(options.force));
   // Actorii sunt porniți serial pentru a evita timeout-urile gateway-ului la două rulări lungi simultan.
   for (const source of sources) results.push(await importSource(source));
   // Pozele vechi, încă găzduite extern, sunt mutate treptat în storage-ul propriu.

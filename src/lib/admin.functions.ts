@@ -48,7 +48,7 @@ export const runImportNow = createServerFn({ method: "POST" })
     if (!isAdmin) throw new Error("Forbidden");
 
     const { importAll } = await import("@/lib/import.server");
-    return { results: await importAll() };
+    return { results: await importAll({ force: true }) };
   });
 
 /** Ultimele rulări ale importului automat (doar admin). */
