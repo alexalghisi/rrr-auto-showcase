@@ -5,3 +5,9 @@ export function facebookDue(lastRunAt: string | null, now = Date.now()): boolean
   if (!lastRunAt) return true;
   return now - new Date(lastRunAt).getTime() >= (FACEBOOK_EVERY_HOURS - 0.25) * 3600_000;
 }
+
+export function importSources(lastFacebookRunAt: string | null, force: boolean, now = Date.now()) {
+  return force || facebookDue(lastFacebookRunAt, now)
+    ? (["facebook", "olx"] as const)
+    : (["olx"] as const);
+}
