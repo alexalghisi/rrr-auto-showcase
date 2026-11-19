@@ -161,14 +161,15 @@ function parseOlxItem(item: Json): ScrapedCar | null {
 }
 
 
-function parseFacebookPost(item: Json): ScrapedCar | null {
+export function parseFacebookPost(item: Json): ScrapedCar | null {
   const description = asText(item["text"] ?? item["caption"]);
   const url = asText(item["url"] ?? item["postUrl"]);
   if (!description || !url) return null;
-  const year = asNumber(firstMatch(description, [/(?:an(?:ul)?|fabricatie|fabricație)\s*[:\-]?\s*((?:19|20)\d{2})/i, /\b((?:19|20)\d{2})\b/]));
-  const price = asNumber(firstMatch(description, [/(?:pre[tț]|price)\s*[:\-]?\s*([\d .]+)\s*(?:€|eur)/i, /([\d .]+)\s*(?:€|eur)\b/i]));
+  if (/(^|[^\p{L}])v[âa]ndut/iu.test(description)) return null;
+  const year = asNumber(firstMatch(description, [/(?:an(?:ul)?|fabricatie|fabricație)\s*[:\-]?\s*(?:\d{1,2}[./])?((?:19|20)\d{2})/i, /\b((?:19|20)\d{2})\b/]));
+  const price = asNumber(firstMatch(description, [/(?:pre[tț]|price)(?:\s+cash)?\s*[:\-]?\s*(\d[\d .]*)\s*(?:€|eur)/i, /(\d[\d .]*)\s*(?:€|eur\b)/i]));
   if (!year || !price) return null;
-  const mileage = asNumber(firstMatch(description, [/(?:km|kilometri|rulaj)\s*[:\-]?\s*([\d .]+)/i, /([\d .]+)\s*km\b/i]));
+  const mileage = asNumber(firstMatch(description, [/(\d{1,3}(?:[. ]\d{3})+|\d{4,})\s*km\b/i, /(?:kilometri|rulaj)\s*[:\-]?\s*(\d[\d .]*)/i]));
   const knownMake = "Audi|BMW|Mercedes(?:-Benz)?|Volkswagen|VW|Vw|Skoda|Dacia|Renault|Ford|Opel|Peugeot|Citroen|Toyota|Honda|Hyundai|Kia|Nissan|Mazda|Volvo|Seat|Fiat|Suzuki|Mitsubishi|Land Rover|Range Rover|Porsche";
   const carLine = description.match(new RegExp(`^\\s*[~\\-*✅🚗 ]*((?:${knownMake})\\s+[^\\n~]{1,60})`, "im"))?.[1];
   const heading = (carLine ?? "").replace(/[✅🚗🔥🔴🟢⭐➡️]/gu, " ").replace(/\s+/g, " ").trim();
