@@ -23,7 +23,8 @@ async function fetchPublicCars(): Promise<Car[]> {
     .order("featured", { ascending: false })
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
-  return data ?? [];
+  const { withStudio360 } = await import("./studio360.server");
+  return withStudio360(data ?? []);
 }
 
 async function fetchPublicCar(slug: string): Promise<Car | null> {
@@ -35,7 +36,9 @@ async function fetchPublicCar(slug: string): Promise<Car | null> {
     .eq("slug", slug)
     .maybeSingle();
   if (error) throw new Error(error.message);
-  return car;
+  if (!car) return null;
+  const { withStudio360 } = await import("./studio360.server");
+  return (await withStudio360([car]))[0] ?? car;
 }
 
 export const listPublicCars = createServerFn({ method: "GET" }).handler(async () => {

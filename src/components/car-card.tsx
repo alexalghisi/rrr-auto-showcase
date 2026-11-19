@@ -8,14 +8,17 @@ import { formatKm, formatPrice, photoUrl } from "@/lib/site";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { spinFor } from "@/lib/spin360";
 import { Spin360 } from "@/components/spin-360";
+import { Studio360 } from "@/components/studio-360";
 import { RatingSummary } from "@/components/car-rating";
 
 const ease = (t: number) => t * t * (3 - 2 * t); // smoothstep
 
 export function CarCard({ car }: { car: Car }) {
-  const hasSpin = !!spinFor(car.slug);
+  const studio = car.studio360 ?? [];
+  const hasStudio = studio.length > 0;
+  const hasSpin = !hasStudio && !!spinFor(car.slug);
   const orbit = useMemo(() => orbitImages(car.images), [car.images]);
-  const n = hasSpin ? 0 : orbit.length;
+  const n = hasSpin || hasStudio ? 0 : orbit.length;
   const [pos, setPos] = useState(0);
   const [active, setActive] = useState(false); // montează toate cadrele după prima interacțiune
   const boxRef = useRef<HTMLDivElement>(null);
@@ -166,7 +169,19 @@ export function CarCard({ car }: { car: Car }) {
       }}
       draggable={false}
       >
-      {hasSpin ? (
+      {hasStudio ? (
+        <div ref={boxRef} className="relative aspect-[4/3]">
+          <Studio360 frames={studio} alt={altText} movedRef={spinMoved} lazy hoverSpin className="size-full" />
+          <span className="pointer-events-none absolute bottom-3 right-3 z-10 inline-flex items-center gap-1 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
+            <RotateCw className="size-3" /> Trage 360°
+          </span>
+          {car.status !== "disponibila" && (
+            <span className="absolute left-3 top-3 z-10 rounded-md bg-background/90 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+              {car.status === "rezervata" ? "Rezervată" : "Vândută"}
+            </span>
+          )}
+        </div>
+      ) : hasSpin ? (
         <div ref={boxRef} className="relative aspect-[4/3]">
           <Spin360
             slug={car.slug}

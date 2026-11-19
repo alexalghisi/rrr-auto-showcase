@@ -9,6 +9,7 @@ import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { FinanceCalculator } from "@/components/finance-calculator";
 import { Viewer360 } from "@/components/viewer-360";
 import { Spin360 } from "@/components/spin-360";
+import { Studio360 } from "@/components/studio-360";
 import { CarRating } from "@/components/car-rating";
 import { AdsterraSlot } from "@/components/ad-slots";
 import { spinFor } from "@/lib/spin360";
@@ -192,7 +193,16 @@ function CarPage() {
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
         <div>
-          {spinFor(car.slug) && (
+          {car.studio360?.length ? (
+            <div className="surface-card mb-4 overflow-hidden rounded-xl">
+              <Studio360
+                frames={car.studio360}
+                autoRotate
+                alt={`${title} ${car.year} — rotire 360° — Bremen Auto, Florești, Cluj`}
+                className="aspect-[4/3] w-full"
+              />
+            </div>
+          ) : spinFor(car.slug) && (
             <div className="surface-card mb-4 overflow-hidden rounded-xl">
               <Spin360
                 slug={car.slug}
@@ -203,7 +213,7 @@ function CarPage() {
             </div>
           )}
           <div className="surface-card overflow-hidden rounded-xl">
-            {car.images.length > 1 && !spinFor(car.slug) ? (
+            {car.images.length > 1 && !spinFor(car.slug) && !car.studio360?.length ? (
               <Viewer360
                 images={car.images}
                 index={active}
