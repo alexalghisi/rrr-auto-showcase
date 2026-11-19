@@ -41,6 +41,7 @@ import { Route as ApiPublicHooksCompetitorScanRouteImport } from './routes/api/p
 import { Route as ApiPublicHooksImportCarsRouteImport } from './routes/api/public/hooks/import-cars'
 import { Route as ApiPublicHooksSeoDailyRouteImport } from './routes/api/public/hooks/seo-daily'
 import { Route as ApiPublicHooksSeoRefreshRouteImport } from './routes/api/public/hooks/seo-refresh'
+import { Route as ApiPublicHooksStudio360RouteImport } from './routes/api/public/hooks/studio360'
 import { Route as ApiPublicPhotoSplatRouteImport } from './routes/api/public/photo.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -206,6 +207,11 @@ const ApiPublicHooksSeoRefreshRoute =
     path: '/api/public/hooks/seo-refresh',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksStudio360Route = ApiPublicHooksStudio360RouteImport.update({
+  id: '/api/public/hooks/studio360',
+  path: '/api/public/hooks/studio360',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPhotoSplatRoute = ApiPublicPhotoSplatRouteImport.update({
   id: '/api/public/photo/$',
   path: '/api/public/photo/$',
@@ -244,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/hooks/seo-daily': typeof ApiPublicHooksSeoDailyRoute
   '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
+  '/api/public/hooks/studio360': typeof ApiPublicHooksStudio360Route
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRoutesByTo {
@@ -278,6 +285,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/hooks/seo-daily': typeof ApiPublicHooksSeoDailyRoute
   '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
+  '/api/public/hooks/studio360': typeof ApiPublicHooksStudio360Route
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRoutesById {
@@ -314,6 +322,7 @@ export interface FileRoutesById {
   '/api/public/hooks/import-cars': typeof ApiPublicHooksImportCarsRoute
   '/api/public/hooks/seo-daily': typeof ApiPublicHooksSeoDailyRoute
   '/api/public/hooks/seo-refresh': typeof ApiPublicHooksSeoRefreshRoute
+  '/api/public/hooks/studio360': typeof ApiPublicHooksStudio360Route
   '/api/public/photo/$': typeof ApiPublicPhotoSplatRoute
 }
 export interface FileRouteTypes {
@@ -350,6 +359,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/import-cars'
     | '/api/public/hooks/seo-daily'
     | '/api/public/hooks/seo-refresh'
+    | '/api/public/hooks/studio360'
     | '/api/public/photo/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -384,6 +394,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/import-cars'
     | '/api/public/hooks/seo-daily'
     | '/api/public/hooks/seo-refresh'
+    | '/api/public/hooks/studio360'
     | '/api/public/photo/$'
   id:
     | '__root__'
@@ -419,6 +430,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/import-cars'
     | '/api/public/hooks/seo-daily'
     | '/api/public/hooks/seo-refresh'
+    | '/api/public/hooks/studio360'
     | '/api/public/photo/$'
   fileRoutesById: FileRoutesById
 }
@@ -454,6 +466,7 @@ export interface RootRouteChildren {
   ApiPublicHooksImportCarsRoute: typeof ApiPublicHooksImportCarsRoute
   ApiPublicHooksSeoDailyRoute: typeof ApiPublicHooksSeoDailyRoute
   ApiPublicHooksSeoRefreshRoute: typeof ApiPublicHooksSeoRefreshRoute
+  ApiPublicHooksStudio360Route: typeof ApiPublicHooksStudio360Route
   ApiPublicPhotoSplatRoute: typeof ApiPublicPhotoSplatRoute
 }
 
@@ -683,6 +696,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksSeoRefreshRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/studio360': {
+      id: '/api/public/hooks/studio360'
+      path: '/api/public/hooks/studio360'
+      fullPath: '/api/public/hooks/studio360'
+      preLoaderRoute: typeof ApiPublicHooksStudio360RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/photo/$': {
       id: '/api/public/photo/$'
       path: '/api/public/photo/$'
@@ -737,6 +757,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksImportCarsRoute: ApiPublicHooksImportCarsRoute,
   ApiPublicHooksSeoDailyRoute: ApiPublicHooksSeoDailyRoute,
   ApiPublicHooksSeoRefreshRoute: ApiPublicHooksSeoRefreshRoute,
+  ApiPublicHooksStudio360Route: ApiPublicHooksStudio360Route,
   ApiPublicPhotoSplatRoute: ApiPublicPhotoSplatRoute,
 }
 export const routeTree = rootRouteImport

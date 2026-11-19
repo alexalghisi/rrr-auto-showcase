@@ -1,7 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
-export type Car = Database["public"]["Tables"]["cars"]["Row"];
+export type Car = Database["public"]["Tables"]["cars"]["Row"] & {
+  /** Studio 360° frame URLs in turning order (eight angles), when generated. */
+  studio360?: string[];
+};
 
 export function createPublicClient() {
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
