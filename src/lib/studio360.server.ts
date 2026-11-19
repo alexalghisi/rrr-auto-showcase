@@ -313,13 +313,13 @@ export async function runStudio360(
           entry.files[angle] = file;
           result.generated.push(`${car.slug}#${angle}`);
         } catch (error) {
-          entry.failures = { ...entry.failures, [angle]: (entry.failures?.[angle] ?? 0) + 1 };
           result.failed.push(`${car.slug}#${angle}: ${(error as Error).message}`);
-          // Credits or rate limits: stop this run, the next cron call retries.
+          // Credits or rate limits are not the car's fault: not counted, stop this run, retry next call.
           if (/\b(402|429)\b/.test((error as Error).message)) {
             budget = 0;
             break;
           }
+          entry.failures = { ...entry.failures, [angle]: (entry.failures?.[angle] ?? 0) + 1 };
         }
         await writeManifest(manifest);
         angle = nextStudioAngle(entry);
