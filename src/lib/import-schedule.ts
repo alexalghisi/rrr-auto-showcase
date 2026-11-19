@@ -11,3 +11,7 @@ export function importSources(lastFacebookRunAt: string | null, force: boolean, 
     ? (["facebook", "olx"] as const)
     : (["olx"] as const);
 }
+
+export function relistedFields(status: string | null) {
+  return status === "vanduta" ? { status: "disponibila", published: true } : {};
+}

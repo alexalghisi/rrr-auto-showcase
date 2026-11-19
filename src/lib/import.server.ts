@@ -1,4 +1,4 @@
-import { importSources } from "./import-schedule";
+import { importSources, relistedFields } from "./import-schedule";
 /** Import automat OLX (API public OLX, fără Apify) + Facebook (Graph API; Apify doar ca rezervă). */
 import { slugify } from "./site";
 
@@ -478,7 +478,7 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
 
   const { data: existing } = await supabaseAdmin
     .from("cars")
-    .select("id, source_url, external_id, fingerprint, make, model, year, mileage_km, price");
+    .select("id, source_url, external_id, fingerprint, make, model, year, mileage_km, price, status");
   const known = (existing ?? []).map((car) => ({
     id: car.id,
     source_url: car.source_url,
@@ -489,6 +489,7 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
     year: car.year,
     mileage_km: car.mileage_km,
     price: Number(car.price),
+    status: car.status,
   }));
 
   for (const car of cars) {
@@ -502,7 +503,10 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
     );
     if (match) {
       result.skipped++;
-      await supabaseAdmin.from("cars").update({ last_seen_at: new Date().toISOString() }).eq("id", match.id);
+      await supabaseAdmin
+        .from("cars")
+        .update({ last_seen_at: new Date().toISOString(), ...relistedFields(match.status) })
+        .eq("id", match.id);
       continue;
     }
     const suffix = slugify(car.externalId).slice(-10);
@@ -536,6 +540,7 @@ export async function importSource(source: SourceKey): Promise<ImportResult> {
       year: car.year,
       mileage_km: car.mileage_km,
       price: car.price,
+      status: "disponibila",
     });
     result.inserted++;
   }
