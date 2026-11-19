@@ -51,9 +51,10 @@ export function AdsterraSlot({ variant = "banner", className = "" }: {
 
   const zone = variant === "banner" ? bannerFor(desktop ? 768 : 767) : null;
   const filled = consent && height > 0;
+  // Unfilled: out of flow (absolute, 0 height) so it never takes a grid cell or leaves a gap.
   return (
     <div ref={container} data-adsterra-slot={variant}
-      className={`relative mx-auto w-full max-w-6xl ${filled ? className : "h-0 overflow-hidden"}`}>
+      className={filled ? `relative mx-auto w-full max-w-6xl ${className}` : "pointer-events-none absolute left-0 h-0 w-full overflow-hidden"}>
       {desktop !== null && nearby && consent && loaded && (
         <div className={`flex flex-col items-center gap-1 ${filled ? "py-4" : "absolute inset-x-0 top-0"}`}>
           {filled && <span className="text-[10px] text-muted-foreground">Publicitate</span>}
